@@ -67,7 +67,6 @@ trait HasRolesAndPermissions
      */
     public function givePermissionsTo(... $permissions)
     {
-//        $permissions = $this->allPermissions($permissions)->get();
         if($this->allPermissions($permissions)->doesntExist())
             return $this;
 

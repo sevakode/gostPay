@@ -15,7 +15,6 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-//        Role::truncate();
         $role = new Role();
         $role->name = 'Admin';
         $role->slug = Str::slug($role->name);
