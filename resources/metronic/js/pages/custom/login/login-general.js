@@ -127,10 +127,10 @@ var KTLogin = function() {
                             }
                         }
                     },
-                    cpassword: {
+                    password_confirmation: {
                         validators: {
                             notEmpty: {
-                                message: 'The password confirmation is required'
+                                message: 'Требуется подтверждение пароля'
                             },
                             identical: {
                                 compare: function() {

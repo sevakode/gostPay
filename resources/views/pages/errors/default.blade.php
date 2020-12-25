@@ -55,9 +55,6 @@ License: You must have a valid license purchased only from themeforest(the above
 <script src="{{asset('plugins/global/plugins.bundle.js')}}"></script>
 <script src="{{asset('plugins/custom/prismjs/prismjs.bundle.js')}}"></script>
 <script src="{{asset('js/scripts.bundle.js')}}"></script>
-<!--end::Global Theme Bundle-->
-<!--begin::Page Scripts(used by this page)-->
-<script src="{{asset('js/pages/custom/login/login-general.js')}}"></script>
 <!--end::Page Scripts-->
 @yield('scripts')
 </body>

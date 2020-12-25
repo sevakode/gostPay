@@ -13,15 +13,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/login', [\App\Http\Controllers\LoginController::class, 'index'])->name('login');
-Route::get('/login/sign-in', [\App\Http\Controllers\LoginController::class, 'signIn'])->name('sign_in');
-Route::get('/login/sign-up', [\App\Http\Controllers\LoginController::class, 'signUp'])->name('sign_up');
+Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login/sign-in', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('sign_in')->middleware('isAjax');
+Route::get('/login/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+
+Route::post('/login/sign-up', [\App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('sign_up')->middleware('isAjax');;
 
 
 // Demo routes
-//Route::middleware('auth')->group(function () {
+Route::middleware('auth')->group(function () {
 
-    Route::get('/', 'PagesController@index');
+    Route::get('/', 'PagesController@index')->name('home');
     Route::get('/datatables', 'PagesController@datatables');
     Route::get('/ktdatatables', 'PagesController@ktDatatables');
     Route::get('/select2', 'PagesController@select2');
@@ -37,9 +39,4 @@ Route::get('/login/sign-up', [\App\Http\Controllers\LoginController::class, 'sig
 
     // Quick search dummy route to display html elements in search dropdown (header search)
     Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');
-//});
-
-
-
-
-
+});
