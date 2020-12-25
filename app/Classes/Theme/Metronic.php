@@ -1,6 +1,9 @@
 <?php
 namespace App\Classes\Theme;
 
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Request;
+
 class Metronic
 {
     public static $attrs;
@@ -93,6 +96,19 @@ class Metronic
     public static function initThemes()
     {
         $themes = [];
+
+        if(Request::routeIs('login')){
+            $themes[] = 'css/pages/login/classic/login-5.css';
+            $themes[] = 'plugins/global/plugins.bundle.css';
+            $themes[] = 'plugins/custom/prismjs/prismjs.bundle.css';
+            $themes[] = 'css/style.bundle.css';
+            $themes[] = 'css/themes/layout/header/base/light.css';
+            $themes[] = 'css/themes/layout/header/menu/light.css';
+            $themes[] = 'css/themes/layout/brand/dark.css';
+            $themes[] = 'css/themes/layout/aside/dark.css';
+
+            return $themes;
+        }
 
         $themes[] = 'css/themes/layout/header/base/'.config('layout.header.self.theme').'.css';
         $themes[] = 'css/themes/layout/header/menu/'.config('layout.header.menu.desktop.submenu.theme').'.css';
