@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::post('/send-notification', [NotificationController::class, 'sendMessageNotification'])->middleware('isAjax');
+
 Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login/sign-in', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('sign_in')->middleware('isAjax');
 Route::get('/login/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
@@ -35,7 +40,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/icons/socicons', 'PagesController@socicons');
     Route::get('/icons/svg', 'PagesController@svg');
 
-    Route::get('/profile/edit', [\App\Http\Controllers\ProfileController::class, 'edit'])->name('profile_edit');
+    Route::prefix(RouteServiceProvider::PROFILE)->group(function () {
+        Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
+        Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update');
+    });
 
     // Quick search dummy route to display html elements in search dropdown (header search)
     Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');

@@ -123,6 +123,15 @@ class Metronic
         return $themes;
     }
 
+    public static function initScripts()
+    {
+        $scripts = [];
+        $scripts[] = 'js/notifications.js';
+
+        return $scripts;
+
+    }
+
     /**
      * Get SVG content
      * @param string $filepath
