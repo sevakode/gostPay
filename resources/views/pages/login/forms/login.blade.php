@@ -5,9 +5,7 @@
     </div>
     <div id="app">
     </div>
-    <form class="form"
-{{--          id="kt_login_signin_form"--}}
-          method="POST" action="{{ route('sign_in') }}">
+    <form class="form" id="kt_login_signin_form" method="POST" action="{{ route('sign_in') }}">
         @csrf
         <div class="form-group">
             <input class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8"
@@ -36,11 +34,9 @@
             <a href="javascript:;" id="kt_login_forgot" class="text-white font-weight-bold">Forget Password ?</a>
         </div>
         <div class="form-group text-center mt-10">
-{{--            <button--}}
-{{--                id="kt_login_signin_submit"--}}
-{{--                class="btn btn-pill btn-primary opacity-90 px-15 py-3">Sign In--}}
-{{--            </button>--}}
-            <input type="submit">
+            <button id="kt_login_signin_submit" class="btn btn-pill btn-primary opacity-90 px-15 py-3">
+                Sign In
+            </button>
         </div>
     </form>
     <div class="mt-10">
