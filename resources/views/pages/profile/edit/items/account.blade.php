@@ -14,7 +14,7 @@
                 <!--end::Svg Icon-->
             </span>
         </span>
-        <span class="nav-text font-size-lg">Account</span>
+        <span class="nav-text font-size-lg">Аккаунт</span>
     </a>
 </li>
 <!--end::Item-->

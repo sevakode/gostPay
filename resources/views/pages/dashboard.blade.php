@@ -5,7 +5,6 @@
 @section('content')
 
     {{-- Dashboard 1 --}}
-
     <div class="row">
         <div class="col-lg-6 col-xxl-4">
             @include('pages.widgets._widget-1', ['class' => 'card-stretch gutter-b'])

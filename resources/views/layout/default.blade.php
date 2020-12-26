@@ -14,6 +14,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" {{ Metronic::printAttrs('html') }} {{ Metronic::printClasses('html') }}>
     <head>
         <meta charset="utf-8"/>
+        <meta name="csrf-token" content="{{ csrf_token() }}">
 
         {{-- Title Section --}}
         <title>{{ config('app.name') }} | @yield('title', $page_title ?? '')</title>
@@ -44,6 +45,7 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <body {{ Metronic::printAttrs('body') }} {{ Metronic::printClasses('body') }}>
 
+
         @if (config('layout.page-loader.type') != '')
             @include('layout.partials._page-loader')
         @endif
@@ -61,6 +63,9 @@ License: You must have a valid license purchased only from themeforest(the above
         @foreach(config('layout.resources.js') as $script)
             <script src="{{ asset($script) }}" type="text/javascript"></script>
         @endforeach
+
+
+        @foreach (Metronic::initScripts() as $script) <script src="{{asset($script)}}"></script> @endforeach
 
         {{-- Includable JS --}}
         @yield('scripts')

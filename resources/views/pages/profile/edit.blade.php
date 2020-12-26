@@ -10,13 +10,13 @@
             <!--begin::Toolbar-->
             <div class="card-toolbar">
                 <ul class="nav nav-tabs nav-bold nav-tabs-line nav-tabs-line-3x">
-                    @include('pages.profile.items.edit.profile')
+                    @include('pages.profile.edit.items.profile')
 
-{{--                    @include('pages.profile.items.edit.account')--}}
+{{--                    @include('pages.profile.edit.items.account')--}}
 
-{{--                    @include('pages.profile.items.edit.change-password')--}}
+{{--                    @include('pages.profile.edit.items.change-password')--}}
 
-{{--                    @include('pages.profile.items.edit.setting')--}}
+{{--                    @include('pages.profile.edit.items.setting')--}}
                 </ul>
             </div>
             <!--end::Toolbar-->
@@ -26,13 +26,13 @@
         <div class="card-body">
             <form class="form" id="kt_form">
                 <div class="tab-content">
-                    @include('pages.profile.tabs.edit.profile')
+                    @include('pages.profile.edit.tabs.profile')
 
-{{--                    @include('pages.profile.tabs.edit.account')--}}
+{{--                    @include('pages.profile.edit.tabs.account')--}}
 
-{{--                    @include('pages.profile.tabs.edit.change-password')--}}
+{{--                    @include('pages.profile.edit.tabs.change-password')--}}
 
-{{--                    @include('pages.profile.tabs.edit.setting')--}}
+{{--                    @include('pages.profile.edit.tabs.setting')--}}
                 </div>
             </form>
         </div>
