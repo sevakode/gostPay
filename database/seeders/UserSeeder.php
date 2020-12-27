@@ -6,6 +6,7 @@ use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -24,21 +25,20 @@ class UserSeeder extends Seeder
         User::truncate();
 
         $user1 = new User();
-        $user1->first_name = 'Jhon';
-        $user1->last_name = 'Deo';
-        $user1->email = 'jhon@deo.com';
-        $user1->password = bcrypt('secret');
-        $user1->role_id = $admin->id;
+        $user1->first_name = 'Developer';
+        $user1->last_name = '';
+        $user1->email = 'dev@dev.dev';
+        $user1->password = bcrypt('dev');
+        $user1->role_id = $developer->id;
         $user1->save();
-        $user1->givePermissionsTo($manageUsers->slug);
         $user1->permissions()->attach($createTasks);
 
         $user2 = new User();
-        $user2->first_name = 'Mike';
-        $user2->last_name = 'Thomas';
-        $user2->email = 'mike@thomas.com';
-        $user2->password = bcrypt('secret');
-        $user2->role_id = $developer->id;
+        $user2->first_name = 'Admin';
+        $user2->last_name = '';
+        $user2->email = 'admin@admin.admin';
+        $user2->password = bcrypt('admin');
+        $user2->role_id = $admin->id;
         $user2->save();
 
         $user2->permissions()->attach($manageUsers);

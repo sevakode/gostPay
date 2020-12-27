@@ -45,10 +45,28 @@ class User extends Authenticatable
     ];
 
     /**
+     * @param $value
      * @return string
      */
-    public function getFullname(): string
+    public function getFirstNameAttribute($value): string
+    {
+        return ucfirst($value);
+    }
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getLastNameAttribute($value): string
+    {
+        return ucfirst($value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute(): string
     {
         return "$this->first_name $this->last_name";
     }
+
 }
