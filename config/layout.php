@@ -78,7 +78,7 @@ return [
         'self' => [
             'display' => true,
             'width' => 'fluid', // fixed, fluid
-            'theme' => 'light', // light, dark
+            'theme' => 'dark', // light, dark
             'fixed' => [
                 'desktop' => true,
                 'mobile' => true
@@ -96,7 +96,7 @@ return [
                 'arrow' => true,
                 'toggle' => 'click',
                 'submenu' => [
-                    'theme' => 'light',
+                    'theme' => 'dark',
                     'arrow' => true,
                 ]
             ],
@@ -112,8 +112,8 @@ return [
 
     // Subheader
     'subheader' => [
-        'display' => true,
-        'displayDesc' => true,
+        'display' => false,
+        'displayDesc' => false,
         'layout' => 'subheader-v1',
         'fixed' => true,
         'width' => 'fluid', // fixed, fluid
@@ -144,7 +144,7 @@ return [
     'aside' => [
         'self' => [
             'theme' => 'dark', // light, dark
-            'display' => true,
+            'display' => false,
             'fixed' => true,
             'minimize' => [
                 'toggle' => true, // allow toggle
@@ -248,7 +248,7 @@ return [
 
         // Page Toolbar
         'toolbar' => [
-            'display' => true
+            'display' => false
         ],
 
         // Scrolltop

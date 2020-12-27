@@ -11,20 +11,18 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRolesAndPermissions;
 
-    public function __construct(array $attributes = [])
-    {
-        parent::__construct($attributes);
-    }
-
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'phone',
+        'role_id',
     ];
 
     /**
@@ -45,4 +43,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * @return string
+     */
+    public function getFullname(): string
+    {
+        return "$this->first_name $this->last_name";
+    }
 }

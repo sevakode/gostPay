@@ -48,7 +48,7 @@
 		{{-- Nav --}}
 		<div class="navi navi-spacer-x-0 p-0">
 		    {{-- Item --}}
-		    <a href="#" class="navi-item">
+		    <a href="{{ route('profile_show') }}" class="navi-item">
 		        <div class="navi-link">
 		            <div class="symbol symbol-40 bg-light mr-3">
 		                <div class="symbol-label">
@@ -57,11 +57,11 @@
 		            </div>
 		            <div class="navi-text">
 		                <div class="font-weight-bold">
-		                    My Profile
+		                    Мой профиль
 		                </div>
 		                <div class="text-muted">
-		                    Account settings and more
-		                    <span class="label label-light-danger label-inline font-weight-bold">update</span>
+		                   Настройки учетной записи и многое другое
+		                    <span class="label label-light-danger label-inline font-weight-bold">Обновить</span>
 		                </div>
 		            </div>
 		        </div>
