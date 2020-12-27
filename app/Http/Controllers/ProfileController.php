@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
-    public function edit()
-    {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
-
-        return view('pages.profile.edit', compact('page_title', 'page_description'));
-    }
-
     public function showPersonalInformation()
     {
         $page_title = 'Мой профиль';
@@ -37,13 +29,18 @@ class ProfileController extends Controller
         if($validator->fails())
             DataNotification::sendErrors($validator->errors()->unique());
         $validator->validate();
-
         $isSuccessUpdate = $request->user()->update([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
         ]);
+
+        $file = $request->file('profile_avatar');
+
+        if(isset($file))
+            $request->user()->saveImage($file, 'images/profile/avatar/small/');
+
 
         if($isSuccessUpdate) Notification::send($request->user(), DataNotification::success());
 

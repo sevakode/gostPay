@@ -15,7 +15,7 @@
         </div>
         <!--end::Header-->
         <!--begin::Form-->
-        <form class="form" id="form-update-personal" action="{{ route('profile_update') }}" method="POST">
+        <form class="form" id="form-update-personal" enctype="multipart/form-data" action="{{ route('profile_update') }}" method="POST">
             @csrf
             <!--begin::Body-->
             <div class="card-body">
