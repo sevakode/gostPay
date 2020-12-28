@@ -3,13 +3,14 @@
 namespace App\Models;
 
 use App\Traits\Imageable;
+use App\Traits\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, Imageable;
+    use HasFactory, Notifiable, HasRolesAndPermissions, Imageable;
 
     /**
      * The attributes that are mass assignable.
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
+        'role_id',
     ];
 
     /**
@@ -44,9 +46,26 @@ class User extends Authenticatable
     ];
 
     /**
+     * @param $value
      * @return string
      */
-    public function getFullnameAttribute(): string
+    public function getFirstNameAttribute($value): string
+    {
+        return ucfirst($value);
+    }
+    /**
+     * @param $value
+     * @return string
+     */
+    public function getLastNameAttribute($value): string
+    {
+        return ucfirst($value);
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullNameAttribute(): string
     {
         return "$this->first_name $this->last_name";
     }
