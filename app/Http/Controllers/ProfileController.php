@@ -39,8 +39,9 @@ class ProfileController extends Controller
         $file = $request->file('profile_avatar');
 
         if(isset($file))
-            $request->user()->saveImage($file, 'images/profile/avatar/small/');
-
+            $request->user()
+                ->image('avatar')
+                ->make($file, 'images/profile/avatar/original/');
 
         if($isSuccessUpdate) Notification::send($request->user(), DataNotification::success());
 

@@ -46,8 +46,16 @@ class User extends Authenticatable
     /**
      * @return string
      */
-    public function getFullname(): string
+    public function getFullnameAttribute(): string
     {
         return "$this->first_name $this->last_name";
     }
+
+    public function getAvatarAttribute(): string
+    {
+//        dd($this->getImage('avatar')->attributes['small']);
+        return $this->getImage('avatar')->attributes['small'] ?? '';
+    }
+
+
 }

@@ -1,37 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca653c01-7342-4c80-8aa7-8d9760065539" name="Default Changelist" comment="Регистрация - Ajax&#10;Авторизация - Ajax&#10;Проверка на авторизированных пользователей - middleware&#10;Шаблон с ошбками - views&#10;Шаблон Профиль - views &#10;Шаблон Авторизации - views&#10;Vue - JS&#10;...">
-      <change afterPath="$PROJECT_DIR$/public/js/notifications.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside/navbar.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside/toolbar.blade.php" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/content.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_12_2020_2_49__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_12_2020_2_49__Default_Changelist_.xml" afterDir="false" />
+    <list default="true" id="ca653c01-7342-4c80-8aa7-8d9760065539" name="Default Changelist" comment="migrate">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_12_2020_16_18__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_12_2020_16_18__Default_Changelist_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Classes/Theme/Metronic.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Classes/Theme/Metronic.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ProfileController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ProfileController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Image.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/ImagesMany.php" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/style.bundle.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/style.bundle.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/metronic/js/vendors/plugins/bootstrap-notify.init.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/metronic/js/vendors/plugins/bootstrap-notify.init.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/layout/default.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layout/default.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Traits/Imageable.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/Imageable.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2020_12_27_144349_create_images_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_12_27_144349_create_images_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2020_12_27_173910_create_images_manies_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_12_27_173910_create_images_manies_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/profile/avatar/small/Rsb4OCvZeLPI35gP.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/images/profile/avatar/small/am0zwrTnopVHn42T.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/views/layout/partials/extras/offcanvas/_quick-user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layout/partials/extras/offcanvas/_quick-user.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/dashboard.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/dashboard.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/login/default.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/login/default.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/login/forms/login.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/login/forms/login.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/edit.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/items/edit/account.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/items/account.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/items/edit/change-password.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/items/change-password.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/items/edit/profile.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/items/profile.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/items/edit/setting.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/items/setting.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/tabs/edit/account.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/tabs/account.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/tabs/edit/change-password.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/tabs/change-password.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/tabs/edit/profile.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/tabs/profile.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/tabs/edit/setting.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/edit/tabs/setting.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/personal/content.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/content.blade.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,7 +36,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="dev-view_profile" />
+        <entry key="$PROJECT_DIR$" value="master" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -165,6 +149,7 @@
       <path value="$PROJECT_DIR$/vendor/ramsey/collection" />
       <path value="$PROJECT_DIR$/vendor/psy/psysh" />
       <path value="$PROJECT_DIR$/vendor/laravel/ui" />
+      <path value="$PROJECT_DIR$/vendor/intervention/image" />
     </include_path>
   </component>
   <component name="ProjectId" id="1m7odLCc2miQipKfKTg9fg7c5YL" />
@@ -198,11 +183,11 @@
       <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\items\edit" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Models\Image" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\edit\tabs" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\edit\items" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\edit" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\login" />
     </key>
   </component>
   <component name="RunManager">
@@ -222,6 +207,7 @@
       <workItem from="1608854078795" duration="17977000" />
       <workItem from="1608910417014" duration="40486000" />
       <workItem from="1609001109847" duration="20401000" />
+      <workItem from="1609128241070" duration="13538000" />
     </task>
     <task id="LOCAL-00001" summary="Шаблон авторизации. Шаблон Профиля. Миддлвар auth, роут с профилем и логином. Изменения в теме">
       <created>1608864470421</created>
@@ -251,7 +237,14 @@
       <option name="project" value="LOCAL" />
       <updated>1608941094708</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="migrate">
+      <created>1609091232011</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1609091232013</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

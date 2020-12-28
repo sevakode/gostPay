@@ -1,43 +1,118 @@
 <?php namespace App\Traits;
 
-use App\Models\User;
 use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image;
 
 trait Imageable
 {
-    private imageable;
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
-     * @var $this User
+     * Создает связь между Моделью и Image
+     *
+     * @return $this
      */
-    public function image()
+    public function image($type)
     {
-        return $this->morphMany(\App\Models\Image::class, 'imageable')->select('*');
+        $this->attributes['type'] = $type;
+        $this->attributes['imageable'] = $this->morphMany(\App\Models\Image\Image::class, 'imageable')
+            ->select('*')->where('type', $type);
+        return $this;
     }
 
-    public function images()
+    /**
+     * Создает связь между Моделью и ImagesMany
+     *
+     * @return $this
+     */
+    public function images($type)
     {
-        $this->attributes  = $this->morphMany(\App\Models\ImagesMany::class, 'imageable')->select('*');
-        return
+        $this->attributes['type'] = $type;
+        $this->attributes['imageable'] = $this->morphMany(\App\Models\Image\ImagesMany::class, 'imageable')
+            ->select('*')->where('type', $type);
+
+        return $this;
     }
 
-    public function saveImage($file, $path = '')
+    /**
+     * Создает или обновляет изображения для модели
+     *
+     * @param $file
+     * @param string $dirpath
+     * @return mixed
+     */
+    public function make($file, $dirpath = '')
     {
         $filename = Str::random(). '.' .$file->extension();
-        $dirpath = $path;
-        $basepath = public_path($path) . $filename;
+        $basepath = public_path($dirpath) . $filename;
         $filepath = $dirpath.$filename;
 
-        $this->ifDirEmpty($dirpath);
+        $this->mkdirIfEmpty($dirpath);
 
         Image::make($file)->save($basepath);
+        $result = $this->imageable
+            ->updateOrCreate([
+                    'type' => $this->type,
+                    'imageable_id' => $this->id
+                ], [
+                    'original' => $filepath,
+                ]);
 
-        return $this->images()->updateOrCreate(['image_original' => asset($filepath)]);
+        return $result;
     }
 
-    private function ifDirEmpty($path)
+    /**
+     * Возвращает модель с изображением
+     *
+     * @param null $type
+//     * @return \App\Models\Image\Image
+     */
+    public function getImage($type = null)
+    {
+        if($type) $this->image($type);
+        return $this->imageable->first();
+    }
+
+    /**
+     * Возвращает модель с изображениями
+     *
+     * @param null $type
+//     * @return ImagesMany
+     */
+    public function getImages($type = null)
+    {
+        if($type) $this->image($type);
+
+        return $this->imageable->get();
+    }
+
+    /**
+     * Проверяет и создает нужную директорию для файла
+     *
+     * @param $path
+     */
+    private function mkdirIfEmpty($path)
     {
         if(!file_exists($path)) mkdir($path, 0777, true);
+    }
+
+    /**
+     * Если Модель с одним изображением
+     *
+     * @return bool
+     */
+    public function isImageOne(): bool
+    {
+        $isClass = $this->attributes['imageable']->getRelated() instanceof \App\Models\Image\Image;
+        $isObject = $this->attributes['imageable']->exists();
+
+        return $isClass and $isObject;
+    }
+
+    /**
+     * Если Модель имеет несколько изображений одного типа
+     * @return bool
+     */
+    public function isImageMany()
+    {
+        return $this->attributes['imageable']->getRelated() instanceof \App\Models\Image\ImagesMany;
     }
 }

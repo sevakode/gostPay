@@ -6,8 +6,8 @@
 	{{-- Header --}}
 	<div class="offcanvas-header d-flex align-items-center justify-content-between pb-5">
 		<h3 class="font-weight-bold m-0">
-			User Profile
-			<small class="text-muted font-size-sm ml-2">12 messages</small>
+			Профиль пользователя
+			<small class="text-muted font-size-sm ml-2">12 Сообщений</small>
 		</h3>
 		<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">
 			<i class="ki ki-close icon-xs text-muted"></i>
@@ -19,23 +19,28 @@
 		{{-- Header --}}
         <div class="d-flex align-items-center mt-5">
             <div class="symbol symbol-100 mr-5">
-                <div class="symbol-label" style="background-image:url('{{ asset('media/users/300_21.jpg') }}')"></div>
+                <div class="symbol-label"
+                     style="background-image:url('{{ asset(\Illuminate\Support\Facades\Auth::user()->avatar) }}')"></div>
 				<i class="symbol-badge bg-success"></i>
             </div>
             <div class="d-flex flex-column">
                 <a href="#" class="font-weight-bold font-size-h5 text-dark-75 text-hover-primary">
-					James Jones
+					{{ \Illuminate\Support\Facades\Auth::user()->fullname }}
 				</a>
-                <div class="text-muted mt-1">
-                    Application Developer
-                </div>
+                @isset(\Illuminate\Support\Facades\Auth::user()->role)
+                    <div class="text-muted mt-1">
+                        {{ \Illuminate\Support\Facades\Auth::user()->role->name }}
+                    </div>
+                @endisset
                 <div class="navi mt-2">
                     <a href="#" class="navi-item">
                         <span class="navi-link p-0 pb-2">
                             <span class="navi-icon mr-1">
 								{{ Metronic::getSVG("media/svg/icons/Communication/Mail-notification.svg", "svg-icon-lg svg-icon-primary") }}
 							</span>
-                            <span class="navi-text text-muted text-hover-primary">jm@softplus.com</span>
+                            <span class="navi-text text-muted text-hover-primary">
+                                {{ \Illuminate\Support\Facades\Auth::user()->email }}
+                            </span>
                         </span>
                     </a>
                 </div>
@@ -77,10 +82,10 @@
 				   	</div>
 		            <div class="navi-text">
 		                <div class="font-weight-bold">
-		                    My Messages
+		                    Мои сообщения
 		                </div>
 		                <div class="text-muted">
-		                    Inbox and tasks
+		                    Входящие и задачи
 		                </div>
 		            </div>
 		        </div>
@@ -96,10 +101,10 @@
 				   	</div>
 		            <div class="navi-text">
 		                <div class="font-weight-bold">
-		                    My Activities
+		                    Моя деятельность
 		                </div>
 		                <div class="text-muted">
-		                    Logs and notifications
+		                    Журналы и уведомления
 		                </div>
 		            </div>
 		        </div>
@@ -115,10 +120,10 @@
 				   	</div>
 		            <div class="navi-text">
 		                <div class="font-weight-bold">
-		                    My Tasks
+		                    Мои задачи
 		                </div>
 		                <div class="text-muted">
-		                    latest tasks and projects
+		                    Последние задачи и проекты
 		                </div>
 		            </div>
 		        </div>
@@ -132,7 +137,7 @@
 		<div>
 			{{-- Heading --}}
         	<h5 class="mb-5">
-            	Recent Notifications
+            	Недавние уведомления
         	</h5>
 
 			{{-- Item --}}
@@ -142,8 +147,8 @@
 	            </span>
 
 	            <div class="d-flex flex-column flex-grow-1 mr-2">
-	                <a href="#" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">Another purpose persuade</a>
-	                <span class="text-muted font-size-sm">Due in 2 Days</span>
+	                <a href="#" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">Другая цель убедить</a>
+	                <span class="text-muted font-size-sm">Срок в 2 дня</span>
 	            </div>
 
 	            <span class="font-weight-bolder text-warning py-1 font-size-lg">+28%</span>
