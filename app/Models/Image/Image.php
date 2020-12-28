@@ -26,8 +26,8 @@ class Image extends Model
     public function setOriginalAttribute($value)
     {
         $this->attributes['original'] = $this->updateOriginal($value);
+        $this->attributes['medium'] = $this->updateMedium($value);
         $this->attributes['small'] = $this->updateSmall($value);
-        $this->attributes['original'] = null;
         $this->attributes['original'] = null;
     }
 
@@ -43,7 +43,17 @@ class Image extends Model
         return $value;
     }
 
+    private function updateMedium($value): string
+    {
+        return $this->updateImage($value, $this->attributes['medium'], 300, 300);
+    }
+
     private function updateSmall($value): string
+    {
+        return $this->updateImage($value, $this->attributes['small'], 100, 100);
+    }
+
+    private function updateImage($value, $attribute, $width, $height)
     {
         $file = new File($value);
         $dirpath = str_replace('original', 'small/',$file->getPath());
@@ -56,12 +66,12 @@ class Image extends Model
             $constraint->aspectRatio();
         };
 
-        if($this->attributes['original'] and file_exists(public_path($this->attributes['small']))){
-            \Intervention\Image\Facades\Image::make(new File($this->attributes['small']))->destroy();
+        if($attribute and file_exists(public_path($attribute))){
+            \Intervention\Image\Facades\Image::make(new File($attribute))->destroy();
             $this->recursiveRemoveAllFiles($file->getPath());
         }
 
-        $small = $image->resize(300, 300, $aspectRatio)->save($dirpath . $filename);
+        $small = $image->resize($width, $height, $aspectRatio)->save($dirpath . $filename);
         return $small->basePath();
     }
 

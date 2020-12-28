@@ -51,9 +51,23 @@ class User extends Authenticatable
         return "$this->first_name $this->last_name";
     }
 
+    /**
+     * @return string
+     */
+    public function getShortnameAttribute(): string
+    {
+        $first = $this->first_name[0] ?? '';
+        $last = $this->last_name[0] ?? '';
+        return strtoupper("$first $last");
+    }
+
     public function getAvatarAttribute(): string
     {
-//        dd($this->getImage('avatar')->attributes['small']);
+        return $this->getImage('avatar')->attributes['medium'] ?? '';
+    }
+
+    public function getAvatarSmallAttribute(): string
+    {
         return $this->getImage('avatar')->attributes['small'] ?? '';
     }
 
