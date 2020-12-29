@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
 use App\Traits\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRolesAndPermissions, Imageable;
+    use HasFactory, Notifiable, HasRolesAndPermissions, HasCompanyAndPermissions, Imageable;
 
     /**
      * The attributes that are mass assignable.

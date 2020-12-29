@@ -1,7 +1,11 @@
 <?php
 
+use App\Classes\TochkaBank\TochkaBank;
+use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TochkaBankController;
+use App\Models\Bank\BankToken;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +47,17 @@ Route::middleware('auth')->group(function () {
     Route::prefix(RouteServiceProvider::PROFILE)->group(function () {
         Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
         Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update');
+    });
+
+    Route::prefix(RouteServiceProvider::MANAGER)->group(function () {
+        Route::get('/', [ManagerController::class, 'devManager'])->name('manager_dev');
+        Route::get('/', [ManagerController::class, 'dashboard'])->name('dashboard');
+        Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update');
+    });
+
+    Route::prefix('api')->group(function () {
+//        Route::get('register', [TochkaBankController::class, 'register']);
+//        Route::get('tauth', [TochkaBankController::class, 'tokenAuth']);
     });
 
     // Quick search dummy route to display html elements in search dropdown (header search)

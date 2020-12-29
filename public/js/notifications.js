@@ -1,5 +1,10 @@
 $(window).load(realTime());
 function realTime() {
+    sendNotification();
+    setTimeout(realTime, 6000);
+}
+
+function sendNotification() {
     $.ajax({
         type:'post',
         url:'/send-notification',
@@ -9,11 +14,9 @@ function realTime() {
         },
         success: function (data) {
             messageNotify(data);
-            setTimeout(realTime, 6000);
         },
         error: function (data) {
             messageNotify(data);
-            setTimeout(realTime, 6000);
         }
     });
 }

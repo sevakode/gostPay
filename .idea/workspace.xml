@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ca653c01-7342-4c80-8aa7-8d9760065539" name="Default Changelist" comment="migrate">
+    <list default="true" id="ca653c01-7342-4c80-8aa7-8d9760065539" name="Default Changelist" comment="Role v0.3">
+      <change afterPath="$PROJECT_DIR$/app/Classes/TochkaBank/BankAPI.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Classes/TochkaBank/Traits/ConnectBanking.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Classes/TochkaBank/Traits/OpenBanking.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Console/UpdateTochkaBank.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/ManagerController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Controllers/TochkaBankController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/Bank/BankToken.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Models/Company.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Traits/HasCompanyAndPermissions.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2020_08_02_000000_create_bank_token_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2020_12_29_133009_create_companies_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/migrations/2020_12_29_133813_create_companies_permissions_table.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/CompanySeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/database/seeders/TochkaBankSeeder.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/modules/features/miscellaneous/dual_listbox/default.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/pages/manager/dashboard.blade.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/views/pages/manager/dev.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/pay.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pay.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_12_2020_16_18__Default_Changelist_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_27_12_2020_16_18__Default_Changelist_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ProfileController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ProfileController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/Image.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Models/ImagesMany.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Models/Permission.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Permission.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/Traits/Imageable.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Traits/Imageable.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_12_27_144349_create_images_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_12_27_144349_create_images_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2020_12_27_173910_create_images_manies_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2020_12_27_173910_create_images_manies_table.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/profile/avatar/small/Rsb4OCvZeLPI35gP.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/images/profile/avatar/small/am0zwrTnopVHn42T.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/layout/partials/extras/offcanvas/_quick-user.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/layout/partials/extras/offcanvas/_quick-user.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/aside.blade.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/pages/profile/personal/content.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/pages/profile/personal/content.blade.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Providers/RouteServiceProvider.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/app.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/app.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2014_10_12_000000_create_users_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/seeders/DatabaseSeeder.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/notifications.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/notifications.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/pages/custom/education/school/students.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/pages/custom/education/school/students.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,6 +168,7 @@
       <path value="$PROJECT_DIR$/vendor/psy/psysh" />
       <path value="$PROJECT_DIR$/vendor/laravel/ui" />
       <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/ancientpenguin/tochkabankapi" />
     </include_path>
   </component>
   <component name="ProjectId" id="1m7odLCc2miQipKfKTg9fg7c5YL" />
@@ -165,7 +184,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/resources/views/pages/errors" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Classes/TochkaBank/Traits" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -176,18 +195,18 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\errors" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\errors" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\lang" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\public\plugins" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\items\edit" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes\TochkaBank\Traits" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes\TochkaBank" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Http\Controllers" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\database\migrations" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes\TochkaBank\Traits" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Models\Bank" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes\TochkaBank" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\app\Models\Image" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\edit\tabs" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\edit\items" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\profile\edit" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages" />
     </key>
   </component>
   <component name="RunManager">
@@ -208,6 +227,9 @@
       <workItem from="1608910417014" duration="40486000" />
       <workItem from="1609001109847" duration="20401000" />
       <workItem from="1609128241070" duration="13538000" />
+      <workItem from="1609150996699" duration="5581000" />
+      <workItem from="1609199497422" duration="84000" />
+      <workItem from="1609208535926" duration="43548000" />
     </task>
     <task id="LOCAL-00001" summary="Шаблон авторизации. Шаблон Профиля. Миддлвар auth, роут с профилем и логином. Изменения в теме">
       <created>1608864470421</created>

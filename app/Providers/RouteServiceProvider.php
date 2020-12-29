@@ -31,11 +31,18 @@ class RouteServiceProvider extends ServiceProvider
     public const LOGIN = '/login';
 
     /**
-     * The path to the "login" route for your application.
+     * The path to the "profile" route for your application.
      *
      * @var string
      */
     public const PROFILE = '/profile';
+
+    /**
+     * The path to the "manager" route for your application.
+     *
+     * @var string
+     */
+    public const MANAGER = '/manager';
 
     /**
      * Define your route model bindings, pattern filters, etc.

@@ -13,4 +13,9 @@ class Permission extends Model
     {
         return $this->belongsToMany(Role::class, 'roles_permissions');
     }
+
+    public function companies(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Company::class, 'companies_permissions');
+    }
 }
