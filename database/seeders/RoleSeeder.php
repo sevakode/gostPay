@@ -15,14 +15,18 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        $role = new Role();
-        $role->name = 'Admin';
-        $role->slug = Str::slug($role->name);
-        $role->save();
+        foreach (Role::ALL as $permission)
+        {
+            $name = $permission[0];
+            $slug = $permission[1] ?? false;
 
-        $role = new Role();
-        $role->name = 'Developer';
-        $role->slug = Str::slug($role->name);
-        $role->save();
+            $role = new Role();
+            $role->name = $name;
+
+            if($slug) {
+                $role->slug = $slug;
+            }
+            $role->save();
+        }
     }
 }

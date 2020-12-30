@@ -95,4 +95,14 @@ trait HasRolesAndPermissions
         $this->permissions()->detach();
         return $this->givePermissionsTo($permissions);
     }
+
+    public function getRolesListForPermissions()
+    {
+        $roles = collect();
+        foreach ($this->permissions()->select('id')->get() as $permission) {
+            $roles = $roles->merge($permission->roles()->get());
+        }
+
+        return $roles;
+    }
 }

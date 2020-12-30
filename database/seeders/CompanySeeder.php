@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Company;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -15,14 +16,6 @@ class CompanySeeder extends Seeder
      */
     public function run()
     {
-        $role = new Company();
-        $role->name = 'Company 1';
-        $role->slug = Str::slug($role->name);
-        $role->save();
-
-        $role = new Company();
-        $role->name = 'Company 2';
-        $role->slug = Str::slug($role->name);
-        $role->save();
+        $company = Company::factory(2)->create();
     }
 }

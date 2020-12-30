@@ -9,6 +9,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+
+/**
+ * Class User
+ * @package App\Models
+ * @property $first_name
+ * @property $last_name
+ * @property $email
+ * @property $password
+ * @property $phone
+ * @property $role_id
+ * @property $company_id
+ * @property Company $company
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable, HasRolesAndPermissions, HasCompanyAndPermissions, Imageable;
@@ -25,6 +38,7 @@ class User extends Authenticatable
         'password',
         'phone',
         'role_id',
+        "company_id",
     ];
 
     /**
@@ -89,6 +103,16 @@ class User extends Authenticatable
     public function getAvatarSmallAttribute(): string
     {
         return $this->getImage('avatar')->attributes['small'] ?? '';
+    }
+
+    public function getCompanyAttribute()
+    {
+        return $this->company()->first();
+    }
+
+    public function getRoleAttribute()
+    {
+        return $this->role()->first();
     }
 
 

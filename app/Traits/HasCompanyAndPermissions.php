@@ -2,6 +2,7 @@
 
 use App\Models\Company;
 use App\Models\Permission;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -21,6 +22,11 @@ trait HasCompanyAndPermissions
     public function companyPermissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->company()->first()->permissions();
+    }
+
+    public function companyUsers()
+    {
+        return self::where('company_id', $this->company_id)->where('id', '!=', $this->id)->get();
     }
 
     /** Для проверки прав доступа текущего компании

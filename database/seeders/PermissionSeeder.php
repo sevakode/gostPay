@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class PermissionSeeder extends Seeder
 {
@@ -15,15 +14,19 @@ class PermissionSeeder extends Seeder
      */
     public function run()
     {
-//        Permission::truncate();
-        $permission = new Permission();
-        $permission->name = 'test 1';
-        $permission->slug = Str::slug($permission->name);
-        $permission->save();
+        foreach (Permission::ALL as $permissionList)
+        {
+            $name = $permissionList[0];
+            $slug = $permissionList[1] ?? false;
 
-        $permission = new Permission();
-        $permission->name = 'test 2';
-        $permission->slug = Str::slug($permission->name);
-        $permission->save();
+            $permission = new Permission();
+            $permission->name = $name;
+
+            if($slug) {
+                $permission->slug = $slug;
+            }
+            $permission->save();
+        }
+
     }
 }

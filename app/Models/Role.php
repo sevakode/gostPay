@@ -10,15 +10,36 @@ class Role extends Model
 {
     use HasFactory;
 
+    const
+        OWNER = [
+        'Owner'
+    ],
+        MANAGER = [
+        'Manager'
+    ],
+        USER = [
+        'User'
+    ];
+
+    const ALL = [ self::OWNER, self::MANAGER, self::USER ];
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'slug'
         ];
+
+    public static function getSlug($array)
+    {
+        $slug = $array[1] ?? Str::slug($array[0]);
+
+        return self::where('slug', $slug)->first();
+    }
 
     public function permissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
@@ -32,6 +53,8 @@ class Role extends Model
     public function setNameAttribute($value): void
     {
         $this->attributes['name'] = $value;
-        $this->attributes['slug'] = Str::slug($value);
+
+        if(!isset($this->attributes['slug']))
+            $this->attributes['slug'] = Str::slug($value);
     }
 }
