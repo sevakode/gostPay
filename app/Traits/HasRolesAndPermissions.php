@@ -5,6 +5,7 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 
 /**
  * Trait HasRolesAndPermissions
@@ -29,7 +30,7 @@ trait HasRolesAndPermissions
     public function hasRole(string ... $roles): bool
     {
         foreach ($roles as $role)
-            if($this->role()->slug === $role) return true;
+            if($this->role()->first()->slug === Str::slug($role)) return true;
 
         return false;
     }
@@ -40,7 +41,7 @@ trait HasRolesAndPermissions
      */
     public function hasPermission(string $permission): bool
     {
-        return (bool) $this->permissions()->where('slug', $permission)->count();
+        return (bool) $this->permissions()->where('slug', Str::slug($permission))->count();
     }
 
     /** Метод проверяет, содержат ли права пользователя заданное право
@@ -103,6 +104,12 @@ trait HasRolesAndPermissions
             $roles = $roles->merge($permission->roles()->get());
         }
 
-        return $roles;
+        return $roles->unique('id');
+    }
+
+    public function setRole($roleId)
+    {
+        $this->role_id = $roleId;
+        $this->save();
     }
 }

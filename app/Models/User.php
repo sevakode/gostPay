@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Bank\Card;
 use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
 use App\Traits\HasRolesAndPermissions;
@@ -59,6 +60,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function cards()
+    {
+        return $this->hasOne(Card::class);
+    }
 
     /**
      * @param $value

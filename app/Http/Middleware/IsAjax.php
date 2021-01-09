@@ -21,7 +21,7 @@ class IsAjax
             return $next($request);
         return response()->view('pages.errors.error-1', [
             'code' => 500,
-            'message' => 'Упс! Здесь что-то пошло не так'
+            'message' => 'У вас недостаточно прав!'
         ]);
     }
 }

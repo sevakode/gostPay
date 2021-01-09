@@ -26,7 +26,7 @@ trait HasCompanyAndPermissions
 
     public function companyUsers()
     {
-        return self::where('company_id', $this->company_id)->where('id', '!=', $this->id)->get();
+        return self::where('company_id', $this->company_id)->where('id', '!=', $this->id);
     }
 
     /** Для проверки прав доступа текущего компании

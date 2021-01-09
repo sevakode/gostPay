@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
 use App\Models\Role;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -15,10 +17,11 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        foreach (Role::ALL as $permission)
+        foreach (Role::ALL as $role)
         {
-            $name = $permission[0];
-            $slug = $permission[1] ?? false;
+            $name = $role['title'];
+            $slug = $role['slug'] ?? false;
+            $permissions = $role['permissions'] ?? [];
 
             $role = new Role();
             $role->name = $name;
@@ -26,7 +29,13 @@ class RoleSeeder extends Seeder
             if($slug) {
                 $role->slug = $slug;
             }
+
             $role->save();
+
+            foreach ($permissions as $permission) {
+                $permission = Permission::getSlug($permission);
+                $role->permissions()->attach($permission);
+            }
         }
     }
 }

@@ -68,6 +68,7 @@ License: You must have a valid license purchased only from themeforest(the above
         @foreach (Metronic::initScripts() as $script) <script src="{{asset($script)}}"></script> @endforeach
 
         {{-- Includable JS --}}
+
         @yield('scripts')
 
     </body>

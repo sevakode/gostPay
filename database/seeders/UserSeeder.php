@@ -20,19 +20,9 @@ class UserSeeder extends Seeder
     {
         $testCompany = Company::all()->first();
 
-
-        $managerRoleSet = Permission::getSlug(Permission::MANAGER_ROLE_SET);//Permission::OWNER
-        $ownerPermission = Permission::getSlug(Permission::OWNER);
-
-        $managerRole = Role::getSlug(Role::MANAGER);
-        $userRole = Role::getSlug(Role::USER);
         $ownerRole = Role::getSlug(Role::OWNER);
-
-        $ownerRole->permissions()->attach($managerRoleSet);
-        $ownerRole->permissions()->attach($ownerPermission);
-        $managerRole->permissions()->attach($managerRoleSet);
-
-        $managerRoleSet->roles()->attach($userRole);
+        $adminRole = Role::getSlug(Role::ADMIN);
+        $userRole = Role::getSlug(Role::USER);
 
         User::truncate();
 
@@ -50,7 +40,7 @@ class UserSeeder extends Seeder
         $user2->last_name = '';
         $user2->email = 'admin@admin.admin';
         $user2->password = bcrypt('admin');
-        $user2->role_id = $ownerRole->id;
+        $user2->role_id = $adminRole->id;
         $user2->save();
 
 

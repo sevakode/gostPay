@@ -19,8 +19,20 @@ class ProfileController extends Controller
         $page_description = 'Настройки учетной записи и многое другое';
 
         $user = Auth::user();
+        $cards = $user->cards()->get();
 
-        return view('pages.profile.personal', compact('page_title', 'page_description', 'user'));
+        return view('pages.profile.personal', compact('page_title', 'page_description', 'user', 'cards'));
+    }
+
+    public function showCards()
+    {
+        $page_title = 'Мой профиль';
+        $page_description = 'Настройки учетной записи и многое другое';
+
+        $user = Auth::user();
+        $cards = $user->cards()->get();
+
+        return view('pages.profile.cards', compact('page_title', 'page_description', 'user', 'cards'));
     }
 
     public function updatePersonalInformation(Request $request)

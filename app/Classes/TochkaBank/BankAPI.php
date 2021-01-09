@@ -2,6 +2,7 @@
 
 use App\Classes\TochkaBank\Traits\ConnectBanking;
 use App\Classes\TochkaBank\Traits\OpenBanking;
+use App\Models\Bank\BankToken;
 use Illuminate\Support\Facades\Log;
 
 class BankAPI
@@ -13,6 +14,11 @@ class BankAPI
     public function __construct($bank)
     {
         $this->bank = $bank;
+    }
+
+    public static function make(): BankAPI
+    {
+        return new BankAPI(BankToken::all()->first());
     }
 
 	protected function send($uri, $headers = null, $body = null)

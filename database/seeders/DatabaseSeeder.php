@@ -18,9 +18,12 @@ class DatabaseSeeder extends Seeder
 //        dd(User::all()->first()->role->name);
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
+        $this->call(RegistrationRoleAndPermissionSeeder::class);
         $this->call(CompanySeeder::class);
         $this->call(UserSeeder::class);
 
         $this->call(TochkaBankSeeder::class);
+        $this->call(CardSeeder::class);
+        $this->call(PaymentSeeder::class);
     }
 }

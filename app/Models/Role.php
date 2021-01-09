@@ -2,26 +2,14 @@
 
 namespace App\Models;
 
+use App\Interfaces\OptionsRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Role extends Model
+class Role extends Model implements OptionsRole
 {
     use HasFactory;
-
-    const
-        OWNER = [
-        'Owner'
-    ],
-        MANAGER = [
-        'Manager'
-    ],
-        USER = [
-        'User'
-    ];
-
-    const ALL = [ self::OWNER, self::MANAGER, self::USER ];
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +24,7 @@ class Role extends Model
 
     public static function getSlug($array)
     {
-        $slug = $array[1] ?? Str::slug($array[0]);
+        $slug = $array['slug'] ?? Str::slug($array['title']);
 
         return self::where('slug', $slug)->first();
     }

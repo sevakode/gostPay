@@ -2,26 +2,14 @@
 
 namespace App\Models;
 
+use App\Interfaces\OptionsPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-class Permission extends Model
+class Permission extends Model implements OptionsPermissions
 {
     use HasFactory;
-
-    const
-        OWNER = [
-        'Owner'
-    ],
-        MANAGER_ROLE_SET = [
-        'Manager role set'
-    ];
-
-    const ALL = [
-        self::OWNER,
-        self::MANAGER_ROLE_SET
-    ];
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +24,7 @@ class Permission extends Model
 
     public static function getSlug($array)
     {
-        $slug = $array[1] ?? Str::slug($array[0]);
+        $slug = $array['slug'] ?? Str::slug($array['title']);
 
         return self::where('slug', $slug)->first();
     }

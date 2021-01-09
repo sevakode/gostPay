@@ -81,9 +81,9 @@ trait OpenBanking
      * @param string $accountId
      * @return object
      */
-    public function getBalanceInfo(string $accountId): object
+    public function getBalanceInfo(string $accountId)
     {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId;
+        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/balances';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
@@ -415,6 +415,27 @@ trait OpenBanking
     /**
      * Метод получения статуса платежа
      *https://enter.tochka.com/uapi/payment/{apiVersion}/for-sign
+     * @param string $requestId
+     * @param $accountCode
+     * @param $bankCode
+     * @param $counterpartyBankBic
+     * @param $counterpartyAccountNumber
+     * @param $counterpartyINN
+     * @param $counterpartyName
+     * @param $paymentAmount
+     * @param $paymentDate
+     * @param $paymentNumber
+     * @param $paymentPurpose
+     * @param string $counterpartyKPP
+     * @param string $paymentPriority
+     * @param string $supplierBillId
+     * @param string $taxInfoDocumentDate
+     * @param string $taxInfoDocumentNumber
+     * @param string $taxInfoKBK
+     * @param string $taxInfoOKATO
+     * @param string $taxInfoPeriod
+     * @param string $taxInfoReasonCode
+     * @param string $taxInfoStatus
      * @return object
      */
     public function createPaymentForSign(

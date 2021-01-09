@@ -4,8 +4,8 @@ use App\Classes\TochkaBank\TochkaBank;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\TochkaBankController;
-use App\Models\Bank\BankToken;
+use App\Interfaces\OptionsPermissions;
+use App\Interfaces\OptionsRole;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -24,13 +24,18 @@ Route::post('/send-notification', [NotificationController::class, 'sendMessageNo
 
 Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login/sign-in', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('sign_in')->middleware('isAjax');
-Route::get('/login/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 Route::post('/login/sign-up', [\App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('sign_up')->middleware('isAjax');;
 
 
 // Demo routes
 Route::middleware('auth')->group(function () {
+
+    Route::prefix('datatables')->group(function () {
+        Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])->name('datatables.company-cards');
+        Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])->name('datatables.user-cards');
+    });
 
     Route::get('/', 'PagesController@index')->name('home');
     Route::get('/datatables', 'PagesController@datatables');
@@ -44,15 +49,29 @@ Route::middleware('auth')->group(function () {
     Route::get('/icons/socicons', 'PagesController@socicons');
     Route::get('/icons/svg', 'PagesController@svg');
 
-    Route::prefix(RouteServiceProvider::PROFILE)->group(function () {
+    Route::prefix(RouteServiceProvider::PROFILE)
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['title'])
+        ->group(function () {
         Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
+        Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
         Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update');
     });
 
-    Route::prefix(RouteServiceProvider::MANAGER)->group(function () {
-        Route::get('/', [ManagerController::class, 'devManager'])->name('manager_dev');
+    Route::prefix(RouteServiceProvider::MANAGER)
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title'])
+        ->group(function () {
         Route::get('/', [ManagerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/user/{id}/cards', [ManagerController::class, 'user'])->name('user_cards');
         Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update');
+        Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update');
+    });
+    Route::prefix('/bank')
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title'])
+        ->group(function () {
+        Route::get('cards', [\App\Http\Controllers\CardController::class, 'cards'])->name('cards');
+        Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
     });
 
     Route::prefix('api')->group(function () {
@@ -60,6 +79,5 @@ Route::middleware('auth')->group(function () {
 //        Route::get('tauth', [TochkaBankController::class, 'tokenAuth']);
     });
 
-    // Quick search dummy route to display html elements in search dropdown (header search)
     Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');
 });
