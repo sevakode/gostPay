@@ -71,6 +71,7 @@
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
+                        timeout: 60000,
                         map: function map(raw) {
                             var dataSet = raw;
                             if (typeof raw.data !== 'undefined') {

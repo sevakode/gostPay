@@ -46,7 +46,7 @@
                 </div>
             </div>
             @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))
-            <div class="col-lg-1 col-xl-2">
+            <div class="col-lg-1 col-xl-2" style="padding-left: 0px; padding-right: 0px;">
                 <a href="#" id="remove-cards" class="btn btn-light-danger px-6 font-weight-bold">Отсоединить</a>
             </div>
             @endif
@@ -79,6 +79,7 @@
                         params: {
                             id: {{ $user->id }},
                         },
+                        timeout: 60000,
                         map: function map(raw) {
                             var dataSet = raw;
                             if (typeof raw.data !== 'undefined') {
