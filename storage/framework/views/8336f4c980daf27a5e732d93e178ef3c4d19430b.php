@@ -1,3 +1,9 @@
+
+
+
+
+
+
 <?php $__env->startSection('content'); ?>
     <div class="d-flex flex-row">
         <div class="flex-md-row-auto w-md-275px w-xl-325px">

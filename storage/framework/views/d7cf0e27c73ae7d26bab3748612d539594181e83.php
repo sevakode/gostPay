@@ -1,3 +1,7 @@
+
+
+
+
 <?php $__env->startSection('content-widget'); ?>
     <div class="card card-custom card-stretch gutter-b">
         <!--begin::Header-->
