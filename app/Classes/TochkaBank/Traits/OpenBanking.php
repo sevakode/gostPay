@@ -21,7 +21,7 @@ trait OpenBanking
      *
      * @return object
      */
-    public function getAccountsList(): object
+    public function getAccountsList()
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts';
         $headers = [
@@ -143,7 +143,7 @@ trait OpenBanking
      * @var string $startDateTime
      * @var string $endDateTime
      */
-    public function initStatement(string $accountId, $startDateTime = '2020-08-01', $endDateTime = '2020-10-12'): object
+    public function initStatement(string $accountId, $startDateTime, $endDateTime): object
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/statements';
         $headers = [
@@ -151,15 +151,15 @@ trait OpenBanking
             'Content-Type' => 'application/json',
         ];
 
-        $data = '{
-            "Data": {
-                "Statement": {
-                    "accountId": "'. $accountId .'",
-                    "startDateTime": "'. $startDateTime .'",
-                    "endDateTime": "'. $startDateTime .'"
-                }
-            }
-        }';
+        $data = [
+            "Data" => [
+                "Statement" => [
+                    "accountId" => $accountId,
+                    "startDateTime" => $startDateTime,
+                    "endDateTime" => $endDateTime
+                ]
+            ]
+        ];
 
         $response = Http::withHeaders($headers)->post($url, $data);
 

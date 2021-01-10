@@ -63,7 +63,7 @@ class User extends Authenticatable
 
     public function cards()
     {
-        return $this->hasOne(Card::class);
+        return $this->company->cards()->where('user_id', $this->id);
     }
 
     /**

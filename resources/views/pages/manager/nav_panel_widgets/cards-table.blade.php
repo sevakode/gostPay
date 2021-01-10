@@ -35,7 +35,7 @@
                             <div class="d-flex align-items-center">
                                 <label class="mr-3 mb-0 d-none d-md-block">Пользователь:</label>
                                 <select class="form-control" id="add_cards_datatable_search_type">
-                                    <option value="">All</option>
+                                    <option value="">Все пользователи</option>
                                     @foreach(\Illuminate\Support\Facades\Auth::user()->company->users()->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->fullname }}</option>
                                     @endforeach
@@ -45,9 +45,9 @@
                     @endisset
                 </div>
             </div>
-            <div class="col-lg-3 col-xl-2 mt-5 mt-lg-0">
-                <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>
-            </div>
+{{--            <div class="col-lg-3 col-xl-2 mt-5 mt-lg-0">--}}
+{{--                <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>--}}
+{{--            </div>--}}
         </div>
     </div>
     <!--end::Search Form-->
@@ -144,11 +144,11 @@
             datatable.search($(this).val().toLowerCase(), 'state');
         });
         $('#add_cards_datatable_search_type').on('change', function () {
-            datatable.search($(this).val().toLowerCase(), 'Type');
+            datatable.search($(this).val().toLowerCase(), 'type');
         });
         $('#add_cards_datatable_search_status, #add_cards_datatable_search_type').selectpicker();
 
-        $('#adding_cards').on('click', function () {
+        $('#adding_random_cards').on('click', function () {
             datatable.search(sliderInput.value, 'countCards');
         });
     });

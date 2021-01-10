@@ -39,12 +39,17 @@
                     </div>
                     <div class="d-flex flex-column flex-root">
                         <span class="font-weight-bolder mb-2">Пользователь</span>
-                        <span class="opacity-70">{{ $card->user->fullname ?? 'none' }}</span>
+                        @if($card->user)
+                            <a href="{{ route('user_cards', $card->user->id) }}" class="">
+                                <span class="opacity-70 text-dark">{{ $card->user->fullname }}</span>
+                            </a>
+                        @else
+                            <span class="opacity-70">{{ 'none' }}</span>
+                        @endif
                     </div>
                     <div class="d-flex flex-column flex-root">
                         <span class="font-weight-bolder mb-2">Геолокация</span>
-                        <span class="opacity-70">{{ $code->geo ?? 'Россия' }}
-																<br>Fredrick Nebraska 20620</span>
+                        <span class="opacity-70">{{ $code->geo ?? 'Россия' }}</span>
                     </div>
                 </div>
             </div>
@@ -57,9 +62,9 @@
                     <table class="table">
                         <thead>
                         <tr>
-                            <th class="pl-0 font-weight-bold text-muted text-uppercase">Ordered Items</th>
+                            <th class="pl-0 font-weight-bold text-muted text-uppercase">Дата</th>
 {{--                            <th class="text-right font-weight-bold text-muted text-uppercase">Qty</th>--}}
-                            <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">Cумма</th>
+                                <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">Сумма</th>
                             <th class="text-right font-weight-bold text-muted text-uppercase">Валюта</th>
                         </tr>
                         </thead>
@@ -69,7 +74,7 @@
                             <td class="border-0 pl-0 pt-7 d-flex align-items-center">
                                 <!--begin::Symbol-->
                                 <!--end::Symbol-->
-                                {{ $payment->type }}
+                                {{ $payment->operationAt->format('M d, Y') }}
                             </td>
 {{--                            <td class="text-right pt-7 align-middle">2</td>--}}
                             <td class="text-primary pr-0 pt-7 text-right align-middle">{{ $payment->amount }}</td>

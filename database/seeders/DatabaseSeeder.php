@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Classes\TochkaBank\BankAPI;
+use App\Models\Bank\Card;
+use App\Models\Bank\Payment;
+use App\Models\Bank\Statement;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -15,7 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-//        dd(User::all()->first()->role->name);
         $this->call(PermissionSeeder::class);
         $this->call(RoleSeeder::class);
         $this->call(RegistrationRoleAndPermissionSeeder::class);
@@ -24,6 +27,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(TochkaBankSeeder::class);
         $this->call(CardSeeder::class);
+        $this->call(StatementSeeder::class);
         $this->call(PaymentSeeder::class);
     }
 }

@@ -107,24 +107,24 @@
 {{--        </a>--}}
 {{--    </div>--}}
 {{--    Saved Credit Cards--}}
-    <div class="navi-item mb-2">
-        <a href="#" class="navi-link py-4" data-toggle="tooltip" title="Coming soon..." data-placement="right">
-            <span class="navi-icon mr-2">
-                <span class="svg-icon">
-                    <!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-top-panel-6.svg-->
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                            <rect x="0" y="0" width="24" height="24" />
-                            <rect fill="#000000" x="2" y="5" width="19" height="4" rx="1" />
-                            <rect fill="#000000" opacity="0.3" x="2" y="11" width="19" height="10" rx="1" />
-                        </g>
-                    </svg>
-                    <!--end::Svg Icon-->
-                </span>
-            </span>
-            <span class="navi-text font-size-lg">Saved Credit Cards</span>
-        </a>
-    </div>
+{{--    <div class="navi-item mb-2">--}}
+{{--        <a href="#" class="navi-link py-4" data-toggle="tooltip" title="Coming soon..." data-placement="right">--}}
+{{--            <span class="navi-icon mr-2">--}}
+{{--                <span class="svg-icon">--}}
+{{--                    <!--begin::Svg Icon | path:assets/media/svg/icons/Layout/Layout-top-panel-6.svg-->--}}
+{{--                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">--}}
+{{--                        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">--}}
+{{--                            <rect x="0" y="0" width="24" height="24" />--}}
+{{--                            <rect fill="#000000" x="2" y="5" width="19" height="4" rx="1" />--}}
+{{--                            <rect fill="#000000" opacity="0.3" x="2" y="11" width="19" height="10" rx="1" />--}}
+{{--                        </g>--}}
+{{--                    </svg>--}}
+{{--                    <!--end::Svg Icon-->--}}
+{{--                </span>--}}
+{{--            </span>--}}
+{{--            <span class="navi-text font-size-lg">Saved Credit Cards</span>--}}
+{{--        </a>--}}
+{{--    </div>--}}
 {{--    Tax information--}}
 {{--    <div class="navi-item mb-2">--}}
 {{--        <a href="#" class="navi-link py-4" data-toggle="tooltip" title="Coming soon..." data-placement="right">--}}

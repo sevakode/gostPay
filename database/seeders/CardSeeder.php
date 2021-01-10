@@ -18,9 +18,13 @@ class CardSeeder extends Seeder
     {
         Card::refreshApi();
 
+        $cards = array();
         foreach (Card::all() as $card) {
             $card->company_id = Company::first()->id;
             $card->save();
+//            $cards[] = $card;
         }
+//        Card::upsert($cards);
+//        dd(Card::all()->pluck('head'), Card::all()->pluck('tail'));
     }
 }

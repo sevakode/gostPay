@@ -12,7 +12,7 @@
 @include('pages.manager.nav_panel_widgets.header-cards')
 
 <div class="card card-custom">
-    @include('pages.manager.nav_panel_widgets.cards-table', ['cards'=>$cards, 'searchUser' => true])
+    @include('pages.manager.nav_panel_widgets.cards-table', ['searchUser' => true])
 </div>
 @endsection
 

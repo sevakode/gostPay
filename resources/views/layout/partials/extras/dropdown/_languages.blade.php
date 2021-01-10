@@ -1,6 +1,6 @@
-{{-- Nav --}}
+ Nav
 <ul class="navi navi-hover py-4">
-    {{-- Item --}}
+     Item
     <li class="navi-item">
         <a href="#" class="navi-link">
             <span class="symbol symbol-20 mr-3">
@@ -10,7 +10,7 @@
         </a>
     </li>
 
-    {{-- Item --}}
+     Item
     <li class="navi-item active">
         <a href="#" class="navi-link">
             <span class="symbol symbol-20 mr-3">
@@ -20,7 +20,7 @@
         </a>
     </li>
 
-    {{-- Item --}}
+     Item
     <li class="navi-item">
         <a href="#" class="navi-link">
             <span class="symbol symbol-20 mr-3">
@@ -30,7 +30,7 @@
         </a>
     </li>
 
-    {{-- Item --}}
+     Item
     <li class="navi-item">
         <a href="#" class="navi-link">
             <span class="symbol symbol-20 mr-3">
@@ -40,7 +40,7 @@
         </a>
     </li>
 
-    {{-- Item --}}
+     Item
     <li class="navi-item">
         <a href="#" class="navi-link">
             <span class="symbol symbol-20 mr-3">

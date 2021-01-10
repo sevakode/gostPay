@@ -2,13 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Bank\Card;
-use App\Models\Bank\Payment;
-use App\Models\Company;
+use App\Models\Bank\Statement;
 use App\Models\Role;
 use Illuminate\Database\Seeder;
 
-class PaymentSeeder extends Seeder
+class StatementSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,6 +15,6 @@ class PaymentSeeder extends Seeder
      */
     public function run()
     {
-        Payment::refreshApi();
+        Statement::refreshApi();
     }
 }

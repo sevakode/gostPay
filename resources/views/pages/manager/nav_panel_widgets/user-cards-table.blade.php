@@ -12,7 +12,7 @@
     <!--begin::Search Form-->
     <div class="mb-7">
         <div class="row align-items-center">
-            <div class="col-lg-9 col-xl-8">
+            <div class="col-lg-9 col-xl-9">
                 <div class="row align-items-center">
                     <div class="col-md-4 my-2 my-md-0">
                         <div class="input-icon">
@@ -46,13 +46,13 @@
                 </div>
             </div>
             @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))
-            <div class="col-lg-1 col-xl-2" style="padding-left: 0px; padding-right: 0px;">
+            <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
                 <a href="#" id="remove-cards" class="btn btn-light-danger px-6 font-weight-bold">Отсоединить</a>
             </div>
             @endif
-            <div class="col-lg-2 col-xl-1 mt-5 mt-lg-0">
-                <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>
-            </div>
+{{--            <div class="col-lg-2 col-xl-1 mt-5 mt-lg-0" style="padding-left: 20px;">--}}
+{{--                <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>--}}
+{{--            </div>--}}
         </div>
     </div>
     <!--end::Search Form-->
@@ -87,7 +87,7 @@
                             }
 
                             if (typeof slider !== 'undefined') {
-                                if(raw.countCardsNoUser > 0){
+                                if(raw.countCardsNoUser >= 0){
                                     slider.noUiSlider.options.range.max = raw.countCardsNoUser;
                                     slider.noUiSlider.updateOptions.length = raw.countCardsNoUser;
                                     slider.noUiSlider.updateOptions('max', raw.countCardsNoUser);
@@ -170,17 +170,28 @@
             ],
         });
         $('#add_cards_datatable_search_status').on('change', function () {
+
             datatable.search($(this).val().toLowerCase(), 'state');
         });
         $('#add_cards_datatable_search_type').on('change', function () {
+
             datatable.search($(this).val().toLowerCase(), 'Type');
         });
         $('#add_cards_datatable_search_status, #add_cards_datatable_search_type').selectpicker();
 
-        $('#adding_cards').on('click', function () {
+        $('#adding_random_cards').on('click', function () {
             datatable.setDataSourceParam('query.removeCards', '')
             datatable.search(sliderInput.value, 'countCards');
+            datatable.setDataSourceParam('query.countCards', '')
         });
+
+        $('#adding_cards').on('click', function () {
+            datatable.setDataSourceParam('query.removeCards', '')
+            datatable.setDataSourceParam('query.countCards', '')
+            datatable.search($('#kt_select2_3').select2('data'), 'listCartForAdding');
+            $('#kt_select2_3').val(null).trigger('change');
+        });
+
         $('#remove-cards').on('click', function () {
             var checkboxes_value = [];
             $('input[name="checkboxes"]').each(function(){

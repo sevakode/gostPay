@@ -11,43 +11,53 @@ class Payment extends Model
 {
     use HasFactory;
 
-    public function __construct(array $attributes = [])
-    {
-//        self::refreshApi();
-        parent::__construct($attributes);
-    }
+    protected $dates = ['operationAt'];
 
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
-        $api = BankAPI::make()->getBalancesList();
-        if(!isset($api->Data)) {
+        $payments = array();
+        foreach (Statement::all() as $statement) {
+            $statement = BankAPI::make()->getStatement($statement->accountId, $statement->statementId);
+            foreach ($statement->Data->Statement[0]->Transaction as $payment)
+            {
+                preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
+                preg_match("/дата операции:([^q]{10})/", $payment->description, $data);
 
-        }
-        $payments =[];
-        foreach ($api->Data->Balance as $card) {
-                $payments[] = collect([
-                    'account_id' => $card->accountId,
-                    'type' => $card->type,
-                    'amount' => $card->Amount->amount,
-                    'currency' => $card->Amount->currency,
-                    'created_at' => new \DateTime($card->dateTime)
-                ]);
-        }
+                if(isset($cards[1], $cards[2])) {
+                    $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
+                        Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id   :
+                        null;
 
+                    $payments[] = [
+                        'transaction_id' => $payment->transactionId,
+                        'description' => $payment->description,
+                        'account_id' => $statement->Data->Statement[0]->accountId,
+                        'card_id' => $cardId,
+                        'status' => $payment->status,
+                        'amount' => $payment->Amount->amount,
+                        'currency' => $payment->Amount->currency,
+                        'operationAt' => Carbon::createFromFormat('d#m#Y', $data[1]),
+                    ];
+                }
+            }
+        }
         return collect($payments);
     }
 
     public static function refreshApi()
     {
         $payments = self::getCollectApi();
-
         self::upsert(
             $payments->toArray(),
             [
+                'transaction_id',
+                'description',
                 'account_id',
-                'type',
+                'card_id',
+                'status',
                 'amount',
                 'currency',
+                'operationAt',
             ]
         );
     }

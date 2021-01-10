@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\TochkaBank\BankAPI;
-use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CardController extends Controller
 {
     public function cards()
     {
-//        Card::refreshApi();
         $cards = Auth::user()->company->cards()->get();
         return view('pages.manager.widgets.cards', compact('cards'));
     }

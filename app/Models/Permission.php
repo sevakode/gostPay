@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Interfaces\OptionsPermissions;
+use App\Interfaces\OptionsRole;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;

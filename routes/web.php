@@ -35,6 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('datatables')->group(function () {
         Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])->name('datatables.company-cards');
         Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])->name('datatables.user-cards');
+        Route::post('select-add-cards', [\App\Http\Controllers\DatatablesController::class, 'selectAddCard'])->name('datatables.select-add-cards');
     });
 
     Route::get('/', 'PagesController@index')->name('home');

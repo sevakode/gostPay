@@ -186,7 +186,7 @@ return [
 
         // Notifications
         'notifications' => [
-            'display' => true,
+            'display' => false,
             'layout' => 'dropdown', // offcanvas, dropdown
             'dropdown' => [
                 'style' => 'dark' // light|dark
@@ -226,12 +226,12 @@ return [
         ],
 
         // Cart
-        'cart' => [
-            'display' => true,
-            'dropdown' => [
-                'style' => 'dark' // light|dark
-            ]
-        ],
+//        'cart' => [
+//            'display' => true,
+//            'dropdown' => [
+//                'style' => 'dark' // light|dark
+//            ]
+//        ],
 
         // Quick Panel
         'quick-panel' => [

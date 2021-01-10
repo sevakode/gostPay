@@ -17,8 +17,8 @@ class RegistrationRoleAndPermissionSeeder extends Seeder
     {
         foreach (Permission::ALL as $permission)
         {
+            $roles = $permission['roles'] ?? [];
             $permission = Permission::getSlug($permission);
-            $roles = $role['permissions'] ?? [];
             foreach ($roles as $role) {
                 $permission->roles()->attach(Role::getSlug($role));
             }
