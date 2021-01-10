@@ -24,6 +24,14 @@ class ManagerController extends Controller
             compact('page_title', 'page_description', 'cards', 'user'));
     }
 
+    public function addUser()
+    {
+        $page_title = 'Мой профиль';
+        $page_description = 'Настройки учетной записи и многое другое';
+
+        return view('pages.manager.widgets.add-user', compact('page_title', 'page_description'));
+    }
+
     public function dashboard()
     {
         $page_title = 'Мой профиль';

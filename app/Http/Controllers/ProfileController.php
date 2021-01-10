@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use App\Notifications\DataNotification;
 use App\Providers\RouteServiceProvider;
@@ -60,6 +61,28 @@ class ProfileController extends Controller
         return $request->wantsJson()
             ? new JsonResponse([url($this->redirectPath())], 201)
             : redirect($this->redirectPath());
+    }
+
+    public function createUser(Request $request)
+    {
+        $user = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'role_id' => Role::getSlug(Role::USER)->id,
+            'password' => bcrypt($request->password),
+            'company_id' => $request->user()->company_id,
+        ]);
+
+        $file = $request->file('profile_avatar');
+        if(isset($file))
+            $user->image('avatar')->make($file, 'images/profile/avatar/original/');
+        Notification::send($request->user(), DataNotification::success());
+        return $request->wantsJson()
+            ? new JsonResponse([url($this->redirectPath())], 201)
+            : redirect(route('dashboard'));
+
     }
 
     /**

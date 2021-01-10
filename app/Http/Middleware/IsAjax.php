@@ -21,7 +21,7 @@ class IsAjax
             return $next($request);
         return response()->view('pages.errors.error-1', [
             'code' => 500,
-            'message' => 'У вас недостаточно прав!'
+            'message' => 'Ожидался запрос Ajax!'
         ]);
     }
 }
