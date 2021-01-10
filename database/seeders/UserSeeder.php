@@ -43,6 +43,13 @@ class UserSeeder extends Seeder
         $user2->role_id = $adminRole->id;
         $user2->save();
 
+        $user3 = new User();
+        $user3->first_name = 'User';
+        $user3->last_name = '';
+        $user3->email = 'user@user.user';
+        $user3->password = bcrypt('user');
+        $user3->role_id = $adminRole->id;
+        $user3->save();
 
         User::factory(10)->create(['company_id' => $testCompany->id, 'role_id' => $userRole->id]);
     }
