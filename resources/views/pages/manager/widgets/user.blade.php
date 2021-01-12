@@ -59,6 +59,7 @@
 @endsection
 
 @section('scripts')
+    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
     <script>
         var slider = document.getElementById('kt_nouislider_1');
 
@@ -85,7 +86,6 @@
             slider.noUiSlider.set(this.value);
         });
     </script>
-{{--    'datatables.select-add-cards'--}}
     <script>
         // $('#kt_select2_3').select2({
         //     placeholder: "Select a state",
@@ -131,6 +131,9 @@
         // templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
         });
     </script>
+    @endif
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
+
+    @yield('scripts_next')
 @endsection

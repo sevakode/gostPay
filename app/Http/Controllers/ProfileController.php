@@ -65,6 +65,16 @@ class ProfileController extends Controller
 
     public function createUser(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'phone' => ['nullable', 'max:16'],
+            'email' => ['nullable', 'required', 'string', 'email', 'max:255', 'unique:users,email']
+        ]);
+        if($validator->fails())
+            DataNotification::sendErrors($validator->errors()->unique());
+        $validator->validate();
+
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
@@ -82,7 +92,6 @@ class ProfileController extends Controller
         return $request->wantsJson()
             ? new JsonResponse([url($this->redirectPath())], 201)
             : redirect(route('dashboard'));
-
     }
 
     /**

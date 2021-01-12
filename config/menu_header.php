@@ -23,6 +23,11 @@ return [
                         'page' => 'manager',
                         'icon' => 'media/svg/icons/Shopping/Box2.svg',
                     ],
+                    [
+                        'title' => 'Добавить пользователя',
+                        'page' => 'manager/user/add',
+                        'icon' => 'media/svg/icons/Communication/Add-user.svg',
+                    ],
                 ]
             ]
         ],

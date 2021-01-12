@@ -41,34 +41,35 @@
 @endsection
 
 @section('scripts')
-    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
-    <script>
-        var slider = document.getElementById('kt_nouislider_1');
-
-        noUiSlider.create(slider, {
-            start: [ 0 ],
-            step: 1,
-            range: {
-                'min': [ 0 ],
-                'max': [ {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->where('user_id', null)->count() }} ]
-            },
-            format: wNumb({
-                decimals: 0
-            })
-        });
-
-        // init slider input
-        var sliderInput = document.getElementById('kt_nouislider_1_input');
-
-        slider.noUiSlider.on('update', function( values, handle ) {
-            sliderInput.value = values[handle];
-        });
-
-        sliderInput.addEventListener('change', function(){
-            slider.noUiSlider.set(this.value);
-        });
-    </script>
-    @endif
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
+    @yield('scripts_next')
+    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
+        <script>
+            var slider = document.getElementById('kt_nouislider_1');
+
+            noUiSlider.create(slider, {
+                start: [ 0 ],
+                step: 1,
+                range: {
+                    'min': [ 0 ],
+                    'max': [ {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->where('user_id', null)->count() }} ]
+                },
+                format: wNumb({
+                    decimals: 0
+                })
+            });
+
+            // init slider input
+            var sliderInput = document.getElementById('kt_nouislider_1_input');
+
+            slider.noUiSlider.on('update', function( values, handle ) {
+                sliderInput.value = values[handle];
+            });
+
+            sliderInput.addEventListener('change', function(){
+                slider.noUiSlider.set(this.value);
+            });
+        </script>
+    @endif
 @endsection

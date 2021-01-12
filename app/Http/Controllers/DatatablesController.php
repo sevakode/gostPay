@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -66,6 +67,17 @@ class DatatablesController extends Controller
 
         $cards = $request->user()->company->cards()->where('user_id', $filter['id']);
 
+        if(isset($filter['query']['date'])) {
+            $date = $filter['query']['date'];
+            $dateStart = Carbon::createFromFormat('m#d#Y', $date['start'])->setTime(0,0,0);
+            $dateEnd = Carbon::createFromFormat('m#d#Y', $date['end'])->setTime(0,0,0);
+
+            $cards = $cards->whereHas('payments', function (Builder $query) use($dateStart, $dateEnd){
+                $query->where('operationAt', '>=', $dateStart);
+                $query->where('operationAt', '<=', $dateEnd);
+            });
+        }
+
         if(isset($filter['query']['state']))
             $cards = $cards->where('state',(boolean) $filter['query']['state']);
 
@@ -116,7 +128,9 @@ class DatatablesController extends Controller
         }
 
         $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->where('user_id', null)->count();
+        $data['amountAll'] = 0;
         foreach ($cards->get() as $card) {
+            $data['amountAll'] += $card->amount();
             $data['data'][] = [
                 'id' => $card->id,
                 'number' => $card->number,
@@ -130,6 +144,8 @@ class DatatablesController extends Controller
                 'amount' => $card->amount() .'₽',
             ];
         }
+
+        $data['amountAll'] .= '₽';
 
         return new JsonResponse($data);
     }
