@@ -6,7 +6,18 @@ interface OptionsRole
 {
     const OWNER = [
         'title' => 'Owner',
-        'permissions' => Permission::ALL
+        'permissions' => [
+            Permission::OWNER,
+            Permission::ADMIN_ROLE_SET,
+            Permission::MANAGER_ROLE_SET,
+
+            Permission::ACCESS_TO_PROFILE,
+            Permission::ACCESS_TO_MANAGER,
+            Permission::ACCESS_TO_ADD_CARDS,
+            Permission::ACCESS_TO_REMOVE_CARDS,
+            Permission::ACCESS_TO_ALL_CARDS_COMPANY,
+            Permission::ACCESS_TO_ALL_USERS_COMPANY,
+        ]
     ],
         ADMIN = [
         'title' => 'Admin',
