@@ -22,6 +22,7 @@ class UserSeeder extends Seeder
 
         $ownerRole = Role::getSlug(Role::OWNER);
         $adminRole = Role::getSlug(Role::ADMIN);
+        $demoRole = Role::getSlug(Role::DEMO);
         $managerRole = Role::getSlug(Role::MANAGER);
         $userMainRole = Role::getSlug(Role::MAIN_USER);
         $userRole = Role::getSlug(Role::USER);
@@ -72,6 +73,15 @@ class UserSeeder extends Seeder
         $user5->role_id = $managerRole->id;
         $user5->company_id = $testCompany->id;
         $user5->save();
+
+        $demo = new User();
+        $demo->first_name = 'Demo';
+        $demo->last_name = '';
+        $demo->email = 'demo@demo.demo';
+        $demo->password = bcrypt('demo');
+        $demo->role_id = $demoRole->id;
+        $demo->company_id = $testCompany->id;
+        $demo->save();
 
         User::factory(10)->create(['company_id' => $testCompany->id, 'role_id' => $userRole->id]);
     }

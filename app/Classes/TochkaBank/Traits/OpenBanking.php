@@ -1,7 +1,6 @@
-<?php namespace App\Classes\TochkaBank\Traits;
+<?php
+namespace App\Classes\TochkaBank\Traits;
 
-use App\Classes\TochkaBank\BankAPI;
-use App\Models\Bank\BankToken;
 use Illuminate\Support\Facades\Http;
 
 /**

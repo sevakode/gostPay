@@ -75,6 +75,7 @@ class Card extends Model
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
         $cardsApi = BankAPI::make()->getCards();
+
         if(!isset($cardsApi->Data)) {
             dd($cardsApi);
         }

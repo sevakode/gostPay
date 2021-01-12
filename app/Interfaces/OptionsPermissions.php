@@ -8,6 +8,9 @@ interface OptionsPermissions
         OWNER = [
         'title' => 'Owner'
     ],
+        DEMO = [
+        'title' => 'Demo'
+    ],
         ACCESS_TO_PROFILE = [
         'title' => 'access to profile'
     ],
@@ -44,6 +47,7 @@ interface OptionsPermissions
 
     const ALL = [
         self::OWNER,
+        self::DEMO,
         self::ADMIN_ROLE_SET,
         self::MANAGER_ROLE_SET,
 

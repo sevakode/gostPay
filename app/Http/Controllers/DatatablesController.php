@@ -1,13 +1,14 @@
 <?php
-
 namespace App\Http\Controllers;
 
+use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification as Notify;
 
 class DatatablesController extends Controller
@@ -64,7 +65,7 @@ class DatatablesController extends Controller
     {
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
-
+        if(!isset($filter['id'])) dd('error');
         $cards = $request->user()->company->cards()->where('user_id', $filter['id']);
 
         if(isset($filter['query']['date'])) {
@@ -90,46 +91,49 @@ class DatatablesController extends Controller
                     $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
                 });
 
-        if(isset($filter['query']['countCards'])) {
-            $countCards = $filter['query']['countCards'];
-            $userId =  $filter['id'];
 
-            $cardsNoUser = $request->user()->company->cards()->where('user_id', null);
-            if($cardsNoUser->count() >= (integer)$countCards) {
-                $cardsNoUser = $cardsNoUser->get()->shuffle()->forPage(1, $countCards);
+        if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['title'])) {
+            if(isset($filter['query']['countCards'])) {
+                $countCards = $filter['query']['countCards'];
+                $userId =  $filter['id'];
 
-                foreach ($cardsNoUser as $card) {
+                $cardsNoUser = $request->user()->company->cards()->where('user_id', null);
+                if($cardsNoUser->count() >= (integer)$countCards) {
+                    $cardsNoUser = $cardsNoUser->get()->shuffle()->forPage(1, $countCards);
+
+                    foreach ($cardsNoUser as $card) {
+                        $card->user_id = $userId;
+                        $card->save();
+                    }
+                    $cards = $request->user()->company->cards()->where('user_id', $userId);
+                    Notify::send($request->user(), DataNotification::success());
+                }
+                else {
+                    DataNotification::sendErrors(['Осталось ' .$cardsNoUser->count(). ' карт!']);
+                }
+            }
+            if(isset($filter['query']['removeCards'])) {
+                $removeCards = explode(',', $filter['query']['removeCards']);
+                $userId = $filter['id'];
+                $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
+                $cardsChecked->update(['user_id'=>null]);
+            }
+            if(isset($filter['query']['listCartForAdding'])) {
+                $userId =  $filter['id'];
+
+                foreach ($filter['query']['listCartForAdding'] as $card) {
+                    $card = Card::find($card['id']);
                     $card->user_id = $userId;
                     $card->save();
                 }
-                $cards = $request->user()->company->cards()->where('user_id', $userId);
                 Notify::send($request->user(), DataNotification::success());
             }
-            else {
-                DataNotification::sendErrors(['Осталось ' .$cardsNoUser->count(). ' карт!']);
-            }
         }
 
-        if(isset($filter['query']['removeCards'])) {
-            $removeCards = explode(',', $filter['query']['removeCards']);
-            $userId = $filter['id'];
-            $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
-            $cardsChecked->update(['user_id'=>null]);
-        }
-        if(isset($filter['query']['listCartForAdding'])) {
-            $userId =  $filter['id'];
-
-            foreach ($filter['query']['listCartForAdding'] as $card) {
-                $card = Card::find($card['id']);
-                $card->user_id = $userId;
-                $card->save();
-            }
-            Notify::send($request->user(), DataNotification::success());
-        }
 
         $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->where('user_id', null)->count();
         $data['amountAll'] = 0;
-        foreach ($cards->get() as $card) {
+        foreach ($cards->get()->where('user_id', $filter['id']) as $card) {
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
                 'id' => $card->id,

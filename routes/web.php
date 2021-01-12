@@ -33,9 +33,12 @@ Route::post('/login/sign-up', [\App\Http\Controllers\Auth\RegisterController::cl
 Route::middleware('auth')->group(function () {
 
     Route::prefix('datatables')->group(function () {
-        Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])->name('datatables.company-cards');
-        Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])->name('datatables.user-cards');
-        Route::post('select-add-cards', [\App\Http\Controllers\DatatablesController::class, 'selectAddCard'])->name('datatables.select-add-cards');
+        Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])
+            ->name('datatables.company-cards');
+        Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])
+            ->name('datatables.user-cards');
+        Route::post('select-add-cards', [\App\Http\Controllers\DatatablesController::class, 'selectAddCard'])
+            ->name('datatables.select-add-cards');
     });
 
     Route::get('/', 'PagesController@index')->name('home');
@@ -55,8 +58,10 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
         Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
         Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
-        Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update');
-        Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create');
+        Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
+            ->middleware('auth.demo');;
+        Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create')
+            ->middleware('auth.demo');;
     });
 
     Route::prefix(RouteServiceProvider::MANAGER)
@@ -66,8 +71,10 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [ManagerController::class, 'dashboard'])->name('dashboard');
         Route::get('/user/{id}/cards', [ManagerController::class, 'user'])->name('user_cards');
         Route::get('/user/add', [ManagerController::class, 'addUser'])->name('add_user');
-        Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update');
-        Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update');
+        Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update')
+            ->middleware('auth.demo');
+        Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update')
+            ->middleware('auth.demo');
     });
     Route::prefix('/bank')
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
