@@ -6,7 +6,13 @@ interface OptionsPermissions
 {
     const
         OWNER = [
-        'title' => 'Owner'
+        'title' => 'Owner',
+        'roles' => [
+            Role::ADMIN,
+            Role::MANAGER,
+            Role::MAIN_USER,
+            Role::USER
+        ]
     ],
         DEMO = [
         'title' => 'Demo'
