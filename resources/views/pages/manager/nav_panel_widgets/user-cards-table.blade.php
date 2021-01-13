@@ -139,7 +139,7 @@
                             },
                             params: {
                                 id: {{ $user->id }},
-                                access_cards: {{ $access_cards ?? null }}
+                                access_cards: {{ $access_cards ?? '0' }},
                             },
                             timeout: 60000,
                             map: function map(raw) {
