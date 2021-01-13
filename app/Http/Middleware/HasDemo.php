@@ -23,9 +23,6 @@ class HasDemo
 
         DataNotification::sendErrors(['Вы используете '. $demo . ' версию!']);
 
-        return response()->view('pages.errors.error-1', [
-            'code' => 500,
-            'message' => 'У вас недостаточно прав!'
-        ]);
+        return redirect()->back();
     }
 }

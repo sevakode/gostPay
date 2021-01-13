@@ -83,6 +83,6 @@ class UserSeeder extends Seeder
         $demo->company_id = $testCompany->id;
         $demo->save();
 
-        User::factory(10)->create(['company_id' => $testCompany->id, 'role_id' => $userRole->id]);
+//        User::factory(10)->create(['company_id' => $testCompany->id, 'role_id' => $userRole->id]);
     }
 }

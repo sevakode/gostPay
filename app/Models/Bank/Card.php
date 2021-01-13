@@ -3,7 +3,9 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Models\Company;
 use App\Models\User;
+use App\Notifications\DataNotification;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -71,6 +73,65 @@ class Card extends Model
         return str_split($number, 4);
     }
 
+    public static function parsePdf($PDF)
+    {
+
+        $texts = explode("\n", $PDF->getText());
+        array_shift($texts);
+
+        $cards = collect();
+        $apiCards = Card::getCollectApi();
+        foreach ($texts as $text){
+            if(strpos($text, 'Карта')) continue;
+
+            $cardsTx = explode(" ", preg_replace('/\p{Cc}+/u', '', $text));
+
+            $id = $cardsTx[0];
+            $number = $cardsTx[1] . $cardsTx[2] .$cardsTx[3] .$cardsTx[4];
+            $head = $cardsTx[1];
+            $tail = $cardsTx[4];
+            $date = explode('/',$cardsTx[5]);
+            $expiredAt = new Carbon("$date[0]/1/$date[1] 0:0:0");
+            $cvc = $cardsTx[6];
+
+            $isCard=Card::where('head', $head)->where('tail', $tail)->where('expiredAt', $date)->exists();
+            if(!$isCard){
+
+                $apiCard = $apiCards->where('head', $head)->where('tail', $tail)->where('expiredAt', $expiredAt);
+                $cards[] = collect([
+                    'account_code' => $apiCard['account_code'] ?? null,
+                    'bank_code' => $apiCard['bank_code'] ?? null,
+                    'number' => $number,
+                    'head' => $head,
+                    'tail' => $tail,
+                    'card_description' => $apiCard['card_description'] ?? null,
+                    'card_type' => $apiCard['card_type'] ?? 'None',
+                    'expiredAt' => $expiredAt,
+                    'state' => isset($apiCard['state']) ? $apiCard['state'] : true,
+                    'cvc' => $cvc,
+                    'company_id' => request()->user()->company->id
+                ]);
+            }
+        }
+        self::upsert(
+            $cards->toArray(),
+            [
+                'account_code',
+                'bank_code',
+                'number',
+                'card_description',
+                'head',
+                'tail',
+                'card_type',
+                'expiredAt',
+                'state',
+                'cvc',
+                'company_id',
+            ]
+        );
+        Statement::refreshApi();
+        Payment::refreshApi();
+    }
 
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
@@ -82,7 +143,6 @@ class Card extends Model
         $cards =[];
         foreach ($cardsApi->Data->cards as $card) {
             $matches = self::getNumberSplit($card->maskedPan);
-
             $cards[] = collect([
                 'account_code' => $card->accountCode,
                 'bank_code' => $card->bankCode,
@@ -91,8 +151,8 @@ class Card extends Model
                 'tail' => $matches[3],
                 'card_description' => $card->cardDescription,
                 'card_type' => $card->cardProductType,
-                'expiredAt' => Carbon::createFromFormat('m#y H', $card->expirationDate. ' 00'),
-                'state' => true ? $card->previewState == 'Active' : false
+                'expiredAt' => Carbon::createFromFormat('m#y#d H', $card->expirationDate. '-1 00'),
+                'state' => $card->previewState == 'Active'
             ]);
         }
 
@@ -120,6 +180,17 @@ class Card extends Model
     public function getStateAttribute()
     {
         return $this->attributes['state'] ? 'Активная' : 'Закрытая';
+    }
+
+    public function getNumberAttribute()
+    {
+        $matches = self::getNumberSplit($this->attributes['number']);
+        return $matches[0] . '********' . $matches[3];
+    }
+
+    public function getNumberFullAttribute()
+    {
+        return $this->attributes['number'];
     }
 
     public static function all($columns = ['*'])

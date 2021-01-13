@@ -42,7 +42,12 @@ return [
                     [
                         'title' => 'Карты компании',
                         'page' => 'bank/cards',
-                        'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
+                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                    ],
+                    [
+                        'title' => 'Добавить карты',
+                        'page' => 'bank/cards/create',
+                        'icon' => 'media/svg/icons/Navigation/Plus.svg',
                     ],
                 ]
             ]

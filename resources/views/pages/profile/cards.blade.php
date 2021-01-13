@@ -11,7 +11,7 @@
 @section('content_profile')
     <div class="flex-row-fluid ml-lg-8">
         <div class="card card-custom gutter-b">
-            @include('pages.manager.nav_panel_widgets.user-cards-table',  compact('user'))
+            @include('pages.manager.nav_panel_widgets.user-cards-table',  ['user' => $user, 'access_cards' => true])
         </div>
         @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
         <div class="card card-custom gutter-b">
@@ -30,7 +30,7 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-9 ml-lg-auto">
-                            <button type="reset" id="adding_cards" class="btn btn-primary mr-2">Добавить</button>
+                            <button type="reset" id="adding_random_cards" class="btn btn-primary mr-2">Добавить</button>
                         </div>
                     </div>
                 </div>

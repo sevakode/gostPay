@@ -58,8 +58,8 @@ Route::middleware('auth')->group(function () {
         ->group(function () {
         Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
         Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
-        Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update');
-//            ->middleware('auth.demo');
+        Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
+            ->middleware('auth.demo');
         Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create')
             ->middleware('auth.demo');
     });
@@ -80,8 +80,11 @@ Route::middleware('auth')->group(function () {
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title'])
         ->group(function () {
-        Route::get('cards', [\App\Http\Controllers\CardController::class, 'cards'])->name('cards');
+        Route::get('cards', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
+        Route::get('cards/create', [\App\Http\Controllers\CardController::class, 'create'])->name('cards.create');
+        Route::post('cards/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])->name('cards.create.pdf');
         Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
+        Route::post('cards/download', [\App\Http\Controllers\CardController::class, 'download'])->name('cards.download.txt');
     });
 
     Route::prefix('api')->group(function () {

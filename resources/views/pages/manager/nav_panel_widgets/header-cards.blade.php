@@ -12,18 +12,26 @@
                 <div class="navi navi-hover navi-active navi-link-rounded navi-bold d-flex flex-row">
                     <!--begin::Item-->
                     <div class="navi-item mr-2">
-                        <a href="{{ route('cards') }}" class="navi-link active">
+                        <a href="{{ route('cards') }}" class="navi-link
+                         @if(\Illuminate\Support\Facades\Request::fullUrlIs(route('cards')))
+                        active
+                         @endif
+                        ">
                             <span class="navi-text">Карты</span>
                         </a>
                     </div>
                     <!--end::Item-->
                     <!--begin::Item-->
-{{--                    <div class="navi-item mr-2">--}}
-{{--                        <a href="/metronic/demo1/custom/apps/todo/docs.html" class="navi-link">--}}
-{{--                            <span class="navi-text">Добавить карту</span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
-{{--                    <!--end::Item-->--}}
+                    <div class="navi-item mr-2">
+                        <a href="{{ route('cards.create') }}" class="navi-link
+                        @if(\Illuminate\Support\Facades\Request::fullUrlIs(route('cards.create')))
+                        active
+                        @endif
+                            ">
+                            <span class="navi-text">Добавить карты</span>
+                        </a>
+                    </div>
+                    <!--end::Item-->
 {{--                    <!--begin::Item-->--}}
 {{--                    <div class="navi-item mr-2">--}}
 {{--                        <a href="/metronic/demo1/custom/apps/todo/files.html" class="navi-link">--}}

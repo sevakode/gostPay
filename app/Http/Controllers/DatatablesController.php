@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
+use Illuminate\Support\Str;
 
 class DatatablesController extends Controller
 {
@@ -61,7 +63,7 @@ class DatatablesController extends Controller
         return new JsonResponse($data);
     }
 
-    public function userCards(Request $request): JsonResponse
+    public function userCards(Request $request)
     {
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
@@ -118,6 +120,26 @@ class DatatablesController extends Controller
                 $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
                 $cardsChecked->update(['user_id'=>null]);
             }
+            if(isset($filter['query']['downloadCardsTxt'])) {
+                $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
+                $userId = $filter['id'];
+                $cardsChecked = $request->user()->company->cards()
+                    ->where('user_id', $userId)
+                    ->whereIn('id', $downloadCardsTxt);
+                $txt = '';
+                foreach ($cardsChecked->get() as $card) {
+                    $txt .= $card->number;
+                    $txt .= "\n";
+                }
+                $dirPath = public_path('download/');
+                $fileName = Str::random(10).'.txt';
+                $fullPath = $dirPath.$fileName;
+
+                if(!File::isDirectory($dirPath)) File::makeDirectory($dirPath);
+                File::put($fullPath, $txt);
+
+                return response()->download($fullPath)->deleteFileAfterSend();
+            }
             if(isset($filter['query']['listCartForAdding'])) {
                 $userId =  $filter['id'];
 
@@ -133,11 +155,12 @@ class DatatablesController extends Controller
 
         $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->where('user_id', null)->count();
         $data['amountAll'] = 0;
+
         foreach ($cards->get()->where('user_id', $filter['id']) as $card) {
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
                 'id' => $card->id,
-                'number' => $card->number,
+                'number' => $filter['access_cards'] ? $card->numberFull : $card->number,
                 'numberLink' => route('card', $card->id),
                 'user' => isset($card->user) ? $card->user->fullname : 'none',
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
