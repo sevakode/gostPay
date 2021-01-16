@@ -79,26 +79,48 @@ class Card extends Model
         $texts = explode("\n", $PDF->getText());
         array_shift($texts);
 
-        $cards = collect();
-        $apiCards = Card::getCollectApi();
-        foreach ($texts as $text){
-            if(strpos($text, 'Карта')) continue;
+        foreach ($texts as $text) {
+            if (strpos($text, 'Карта')) continue;
 
             $cardsTx = explode(" ", preg_replace('/\p{Cc}+/u', '', $text));
 
-            $id = $cardsTx[0];
-            $number = $cardsTx[1] . $cardsTx[2] .$cardsTx[3] .$cardsTx[4];
-            $head = $cardsTx[1];
-            $tail = $cardsTx[4];
-            $date = explode('/',$cardsTx[5]);
+            $listCards[] = $cardsTx;
+        }
+        self::parsing($listCards);
+    }
+
+    public static function parseXlsx($XLSX)
+    {
+        $listCards = array();
+        foreach ($XLSX as $text){
+            preg_match("/(\d{4}) (\d{4}) (\d{4}) (\d{4}) ([^q]{5}) (\d{3})/", $text[0], $cardsTx);
+            $listCards[] = $cardsTx;
+        }
+        self::parsing($listCards);
+    }
+
+    public static function parsing(array $listCards)
+    {
+        $cards = [];
+        $apiCards = Card::getCollectApi();
+        foreach ($listCards as $card) {
+
+            $number = $card[1] . $card[2] . $card[3] . $card[4];
+            $head = $card[1];
+            $tail = $card[4];
+            $date = explode('/',$card[5]);
             $expiredAt = new Carbon("$date[0]/1/$date[1] 0:0:0");
-            $cvc = $cardsTx[6];
+            $cvc = $card[6];
 
             $isCard=Card::where('head', $head)->where('tail', $tail)->where('expiredAt', $date)->exists();
-            if(!$isCard){
+            $apiCard = $apiCards
+                ->where('head', $head)
+                ->where('tail', $tail)
+                ->where('expiredAt', $expiredAt)
+                ->first();
 
-                $apiCard = $apiCards->where('head', $head)->where('tail', $tail)->where('expiredAt', $expiredAt);
-                $cards[] = collect([
+            if(!$isCard and $apiCard){
+                $cards[] = [
                     'account_code' => $apiCard['account_code'] ?? null,
                     'bank_code' => $apiCard['bank_code'] ?? null,
                     'number' => $number,
@@ -110,11 +132,12 @@ class Card extends Model
                     'state' => isset($apiCard['state']) ? $apiCard['state'] : true,
                     'cvc' => $cvc,
                     'company_id' => request()->user()->company->id
-                ]);
+                ];
             }
         }
+
         self::upsert(
-            $cards->toArray(),
+            $cards,
             [
                 'account_code',
                 'bank_code',

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use App\Notifications\DataNotification;
+use Aspera\Spreadsheet\XLSX\Reader;
+use Aspera\Spreadsheet\XLSX\SharedStringsConfiguration;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +32,7 @@ class CardController extends Controller
 
     public function sendPDF(Request $request)
     {
-        if(!$request->file('file')) return DataNotification::sendErrors(['Файл не указан'], $request->user());
+        if(!$request->file('pdf')) return DataNotification::sendErrors(['Файл не указан'], $request->user());
 
         try {
             $pdf = (new Parser())->parseFile($request->file('file')->getPathname());
@@ -39,6 +41,30 @@ class CardController extends Controller
         catch (\Exception $e) {
             DataNotification::sendErrors(['Файл зашифрован'], $request->user());
         }
+
+        return new JsonResponse();
+    }
+
+    public function sendXLSX(Request $request)
+    {
+        if(!$request->file('xlsx')) return DataNotification::sendErrors(['Файл не указан'], $request->user());
+
+        $options = array(
+            'TempDir'                    => public_path(),
+            'SkipEmptyCells'             => false,
+            'ReturnDateTimeObjects'      => true,
+            'SharedStringsConfiguration' => new SharedStringsConfiguration(),
+            'CustomFormats'              => array(20 => 'hh:mm')
+        );
+
+//        try {
+            $xlsx = new Reader($options);
+            $xlsx->open($request->file('xlsx')->getPathname());
+            Card::parseXlsx($xlsx);
+//        }
+//        catch (\Exception $e) {
+//            DataNotification::sendErrors(['Файл зашифрован'], $request->user());
+//        }
 
         return new JsonResponse();
     }

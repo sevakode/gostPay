@@ -83,6 +83,7 @@ Route::middleware('auth')->group(function () {
         Route::get('cards', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
         Route::get('cards/create', [\App\Http\Controllers\CardController::class, 'create'])->name('cards.create');
         Route::post('cards/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])->name('cards.create.pdf');
+        Route::post('cards/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])->name('cards.create.xlsx');
         Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
         Route::post('cards/download', [\App\Http\Controllers\CardController::class, 'download'])->name('cards.download.txt');
     });
