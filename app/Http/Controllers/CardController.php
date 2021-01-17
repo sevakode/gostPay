@@ -32,13 +32,13 @@ class CardController extends Controller
     {
         if(!$request->file('pdf')) return DataNotification::sendErrors(['Файл не указан'], $request->user());
 
-//        try {
+        try {
             $pdf = (new Parser())->parseFile($request->file('pdf')->getPathname());
             Card::parsePdf($pdf);
-//        }
-//        catch (\Exception $e) {
-//            DataNotification::sendErrors(['Файл зашифрован'], $request->user());
-//        }
+        }
+        catch (\Exception $e) {
+            DataNotification::sendErrors(['Файл зашифрован'], $request->user());
+        }
 
         return new JsonResponse();
     }
