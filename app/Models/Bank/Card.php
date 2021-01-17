@@ -81,10 +81,15 @@ class Card extends Model
 
         foreach ($texts as $text) {
             if (strpos($text, 'Карта')) continue;
+            $text = preg_replace('/^([ ]+)|([ ]){2,}/m', '$2', $text);
 
             $cardsTx = explode(" ", preg_replace('/\p{Cc}+/u', '', $text));
-
+            if(count($cardsTx) !== 9){
+                DataNotification::sendErrors(['Файл поврежден. ID '. $cardsTx[0]], request()->user());
+                continue;
+            }
             $listCards[] = $cardsTx;
+
         }
         self::parsing($listCards);
     }
@@ -110,6 +115,7 @@ class Card extends Model
             $tail = $card[4];
             $date = explode('/',$card[5]);
             $expiredAt = new Carbon("$date[0]/1/$date[1] 0:0:0");
+
             $cvc = $card[6];
 
             $isCard=Card::where('head', $head)->where('tail', $tail)->where('expiredAt', $date)->exists();
@@ -134,6 +140,7 @@ class Card extends Model
                     'company_id' => request()->user()->company->id
                 ];
             }
+
         }
 
         self::upsert(
