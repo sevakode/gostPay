@@ -42,20 +42,20 @@ class BankToken extends Model
         return $this->url . $method;
     }
 
-    public function getAuthCodeAttribute($value)
-    {
-        return $this->getToken('authCode', 2 * 60);
-    }
+//    public function getAuthCodeAttribute($value)
+//    {
+//        return $this->getToken('authCode', 2 * 60);
+//    }
 
 //    public function getAccessTokenAttribute($value)
 //    {
 //        return $this->getToken('accessToken', 24 * 60 * 60);
 //    }
 
-    public function getRefreshTokenAttribute($value)
-    {
-        return $this->getToken('refreshToken', 30 * 24 * 60 * 60);
-    }
+//    public function getRefreshTokenAttribute($value)
+//    {
+//        return $this->getToken('refreshToken', 30 * 24 * 60 * 60);
+//    }
 
     public function setAuthCodeAttribute($value)
     {
@@ -72,21 +72,21 @@ class BankToken extends Model
         $this->setToken('refreshToken', $value);
     }
 
-    protected function getToken(string $attribute, int $timeout)
-    {
-        /** @var null|Carbon $date */
-        $date = $this->attributes["{$attribute}Date"];
-        if (!$date) {
-            return null;
-        }
-        $elapsed = time() - $date->getTimestamp();
-        if ($elapsed > $timeout) {
-            $this->setToken($attribute, null);
-            $this->save();
-            return null;
-        }
-        return $this->attributes[$attribute];
-    }
+//    protected function getToken(string $attribute, int $timeout)
+//    {
+//        /** @var null|Carbon $date */
+//        $date = $this->attributes["{$attribute}Date"];
+//        if (!$date) {
+//            return null;
+//        }
+//        $elapsed = time() - $date->getTimestamp();
+//        if ($elapsed > $timeout) {
+//            $this->setToken($attribute, null);
+//            $this->save();
+//            return null;
+//        }
+//        return $this->attributes[$attribute];
+//    }
 
     protected function setToken(string $attribute, $value)
     {
@@ -97,5 +97,13 @@ class BankToken extends Model
             $this->attributes[$attribute] = null;
             $this->attributes["{$attribute}Date"] = null;
         }
+    }
+
+    public function refreshToken($access_token, $refresh_token)
+    {
+        $this->accessToken = $access_token;
+        $this->refreshToken = $refresh_token;
+
+        $this->save();
     }
 }

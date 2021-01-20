@@ -81,6 +81,10 @@ class CardController extends Controller
         $txt = '';
         foreach ($cardsChecked->get() as $card) {
             $txt .= $card->numberFull;
+            $txt .= " ";
+            $txt .= $card->expiredAt->format('m/Y');
+            $txt .= " ";
+            $txt .= $card->cvc;
             $txt .= "\n";
         }
         $dirName = 'download/';

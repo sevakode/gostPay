@@ -21,6 +21,14 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+    public function showLoginForm()
+    {
+        $page_title = 'Мой профиль';
+        $page_description = 'Настройки учетной записи и многое другое';
+
+        return view('pages.login.main');
+    }
+
     /**
      * Where to redirect users after login.
      *

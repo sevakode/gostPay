@@ -42,6 +42,29 @@ trait ConnectBanking
         return $response;
     }
 
+    public function connectTokenRefresh()
+    {
+        $url = $this->bank->url.'/connect/token';
+        $headers = [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ];
+
+        $data = [
+            'client_id' => $this->bank->bankId,
+            'client_secret' => $this->bank->bankSecret,
+            'grant_type' => $this->bank->bankId,
+            'refresh_token' => $this->bank->refreshToken,
+        ];
+
+        $response = Http::withHeaders($headers)->post($url, $data);
+
+        dd($response->object());
+
+        $this->bank->refreshToken($response->object()->access_token, $response->object()->refresh_token);
+
+        return $response->object();
+    }
+
     public function connectAuthorize()
     {
         $redirect_uri = 'https://app.gost.agency/api/tauth';
