@@ -199,7 +199,11 @@ class Menu
     public static function renderHorMenu($item, $parent = null, $rec = 0)
     {
         self::checkRecursion($rec);
+
         if (!$item) { return 'menu misconfiguration'; }
+
+        if(isset($item['permission']))
+            if(!request()->user()->hasPermission($item['permission'])) return '';
 
         // render separator
         if (isset($item['separator'])) {

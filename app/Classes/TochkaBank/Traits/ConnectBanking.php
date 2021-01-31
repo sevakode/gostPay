@@ -1,6 +1,6 @@
 <?php namespace App\Classes\TochkaBank\Traits;
 
-use App\Classes\TochkaBank\BankAPI;
+use  App\Classes\TochkaBank\BankAPI;
 use App\Models\Bank\BankToken;
 use Illuminate\Support\Facades\Http;
 
@@ -52,15 +52,11 @@ trait ConnectBanking
         $data = [
             'client_id' => $this->bank->bankId,
             'client_secret' => $this->bank->bankSecret,
-            'grant_type' => $this->bank->bankId,
+            'grant_type' => 'refresh_token',
             'refresh_token' => $this->bank->refreshToken,
         ];
 
-        $response = Http::withHeaders($headers)->post($url, $data);
-
-        dd($response->object());
-
-        $this->bank->refreshToken($response->object()->access_token, $response->object()->refresh_token);
+        $response = Http::asForm()->post($url, $data);
 
         return $response->object();
     }

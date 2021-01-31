@@ -29,7 +29,8 @@ return [
                         'icon' => 'media/svg/icons/Communication/Add-user.svg',
                     ],
                 ]
-            ]
+            ],
+            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_MANAGER['title']
         ],
         [
             'title' => 'Bank',
@@ -50,7 +51,8 @@ return [
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
                     ],
                 ]
-            ]
+            ],
+            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title']
         ],
 //        [
 //            'title' => 'Crud',

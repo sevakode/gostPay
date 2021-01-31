@@ -59,9 +59,10 @@ class ManagerController extends Controller
         $user = $request->user()->companyUsers()->find($request->user_id);
         if(!$user) return DataNotification::sendErrors(['Такого пользователя не существует']);
 
-        $user->setRole($request->role_id);
+        if(!request()->user()->getRolesListForPermissions()->where('id', $user->role_id)->first())
+            return DataNotification::sendErrors(['У вас недостаточно прав']);
 
-        Notification::send($request->user(), DataNotification::success());
+        $user->setRole($request->role_id);
 
         $data = [
             'user_id' => $request->user_id,

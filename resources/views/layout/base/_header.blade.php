@@ -16,6 +16,8 @@
             @endif
 
             {{-- Header Menu --}}
+
+
             <div class="header-menu-wrapper header-menu-wrapper-left" id="kt_header_menu_wrapper">
                 @if(config('layout.aside.self.display') == false)
                     <div class="header-logo">

@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Interfaces\OptionsPermissions;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class HasPermission
 {

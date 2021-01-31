@@ -77,7 +77,7 @@
                             if (typeof raw.data !== 'undefined') {
                                 dataSet = raw.data;
                             }
-                            console.log(dataSet);
+
                             return dataSet;
                         }
                     }

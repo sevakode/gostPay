@@ -2,9 +2,11 @@
 
 use App\Models\Role;
 use App\Models\Permission;
+use App\Notifications\DataNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 /**
@@ -111,5 +113,6 @@ trait HasRolesAndPermissions
     {
         $this->role_id = $roleId;
         $this->save();
+        Notification::send(request()->user(), DataNotification::success());
     }
 }

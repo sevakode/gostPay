@@ -4,6 +4,7 @@
 namespace App\Models\Bank;
 
 
+use App\Classes\TochkaBank\BankAPI;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,6 +32,11 @@ class BankToken extends Model
         'accessTokenDate',
         'refreshTokenDate',
     ];
+
+    public static function make()
+    {
+        return self::first();
+    }
 
 	public function token()
 	{
@@ -99,11 +105,13 @@ class BankToken extends Model
         }
     }
 
-    public function refreshToken($access_token, $refresh_token)
+    public function refreshToken()
     {
-        $this->accessToken = $access_token;
-        $this->refreshToken = $refresh_token;
+        $api = BankAPI::make()->connectTokenRefresh();
+        $this->accessToken = $api->access_token;
+        $this->refreshToken = $api->refresh_token;
 
         $this->save();
+        return $this;
     }
 }

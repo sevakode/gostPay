@@ -75,9 +75,15 @@ class CardController extends Controller
 
     public function download(Request $request)
     {
-        $cardsChecked = $request->user()->company->cards()
-            ->where('user_id', $request->id)
-            ->whereIn('id', $request->cards);
+        $cardsChecked = $request->user()->cards()->where('user_id', $request->id);
+
+        if(!$cardsChecked->exists()) {
+            DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());
+            die;
+        }
+
+        $cardsChecked = $cardsChecked->whereIn('id', $request->cards);
+
         $txt = '';
         foreach ($cardsChecked->get() as $card) {
             $txt .= $card->numberFull;

@@ -101,12 +101,14 @@
                             </a>
                         </li>
                         @endif
+                        @if(\Illuminate\Support\Facades\Route::is('profile_cards'))
                         <li class="navi-item">
                             <a href="#" id="download-cards-txt" class="navi-link disabled">
                                 <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>
                                 <span class="navi-text">Скачать</span>
                             </a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -301,17 +303,18 @@
                 $.ajax({
                     type:'post',
                     url:'{{ route('cards.download.txt') }}',
-                    // dataType: "json",
                     data:{
                         '_token':$('meta[name="csrf-token"]').attr('content'),
                         'cards': checkboxes_value,
                         'id': {{ $user->id }}
                     },
                     success: function(t) {
-                        var link = document.createElement('a');
-                        link.setAttribute('href', t);
-                        link.setAttribute('download', 'download.txt');
-                        link.click();
+                        if(t) {
+                            var link = document.createElement('a');
+                            link.setAttribute('href', t);
+                            link.setAttribute('download', 'download.txt');
+                            link.click();
+                        }
                         return false;
                     },
                 });
@@ -336,7 +339,6 @@
             rightArrow: '<i class="la la-angle-right"></i>'
         }
         var demos = function () {
-                // range picker
                 $('#kt_datepicker_5').datepicker({
                     rtl: KTUtil.isRTL(),
                     todayHighlight: true,
@@ -348,7 +350,6 @@
         console.log($('.event_click_checkbox'));
             $('.event_click_checkbox').on('click', function () {
                 var status_check = 0;
-                console.log('asdasd');
                 $('input[name="checkboxes"]').each(function () {
                     //if($(this).is(":checked")) {
                     if (this.checked) {
@@ -356,7 +357,6 @@
                     }
                 });
                 if (status_check) {
-                    console.log('asdasd');
                     $('#checkbox-parameter').removeClass('d-none');
                 } else {
                     $('#checkbox-parameter').addClass('d-none');

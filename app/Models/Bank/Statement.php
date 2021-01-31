@@ -16,8 +16,9 @@ class Statement extends Model
         $api = BankAPI::make();
         $accountList = $api->getAccountsList();
         $statements = array();
-        if(!isset($accountList->Data))
-            $api->connectTokenRefresh();
+
+        if(!isset($accountList->Data)) $api->connectTokenRefresh();
+
         foreach ($accountList->Data->Account as $account)
         {
             $statement = BankAPI::make()->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
