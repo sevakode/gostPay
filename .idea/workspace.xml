@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="ca653c01-7342-4c80-8aa7-8d9760065539" name="Default Changelist" comment="Role v0.3">
       <change beforePath="$PROJECT_DIR$/storage/framework/views/039a93c9f967d02f34190f40a5561de03da4de20.php" beforeDir="false" afterPath="$PROJECT_DIR$/storage/framework/views/039a93c9f967d02f34190f40a5561de03da4de20.php" afterDir="false" />
@@ -157,7 +175,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/Interfaces" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -210,6 +228,7 @@
       <workItem from="1610013143610" duration="33708000" />
       <workItem from="1610103892253" duration="22281000" />
       <workItem from="1610178892960" duration="19398000" />
+      <workItem from="1612183085887" duration="7367000" />
     </task>
     <task id="LOCAL-00001" summary="Шаблон авторизации. Шаблон Профиля. Миддлвар auth, роут с профилем и логином. Изменения в теме">
       <created>1608864470421</created>
@@ -291,6 +310,25 @@
     <MESSAGE value="Регистрация - Ajax&#10;Авторизация - Ajax&#10;Проверка на авторизированных пользователей - middleware&#10;Шаблон с ошбками - views&#10;Шаблон Профиль - views &#10;Шаблон Авторизации - views&#10;Vue - JS&#10;..." />
     <MESSAGE value="debugging" />
     <MESSAGE value="Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update" />
+    <MESSAGE value="Role v0.3" />
+    <option name="LAST_COMMIT_MESSAGE" value="Role v0.3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="450" y="184" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog" timestamp="1612219637025">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="450" y="184" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1440.860@0.0.1440.860" timestamp="1612219637025" />
+    <state x="457" y="132" key="RollbackChangesDialog" timestamp="1612220048021">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="457" y="132" key="RollbackChangesDialog/0.0.1440.860@0.0.1440.860" timestamp="1612220048021" />
+    <state x="427" y="163" width="585" height="534" key="find.popup" timestamp="1612219767343">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="427" y="163" width="585" height="534" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1612219767343" />
+    <state x="383" y="180" key="search.everywhere.popup" timestamp="1612219936877">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="383" y="180" key="search.everywhere.popup/0.0.1440.860@0.0.1440.860" timestamp="1612219936877" />
   </component>
 </project>

@@ -64,7 +64,7 @@
 		            </div>
 		            <div class="navi-text">
 		                <div class="font-weight-bold">
-		                    Мой профиль
+		                        Мой профиль
 		                </div>
 		                <div class="text-muted">
 		                   Настройки учетной записи и многое другое
@@ -88,6 +88,24 @@
 		                </div>
 		                <div class="text-muted">
 		                    Просмотр карт
+		                </div>
+		            </div>
+		        </div>
+		    </a>
+
+		    <a href="{{ route('logout') }}"  class="navi-item">
+		        <div class="navi-link">
+					<div class="symbol symbol-40 bg-light mr-3">
+						<div class="symbol-label">
+ 						   {{ Metronic::getSVG("media/svg/icons/Home/Door-open.svg", "svg-icon-md svg-icon-danger ") }}
+ 					   </div>
+				   	</div>
+		            <div class="navi-text">
+		                <div class="font-weight-bold">
+		                    Выход
+		                </div>
+		                <div class="text-muted">
+		                    Выйти из аккаунта
 		                </div>
 		            </div>
 		        </div>

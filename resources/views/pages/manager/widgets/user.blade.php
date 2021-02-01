@@ -91,7 +91,7 @@
         //     placeholder: "Select a state",
         // });
         $("#kt_select2_3").select2({
-        placeholder: "Search for git repositories",
+        placeholder: "Поиск свободных карт",
         allowClear: true,
         ajax: {
             url: "{{route('datatables.select-add-cards')}}",

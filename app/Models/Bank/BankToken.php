@@ -7,6 +7,7 @@ namespace App\Models\Bank;
 use App\Classes\TochkaBank\BankAPI;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class BankToken
@@ -110,6 +111,9 @@ class BankToken extends Model
         $api = BankAPI::make()->connectTokenRefresh();
         $this->accessToken = $api->access_token;
         $this->refreshToken = $api->refresh_token;
+
+        Storage::disk('local')
+            ->put('token.txt', "access_token: $api->access_token\nrefresh_token: $api->refresh_token\n\n");
 
         $this->save();
         return $this;

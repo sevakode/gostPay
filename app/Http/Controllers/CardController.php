@@ -91,7 +91,7 @@ class CardController extends Controller
             $txt .= $card->expiredAt->format('m/Y');
             $txt .= " ";
             $txt .= $card->cvc;
-            $txt .= "\n";
+            $txt .= "\r\n";
         }
         $dirName = 'download/';
         $dirPath = public_path($dirName);

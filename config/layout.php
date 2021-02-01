@@ -198,7 +198,7 @@ return [
 
         // Quick Actions
         'quick-actions' => [
-            'display' => true,
+            'display' => false,
             'layout' => 'dropdown', // offcanvas, dropdown
             'dropdown' => [
                 'style' => 'dark' // light|dark

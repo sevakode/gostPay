@@ -179,7 +179,7 @@
                     key: 'generalSearch'
                 },
                 rows: {
-                    autoHide: true,
+                    autoHide: false,
                     afterTemplate: function (row, data, index) {
                         $('.event_click_checkbox').on('click', function () {
                             var status_check = 0;
@@ -200,16 +200,20 @@
                 columns: [
                     {
                         field: 'id',
-                        title: '№',
+                        title: '<label class="checkbox event_click_checkbox">' +
+                            '<input  id="check_all" type="checkbox" value="" name="checkboxes"/>' +
+                            '<span></span>' +
+                            '</label>',
                         width: 20,
-                        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))
+                        sortable: false,
+{{--                        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))--}}
                         template: function template(row) {
                             return '<label class="checkbox event_click_checkbox">'+
-                                '<input type="checkbox" value="'+row.id+'" name="checkboxes"/>'+
+                                '<input class="check_cards" type="checkbox" value="'+row.id+'" name="checkboxes"/>'+
                                 '<span></span>'+
                                 '</label>'
                         }
-                        @endif
+{{--                        @endif--}}
                     },
                     {
                         field: 'number',
@@ -255,6 +259,10 @@
                     },
                 ],
             });
+            $('#check_all').on('click', function () {
+                $(".check_cards").prop('checked', this.checked);
+            });
+
             $('#add_cards_datatable_search_status').on('change', function () {
                 datatable.search($(this).val().toLowerCase(), 'state');
             });
@@ -319,6 +327,8 @@
                     },
                 });
             });
+
+            $()
 
 
             $('#kt_datepicker_5').datepicker().on('changeDate', function(e) {

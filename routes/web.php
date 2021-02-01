@@ -33,10 +33,13 @@ Route::post('/login/sign-up', [\App\Http\Controllers\Auth\RegisterController::cl
 Route::middleware('auth')->group(function () {
 
     Route::prefix('datatables')->group(function () {
+
         Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])
             ->name('datatables.company-cards');
+
         Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])
             ->name('datatables.user-cards');
+
         Route::post('select-add-cards', [\App\Http\Controllers\DatatablesController::class, 'selectAddCard'])
             ->name('datatables.select-add-cards');
     });
@@ -56,36 +59,57 @@ Route::middleware('auth')->group(function () {
     Route::prefix(RouteServiceProvider::PROFILE)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['title'])
         ->group(function () {
+
         Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
+
         Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
+
         Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
             ->middleware('auth.demo');
+
         Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create')
             ->middleware('auth.demo');
     });
+
 
     Route::prefix(RouteServiceProvider::MANAGER)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title'])
         ->group(function () {
+
         Route::get('/', [ManagerController::class, 'dashboard'])->name('dashboard');
+
         Route::get('/user/{id}/cards', [ManagerController::class, 'user'])->name('user_cards');
+
         Route::get('/user/add', [ManagerController::class, 'addUser'])->name('add_user');
+
         Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update')
             ->middleware('auth.demo');
+
         Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update')
             ->middleware('auth.demo');
     });
+
+
     Route::prefix('/bank')
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title'])
         ->group(function () {
+
         Route::get('cards', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
+
         Route::get('cards/create', [\App\Http\Controllers\CardController::class, 'create'])->name('cards.create');
+
         Route::post('cards/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])->name('cards.create.pdf');
+
         Route::post('cards/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])->name('cards.create.xlsx');
+
         Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
-        Route::post('cards/download', [\App\Http\Controllers\CardController::class, 'download'])->name('cards.download.txt');
+
+        Route::post('cards/download', [\App\Http\Controllers\CardController::class, 'download'])
+            ->name('cards.download.txt')
+            ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
+            ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title']);
     });
 
     Route::prefix('api')->group(function () {
