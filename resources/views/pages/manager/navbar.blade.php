@@ -17,7 +17,7 @@
                     </a>
                     <!--end::Title-->
                     <!--begin::Text-->
-                    <div class="font-weight-bold text-dark-50 font-size-sm pb-7">CV38+2J Palo Alto</div>
+                    <div class="font-weight-bold text-dark-50 font-size-sm pb-7"></div>
                     <!--end::Text-->
                 </div>
                 <!--end::Header-->
