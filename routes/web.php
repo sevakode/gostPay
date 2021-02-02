@@ -47,17 +47,17 @@ Route::middleware('auth')->group(function () {
             ->name('datatables.select-add-cards');
     });
 
-    Route::get('/', 'PagesController@index')->name('home');
-    Route::get('/datatables', 'PagesController@datatables');
-    Route::get('/ktdatatables', 'PagesController@ktDatatables');
-    Route::get('/select2', 'PagesController@select2');
-    Route::get('/jquerymask', 'PagesController@jQueryMask');
-    Route::get('/icons/custom-icons', 'PagesController@customIcons');
-    Route::get('/icons/flaticon', 'PagesController@flaticon');
-    Route::get('/icons/fontawesome', 'PagesController@fontawesome');
-    Route::get('/icons/lineawesome', 'PagesController@lineawesome');
-    Route::get('/icons/socicons', 'PagesController@socicons');
-    Route::get('/icons/svg', 'PagesController@svg');
+//    Route::get('/', 'PagesController@index')->name('home');
+//    Route::get('/datatables', 'PagesController@datatables');
+//    Route::get('/ktdatatables', 'PagesController@ktDatatables');
+//    Route::get('/select2', 'PagesController@select2');
+//    Route::get('/jquerymask', 'PagesController@jQueryMask');
+//    Route::get('/icons/custom-icons', 'PagesController@customIcons');
+//    Route::get('/icons/flaticon', 'PagesController@flaticon');
+//    Route::get('/icons/fontawesome', 'PagesController@fontawesome');
+//    Route::get('/icons/lineawesome', 'PagesController@lineawesome');
+//    Route::get('/icons/socicons', 'PagesController@socicons');
+//    Route::get('/icons/svg', 'PagesController@svg');
 
     Route::prefix(RouteServiceProvider::PROFILE)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['title'])

@@ -178,7 +178,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/public/media/logos" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.path.for.package.tslint" value="project" />
@@ -189,19 +189,19 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Interfaces" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Traits" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\database\seeders" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Http\Controllers" />
-      <recent name="C:\Users\hd\PhpstormProjects\pay\resources\views\pages\manager\widgets" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\hd\PhpstormProjects\pay\app\Interfaces" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\app\Models\Bank" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes\TochkaBank\Traits" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes\TochkaBank" />
       <recent name="C:\Users\hd\PhpstormProjects\pay\app\Classes" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\OPENSERVER\OSPanel\domains\pay\public\media\logos" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Interfaces" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Traits" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\database\seeders" />
+      <recent name="C:\Users\hd\PhpstormProjects\pay\app\Http\Controllers" />
     </key>
   </component>
   <component name="RunManager">
@@ -232,7 +232,7 @@
       <workItem from="1610013143610" duration="33708000" />
       <workItem from="1610103892253" duration="22281000" />
       <workItem from="1610178892960" duration="19398000" />
-      <workItem from="1612183085887" duration="19535000" />
+      <workItem from="1612183085887" duration="21271000" />
     </task>
     <task id="LOCAL-00001" summary="Шаблон авторизации. Шаблон Профиля. Миддлвар auth, роут с профилем и логином. Изменения в теме">
       <created>1608864470421</created>
@@ -322,6 +322,10 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="450" y="184" key="#com.jetbrains.php.actions.copyPaste.importReferences.PhpImportReferencesDialog/0.0.1440.860@0.0.1440.860" timestamp="1612219637025" />
+    <state x="555" y="353" key="NewPhpFileDialog" timestamp="1612235392757">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="555" y="353" key="NewPhpFileDialog/0.0.1440.860@0.0.1440.860" timestamp="1612235392757" />
     <state x="457" y="132" key="RollbackChangesDialog" timestamp="1612220048021">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
@@ -330,10 +334,14 @@
       <screen x="0" y="0" width="1440" height="860" />
     </state>
     <state x="221" y="74" key="SettingsEditor/0.0.1440.860@0.0.1440.860" timestamp="1612230176621" />
-    <state x="427" y="163" width="585" height="624" key="find.popup" timestamp="1612234117928">
+    <state x="427" y="163" width="585" height="624" key="find.popup" timestamp="1612235186634">
       <screen x="0" y="0" width="1440" height="860" />
     </state>
-    <state x="427" y="163" width="585" height="624" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1612234117928" />
+    <state x="427" y="163" width="585" height="624" key="find.popup/0.0.1440.860@0.0.1440.860" timestamp="1612235186634" />
+    <state x="376" y="195" key="run.anything.popup" timestamp="1612234557713">
+      <screen x="0" y="0" width="1440" height="860" />
+    </state>
+    <state x="376" y="195" key="run.anything.popup/0.0.1440.860@0.0.1440.860" timestamp="1612234557713" />
     <state x="383" y="180" width="672" height="678" key="search.everywhere.popup" timestamp="1612227821032">
       <screen x="0" y="0" width="1440" height="860" />
     </state>

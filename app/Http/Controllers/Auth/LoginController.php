@@ -23,10 +23,10 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
+        $page_title = 'Вход';
+        $page_description = 'Вход в аккаунт';
 
-        return view('pages.login.main');
+        return view('pages.login.main', compact('page_title', 'page_description'));
     }
 
     /**

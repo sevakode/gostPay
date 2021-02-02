@@ -18,14 +18,21 @@ class CardController extends Controller
 {
     public function show()
     {
+        $page_title = 'Все карты компании';
+        $page_description = $page_title;
+
         $cards = Auth::user()->company->cards()->get();
-        return view('pages.manager.widgets.cards', compact('cards'));
+
+        return view('pages.manager.widgets.cards', compact('cards','page_title', 'page_description'));
     }
 
     public function create()
     {
+        $page_title = 'Создать карты';
+        $page_description = $page_title;
+
         $cards = Auth::user()->company->cards()->get();
-        return view('pages.manager.widgets.cards-create', compact('cards'));
+        return view('pages.manager.widgets.cards-create', compact('cards', 'page_title', 'page_description'));
     }
 
     public function sendPDF(Request $request)

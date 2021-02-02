@@ -14,8 +14,8 @@ class ManagerController extends Controller
 {
     public function user($id)
     {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
+        $page_title = 'Профиль пользователя компании';
+        $page_description = $page_title;
 
         $user = Auth::user()->company->users()->find($id);
         $cards = $user->cards()->get();
@@ -26,16 +26,16 @@ class ManagerController extends Controller
 
     public function addUser()
     {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
+        $page_title = 'Добавление пользователя компании';
+        $page_description = $page_title;
 
         return view('pages.manager.widgets.add-user', compact('page_title', 'page_description'));
     }
 
     public function dashboard()
     {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
+        $page_title = 'Управление пользователями';
+        $page_description = $page_title;
 
         return view('pages.manager.widgets.dashboard', compact('page_title', 'page_description'));
     }

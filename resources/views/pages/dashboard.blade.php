@@ -14,12 +14,12 @@
 {{--            @include('pages.widgets._widget-2', ['class' => 'card-stretch gutter-b'])--}}
 {{--        </div>--}}
 
-        <div class="col-lg-6 col-xxl-8">
-            @include('pages.widgets._widget-3')
+        <div class="col-lg-6 col-xxl-6">
+            @include('pages.widgets._widget-3', ['class' => 'card-stretch gutter-b'])
         </div>
-        <div class="col-lg-6 col-xxl-4">
-
-            @include('pages.widgets._widget-4')
+        <div class="col-lg-6 col-xxl-6"></div>
+        <div class="col-lg-6 col-xxl-2 order-1 order-xxl-1">
+            @include('pages.widgets._widget-4', ['class' => 'card-stretch gutter-b'])
         </div>
 
 {{--        <div class="col-lg-6 col-xxl-4 order-1 order-xxl-1">--}}

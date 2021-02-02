@@ -27,8 +27,8 @@ class ProfileController extends Controller
 
     public function showCards()
     {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
+        $page_title = 'Мои карты';
+        $page_description = 'Просмотр и управление моих карт';
 
         $user = Auth::user();
         $cards = $user->cards()->get();
