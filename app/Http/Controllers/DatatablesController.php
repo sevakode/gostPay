@@ -63,6 +63,30 @@ class DatatablesController extends Controller
         return new JsonResponse($data);
     }
 
+    public function paymentChart(Request $request)
+    {
+        $data = [];
+        $user = $request->user();
+        $company = $user->company;
+
+        $i = 0;
+        foreach ($company->users()->get() as $user)
+        {
+            $cards = $user->cards();
+
+            $data['users'][$i] = $user->fullName;
+
+            $data['amount'][$i] = 0;
+            foreach ($cards->get() as $card)
+            {
+                $data['amount'][$i] += $card->amount();
+            }
+
+            $i++;
+        }
+        return new JsonResponse($data, 200);
+    }
+
     public function userCards(Request $request)
     {
         $data = array();

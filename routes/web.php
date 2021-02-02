@@ -37,6 +37,9 @@ Route::middleware('auth')->group(function () {
         Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])
             ->name('datatables.company-cards');
 
+        Route::post('payment-chart', [\App\Http\Controllers\DatatablesController::class, 'paymentChart'])
+            ->name('datatables.payment-chart');
+
         Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])
             ->name('datatables.user-cards');
 

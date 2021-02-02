@@ -47,4 +47,14 @@ class Company extends Model
     {
         return User::where('company_id', $this->id);
     }
+
+    public function sumCardsPayments()
+    {
+        $payments = 0;
+        foreach ($this->users()->get() as $user)
+            foreach ($user->cards()->get() as $card)
+                $payments += $card->amount();
+
+        return $payments;
+    }
 }

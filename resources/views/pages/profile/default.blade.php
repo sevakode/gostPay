@@ -30,10 +30,10 @@
                                     <div>
                                         <a href="#" class="font-weight-bolder font-size-h5 text-dark-75 text-hover-primary">{{ $user->fullname }}</a>
                                         <div class="text-muted">{{ $user->role->name }}</div>
-                                        <div class="mt-2">
-                                            <a href="#" class="btn btn-sm btn-primary font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Чат</a>
-                                            <a href="#" class="btn btn-sm btn-success font-weight-bold py-2 px-3 px-xxl-5 my-1">Follow</a>
-                                        </div>
+{{--                                        <div class="mt-2">--}}
+{{--                                            <a href="#" class="btn btn-sm btn-primary font-weight-bold mr-2 py-2 px-3 px-xxl-5 my-1">Чат</a>--}}
+{{--                                            <a href="#" class="btn btn-sm btn-success font-weight-bold py-2 px-3 px-xxl-5 my-1">Follow</a>--}}
+{{--                                        </div>--}}
                                     </div>
                                 </div>
                                 <!--end::User-->

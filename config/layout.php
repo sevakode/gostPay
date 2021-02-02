@@ -177,7 +177,7 @@ return [
 
         // Search
         'search' => [
-            'display' => true,
+            'display' => false,
             'layout' => 'dropdown', // offcanvas, dropdown
             'offcanvas' => [
                 'direction' => 'right'
