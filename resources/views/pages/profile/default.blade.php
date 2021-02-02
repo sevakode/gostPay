@@ -45,12 +45,21 @@
                                             <a href="#" class="text-muted text-hover-primary">{{ $user->email }}</a>
                                         </div>
                                     @endisset
-                                    {{--                @isset($user->phone)--}}
+                                    @isset($user->phone)
                                     <div class="d-flex align-items-center justify-content-between mb-2">
                                         <span class="font-weight-bold mr-2">Телефон:</span>
-                                        <span class="text-muted">{{ $user->phone ?? '+7 (777) 777 77-77' }}</span>
+                                        <span class="text-muted">{{ $user->phone }}</span>
                                     </div>
-                                    {{--                @endisset--}}
+                                    @endisset
+
+                                    @isset($user->telegram)
+                                        <div class="d-flex align-items-center justify-content-between mb-2">
+                                            <span class="font-weight-bold mr-2">telegram:</span>
+                                            <a href="{{$user->telegramLink}}" class="text-muted text-hover-primary">
+                                                {{ $user->telegram }}
+                                            </a>
+                                        </div>
+                                    @endisset
                                     @isset($user->location)
                                         <div class="d-flex align-items-center justify-content-between">
                                             <span class="font-weight-bold mr-2">Location:</span>

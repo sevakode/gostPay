@@ -47,6 +47,7 @@ class ProfileController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'telegram' => $request->telegram,
         ]);
 
         $file = $request->file('profile_avatar');
@@ -104,6 +105,7 @@ class ProfileController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'max:16'],
+            'telegram' => ['nullable', 'string', 'max:30'],
             'email' => ['nullable', 'required', 'string', 'email', 'max:255', 'unique:users,email,'. $user->id]
         ]);
     }

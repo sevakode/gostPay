@@ -88,7 +88,7 @@
                         <label class="col-xl-3 col-lg-3 col-form-label">Название компании</label>
                         <div class="col-lg-9 col-xl-6">
                             <input class="form-control form-control-lg form-control-solid" type="text"
-                                   value="{{ $user->company->name ?? '' }}" name="company"/>
+                                   value="{{ $user->company->name ?? '' }}" name="company" disabled/>
                             <span class="form-text text-muted">
                             Если вы не хотите, чтобы ваши счета были адресованы компании. Оставьте поле пустым, чтобы использовать свое полное имя.
                         </span>
@@ -161,7 +161,26 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-xl-3 col-lg-3 col-form-label">Telegram</label>
+                        <div class="col-lg-9 col-xl-6">
+                            <div class="input-group input-group-lg input-group-solid">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">@</span>
+                                </div>
+                                <input type="text" class="form-control form-control-lg form-control-solid"
+                                       placeholder="Telegram" value="{{ $user->telegram ?? '' }}"
+                                       name="telegram" />
+                                @error('telegram')
+                                <span class="form-text text-danger">
+                                {{ $message }}
+                            </span>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
                 <!--end::Body-->
             </form>
             <!--end::Form-->

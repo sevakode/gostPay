@@ -21,6 +21,7 @@ use Illuminate\Notifications\Notifiable;
  * @property $phone
  * @property $role_id
  * @property $company_id
+ * @property $telegram
  * @property Company $company
  */
 class User extends Authenticatable
@@ -39,7 +40,8 @@ class User extends Authenticatable
         'password',
         'phone',
         'role_id',
-        "company_id",
+        'company_id',
+        'telegram'
     ];
 
     /**
@@ -99,6 +101,13 @@ class User extends Authenticatable
         $first = $this->first_name[0] ?? '';
         $last = $this->last_name[0] ?? '';
         return strtoupper("$first $last");
+    }
+
+    public function getTelegramLinkAttribute(): string
+    {
+        return  $this->telegram ?
+                "https://t.me/$this->telegram" :
+                '';
     }
 
     public function getAvatarAttribute(): string
