@@ -232,7 +232,9 @@
       <workItem from="1610013143610" duration="33708000" />
       <workItem from="1610103892253" duration="22281000" />
       <workItem from="1610178892960" duration="19398000" />
-      <workItem from="1612183085887" duration="21271000" />
+      <workItem from="1612183085887" duration="22408000" />
+      <workItem from="1612272497097" duration="999000" />
+      <workItem from="1612339712638" duration="1180000" />
     </task>
     <task id="LOCAL-00001" summary="Шаблон авторизации. Шаблон Профиля. Миддлвар auth, роут с профилем и логином. Изменения в теме">
       <created>1608864470421</created>

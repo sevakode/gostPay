@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
             ->name('datatables.select-add-cards');
     });
 
-//    Route::get('/', 'PagesController@index')->name('home');
+    Route::get('/', 'PagesController@index')->name('home');
 //    Route::get('/datatables', 'PagesController@datatables');
 //    Route::get('/ktdatatables', 'PagesController@ktDatatables');
 //    Route::get('/select2', 'PagesController@select2');

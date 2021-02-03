@@ -127,6 +127,24 @@
                             </div>
                         </div>
                         <div class="form-group row">
+                            <label class="col-xl-3 col-lg-3 col-form-label">Telegram</label>
+                            <div class="col-lg-9 col-xl-6">
+                                <div class="input-group input-group-lg input-group-solid">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">@</span>
+                                    </div>
+                                    <input type="text" class="form-control form-control-lg form-control-solid"
+                                           placeholder="Telegram" value="{{ $user->telegram ?? '' }}"
+                                           name="telegram" />
+                                    @error('telegram')
+                                    <span class="form-text text-danger">
+                                {{ $message }}
+                            </span>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
                             <label class="col-xl-3 col-lg-3 col-form-label">Пароль</label>
                             <div class="col-lg-9 col-xl-6">
                                 <div class="input-group input-group-lg input-group-solid">

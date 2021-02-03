@@ -26,8 +26,9 @@ class DatabaseSeeder extends Seeder
         $this->call(UserSeeder::class);
 
         $this->call(TochkaBankSeeder::class);
-        $this->call(CardSeeder::class);
-        $this->call(StatementSeeder::class);
-        $this->call(PaymentSeeder::class);
+        
+//        $this->call(CardSeeder::class);
+//        $this->call(StatementSeeder::class);
+//        $this->call(PaymentSeeder::class);
     }
 }

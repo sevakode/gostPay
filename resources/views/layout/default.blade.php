@@ -6,7 +6,6 @@
 
     <body {{ Metronic::printAttrs('body') }} {{ Metronic::printClasses('body') }}>
 
-
         @if (config('layout.page-loader.type') != '')
             @include('layout.partials._page-loader')
         @endif
@@ -33,4 +32,5 @@
         @yield('scripts')
 
     </body>
+
 @endsection

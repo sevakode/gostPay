@@ -70,6 +70,7 @@ class ProfileController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'phone' => ['nullable', 'max:16'],
+            'telegram' => ['nullable', 'max:32'],
             'email' => ['nullable', 'required', 'string', 'email', 'max:255', 'unique:users,email']
         ]);
         if($validator->fails())
@@ -81,6 +82,7 @@ class ProfileController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'telegram' => $request->telegram,
             'role_id' => Role::getSlug(Role::USER)->id,
             'password' => bcrypt($request->password),
             'company_id' => $request->user()->company_id,
