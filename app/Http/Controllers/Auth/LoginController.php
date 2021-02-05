@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller
 {
@@ -27,6 +28,21 @@ class LoginController extends Controller
         $page_description = 'Вход в аккаунт';
 
         return view('pages.login.main', compact('page_title', 'page_description'));
+    }
+
+    protected function sendLoginResponse($request)
+    {
+        $request->session()->regenerate();
+
+        $this->clearLoginAttempts($request) ;
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+            return $response;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse([url($this->redirectPath())], 201)
+            : redirect()->intended($this->redirectPath());
     }
 
     /**

@@ -144,7 +144,6 @@ eval(" // Class Definition\n" +
     "    KTUtil.animateClass(KTUtil.getById(form), 'animate__animated animate__backInUp');\n" +
     "  };\n" +
     "\n" +
-    "  console.log('dadasds');" +
     "" +
     "  var _handleSignInForm = function _handleSignInForm() {\n" +
     "" +

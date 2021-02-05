@@ -1,3 +1,4 @@
+storage/framework/*
 /storage/framework/*
 /vendor
 .env
