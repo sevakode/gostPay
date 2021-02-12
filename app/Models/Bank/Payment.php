@@ -6,10 +6,14 @@ use App\Classes\TochkaBank\BankAPI;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    const EXPENDITURE='expenditure';
+    const REVENUE='revenue';
 
     protected $dates = ['operationAt'];
 
@@ -33,6 +37,7 @@ class Payment extends Model
                         'description' => $payment->description,
                         'account_id' => $statement->Data->Statement[0]->accountId,
                         'card_id' => $cardId,
+                        'type' => self::EXPENDITURE,
                         'status' => $payment->status,
                         'amount' => $payment->Amount->amount,
                         'currency' => $payment->Amount->currency,

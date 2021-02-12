@@ -122,7 +122,7 @@
                                 </span>
                                 @enderror
                             </div>
-                            <span class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту.</span>
+{{--                            <span class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту.</span>--}}
                         </div>
                     </div>
                     <div class="form-group row">

@@ -19,7 +19,7 @@
                     @include('pages.login.forms.login')
                     <!--end::Login Sign in form-->
                     <!--begin::Login Sign up form-->
-                    @include('pages.login.forms.register')
+{{--                    @include('pages.login.forms.register')--}}
                     <!--end::Login Sign up form-->
                     <!--begin::Login forgot password form-->
                     <div class="login-forgot">

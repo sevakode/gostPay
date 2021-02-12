@@ -8,7 +8,7 @@
             <span class="text-muted mt-3 font-weight-bold font-size-sm">Pending 10 tasks</span>
         </h3>
         <div class="card-toolbar">
-            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions" data-placement="left">
+            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Быстрые действия" data-placement="left">
                 <a href="#" class="btn btn-clean btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="ki ki-bold-more-ver"></i>
                 </a>
@@ -18,7 +18,7 @@
                         <li class="navi-item">
                             <a href="#" class="navi-link">
                                 <span class="navi-icon"><i class="navi-icon flaticon2-group"></i></span>
-                                <span class="navi-text">New Group</span>
+                                <span class="navi-text">Новая группа</span>
                             </a>
                         </li>
                         <li class="navi-item">

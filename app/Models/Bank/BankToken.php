@@ -34,9 +34,13 @@ class BankToken extends Model
         'refreshTokenDate',
     ];
 
+    protected $fillable = [
+        'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id'
+    ];
+
     public static function make()
     {
-        return self::first();
+        return request()->user()->company->bank;
     }
 
 	public function token()

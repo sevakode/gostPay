@@ -18,7 +18,7 @@ class BankAPI
 
     public static function make(): BankAPI
     {
-        return new BankAPI(BankToken::all()->first());
+        return new BankAPI(BankToken::make());
     }
 
 	protected function send($uri, $headers = null, $body = null)

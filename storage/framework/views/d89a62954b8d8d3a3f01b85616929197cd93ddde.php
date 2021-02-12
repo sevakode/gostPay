@@ -1,7 +1,3 @@
-
-
-
-
 <?php $__env->startSection('content'); ?>
     <div class="d-flex flex-column flex-root">
         <!--begin::Login-->
@@ -11,7 +7,7 @@
                     <!--begin::Login Header-->
                     <div class="d-flex flex-center mb-15">
                         <a href="#">
-                            <img src="<?php echo e(asset('media/logos/logo-letter-13.png')); ?>" class="max-h-75px" alt="" />
+                            <img src="<?php echo e(asset('media/logos/logo-letter.png')); ?>" class="max-h-75px" alt="" />
                         </a>
                     </div>
                     <!--end::Login Header-->
@@ -19,7 +15,7 @@
                     <?php echo $__env->make('pages.login.forms.login', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                     <!--end::Login Sign in form-->
                     <!--begin::Login Sign up form-->
-                    <?php echo $__env->make('pages.login.forms.register', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+
                     <!--end::Login Sign up form-->
                     <!--begin::Login forgot password form-->
                     <div class="login-forgot">

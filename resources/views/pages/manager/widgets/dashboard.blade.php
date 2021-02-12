@@ -6,7 +6,7 @@
     <div class="card card-custom card-stretch gutter-b">
         <!--begin::Header-->
         <div class="card-header border-0">
-            <h3 class="card-title font-weight-bolder text-dark">Авторы</h3>
+            <h3 class="card-title font-weight-bolder text-dark">Пользователи</h3>
             <div class="card-toolbar">
                 <a href="{{ route('add_user') }}" class="btn btn-primary mr-2">Создать пользователя</a>
             </div>
@@ -39,7 +39,7 @@
                     </span>
                     <!--end::Text-->
                     <!--begin::Dropdown-->
-                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Quick actions">
+                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Быстрые действия">
                         <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="ki ki-bold-more-hor"></i>
                         </a>
@@ -48,7 +48,7 @@
                             <ul class="navi navi-hover">
                                 <li class="navi-header font-weight-bold py-4">
                                     <span class="font-size-lg">Роли:</span>
-                                    <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip" data-placement="right" title="" data-original-title="Click to learn more..."></i>
+                                    <i class="flaticon2-information icon-md text-muted" data-toggle="tooltip" data-placement="right" title="" data-original-title="Нажмите, чтобы узнать больше..."></i>
                                 </li>
                                 <li class="navi-separator mb-3 opacity-70"></li>
                                 @foreach(Auth::user()->getRolesListForPermissions() as $role)
@@ -65,10 +65,10 @@
                                     </li>
                                 @endforeach
                                 <li class="navi-separator mt-3 opacity-70"></li>
-                                <li class="navi-footer py-4">
-                                    <a class="btn btn-clean font-weight-bold btn-sm" href="#">
-                                        <i class="ki ki-plus icon-sm"></i>Add new</a>
-                                </li>
+{{--                                <li class="navi-footer py-4">--}}
+{{--                                    <a class="btn btn-clean font-weight-bold btn-sm" href="#">--}}
+{{--                                        <i class="ki ki-plus icon-sm"></i>Add new</a>--}}
+{{--                                </li>--}}
                             </ul>
                             <!--end::Navigation-->
                         </div>

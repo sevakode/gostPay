@@ -48,7 +48,7 @@
                 <i class="flaticon2-settings icon-md text-muted"></i>
             </a>
 
-            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions" data-placement="left">
+            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Быстрые действия" data-placement="left">
                 <a href="#" class="btn btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ Metronic::getSVG( "media/svg/icons/Files/File-plus.svg", "svg-icon-success svg-icon-2x") }}
                     {{-- <i class="flaticon2-plus"></i> --}}

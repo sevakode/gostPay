@@ -32,8 +32,10 @@ class CreateBankTokenTable extends Migration
 			$table->string('rsUrl');
             $table->string('apiVersion');
 
-			$table->string('bankId')->nullable();
-			$table->string('bankSecret')->nullable();
+			$table->string('bankId');
+			$table->string('bankSecret');
+
+            $table->integer('company_id')->references('id')->on('companies')->onDelete('cascade');
 
 			$table->timestamps();
 			$table->string('authCode')->nullable();
@@ -42,7 +44,6 @@ class CreateBankTokenTable extends Migration
 			$table->timestamp('accessTokenDate')->nullable();
 			$table->string('refreshToken')->nullable();
 			$table->timestamp('refreshTokenDate')->nullable();
-			$table->text('jwtToken')->nullable();
 		});
 	}
 

@@ -234,7 +234,7 @@ class TestResponse implements ArrayAccess
     }
 
     /**
-     * Asserts that the response does not contains the given header.
+     * Asserts that the response does not contain the given header.
      *
      * @param  string  $headerName
      * @return $this
@@ -327,7 +327,7 @@ class TestResponse implements ArrayAccess
         $expiresAt = Carbon::createFromTimestamp($cookie->getExpiresTime());
 
         PHPUnit::assertTrue(
-            $expiresAt->lessThan(Carbon::now()),
+            0 !== $cookie->getExpiresTime() && $expiresAt->lessThan(Carbon::now()),
             "Cookie [{$cookieName}] is not expired, it expires at [{$expiresAt}]."
         );
 
@@ -350,7 +350,7 @@ class TestResponse implements ArrayAccess
         $expiresAt = Carbon::createFromTimestamp($cookie->getExpiresTime());
 
         PHPUnit::assertTrue(
-            $expiresAt->greaterThan(Carbon::now()),
+            0 === $cookie->getExpiresTime() || $expiresAt->greaterThan(Carbon::now()),
             "Cookie [{$cookieName}] is expired, it expired at [{$expiresAt}]."
         );
 
@@ -358,7 +358,7 @@ class TestResponse implements ArrayAccess
     }
 
     /**
-     * Asserts that the response does not contains the given cookie.
+     * Asserts that the response does not contain the given cookie.
      *
      * @param  string  $cookieName
      * @return $this

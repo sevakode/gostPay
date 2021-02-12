@@ -19,10 +19,12 @@ class CreatePaymentsTable extends Migration
             $table->string('description')->nullable();
             $table->string('account_id');
             $table->string('card_id')->nullable();
+            $table->string('type');
             $table->string('status');
             $table->float('amount');
             $table->string('currency')->nullable();
 
+            $table->softDeletes();
             $table->timestamp('operationAt');
             $table->timestamps();
         });

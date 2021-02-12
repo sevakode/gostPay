@@ -40,7 +40,7 @@
                 @section('page_toolbar')
             @endif
 
-            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Quick actions" data-placement="left">
+            <div class="dropdown dropdown-inline" data-toggle="tooltip" title="Быстрые действия" data-placement="left">
                 <a href="#" class="btn btn-icon"data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ Metronic::getSVG("media/svg/icons/Files/File-plus.svg", "svg-icon-success svg-icon-2x") }}
                 </a>
@@ -49,13 +49,13 @@
                     <ul class="navi navi-hover">
                         <li class="navi-header font-weight-bold">
                             Jump to:
-                            <i class="flaticon2-information" data-toggle="tooltip" data-placement="right" title="Click to learn more..."></i>
+                            <i class="flaticon2-information" data-toggle="tooltip" data-placement="right" title="Нажмите, чтобы узнать больше..."></i>
                         </li>
                         <li class="navi-separator mb-3"></li>
                         <li class="navi-item">
                             <a href="#" class="navi-link">
                                 <span class="navi-icon"><i class="flaticon2-drop"></i></span>
-                                <span class="navi-text">Recent Orders</span>
+                                <span class="navi-text">Недавние заказы</span>
                             </a>
                         </li>
                         <li class="navi-item">

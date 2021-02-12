@@ -18,10 +18,7 @@ trait AuthenticatesUsers
      */
     public function showLoginForm()
     {
-        $page_title = 'Мой профиль';
-        $page_description = 'Настройки учетной записи и многое другое';
-
-        return view('pages.login.main');
+        return view('auth.login');
     }
 
     /**
@@ -36,9 +33,9 @@ trait AuthenticatesUsers
     {
         $this->validateLogin($request);
 
-        // Если класс использует трейт ThrottlesLogins, мы можем автоматически регулировать
-        // попытки входа в систему для этого приложения. Мы будем вводить это по имени пользователя и
-        // IP-адрес клиента, отправляющего эти запросы в это приложение.
+        // If the class is using the ThrottlesLogins trait, we can automatically throttle
+        // the login attempts for this application. We'll key this by the username and
+        // the IP address of the client making these requests into this application.
         if (method_exists($this, 'hasTooManyLoginAttempts') &&
             $this->hasTooManyLoginAttempts($request)) {
             $this->fireLockoutEvent($request);
@@ -50,9 +47,9 @@ trait AuthenticatesUsers
             return $this->sendLoginResponse($request);
         }
 
-        // Если попытка входа в систему не удалась, мы увеличим количество попыток.
-        // для входа в систему и перенаправления пользователя обратно в форму входа. Конечно, когда это
-        // пользователь превышает максимальное количество попыток, которые он может заблокировать.
+        // If the login attempt was unsuccessful we will increment the number of attempts
+        // to login and redirect the user back to the login form. Of course, when this
+        // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
@@ -115,7 +112,7 @@ trait AuthenticatesUsers
         }
 
         return $request->wantsJson()
-                    ? new JsonResponse([url($this->redirectPath())], 201)
+                    ? new JsonResponse([], 204)
                     : redirect()->intended($this->redirectPath());
     }
 
@@ -175,8 +172,8 @@ trait AuthenticatesUsers
         }
 
         return $request->wantsJson()
-            ? new JsonResponse([url($this->redirectPath())], 204)
-            : redirect($this->redirectPath());
+            ? new JsonResponse([], 204)
+            : redirect('/');
     }
 
     /**

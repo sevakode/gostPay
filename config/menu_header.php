@@ -11,6 +11,38 @@ return [
             'new-tab' => false,
         ],
         [
+            'title' => 'Company',
+            'root' => true,
+            'toggle' => 'click',
+            'submenu' => [
+                'type' => 'classic',
+                'alignment' => 'left',
+                'items' => [
+                    [
+                        'title' => 'Управление Компаниями',
+                        'page' => 'company',
+                        'icon' => 'media/svg/icons/Shopping/Sort3.svg',
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_COMPANY['title'],
+                    ],
+                    [
+                        'title' => 'Создать компанию',
+                        'page' => 'company/create',
+                        'icon' => 'media/svg/icons/Navigation/Plus.svg',
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY['title'],
+                    ],
+                    [
+                        'title' => 'Параметры',
+                        'page' => 'company/edit',
+                        'icon' => 'media/svg/icons/General/Settings-2.svg',
+                        'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['title'],
+                    ],
+                ],
+                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['title'],
+            ],
+            'permission' => \App\Interfaces\OptionsPermissions::OWNER['title'],
+
+        ],
+        [
             'title' => 'Manager',
             'root' => true,
             'toggle' => 'click',

@@ -6,20 +6,9 @@
             <!--begin::Container-->
             <div class="h-100">
                 <!--begin::Header-->
-                <div class="d-flex flex-column flex-center">
-                    <!--begin::Image-->
-                    <div class="bgi-no-repeat bgi-size-cover rounded min-h-180px w-100"
-                         style="background-image: url({{ asset('media/stock-600x400/img-70.jpg') }})"></div>
-                    <!--end::Image-->
-                    <!--begin::Title-->
-                    <a href="#" class="card-title font-weight-bolder text-dark-75 text-hover-primary font-size-h4 m-0 pt-7 pb-1">
-                        {{ \Illuminate\Support\Facades\Auth::user()->company->name }}
-                    </a>
-                    <!--end::Title-->
-                    <!--begin::Text-->
-                    <div class="font-weight-bold text-dark-50 font-size-sm pb-7"></div>
-                    <!--end::Text-->
-                </div>
+                @include('pages.company.navbar.my-company-preview',[
+                        'company' => \Illuminate\Support\Facades\Auth::user()->company ?? null
+                    ])
                 <!--end::Header-->
                 <!--begin::Body-->
                 <div class="pt-1">

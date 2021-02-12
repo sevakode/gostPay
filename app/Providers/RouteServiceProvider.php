@@ -45,6 +45,13 @@ class RouteServiceProvider extends ServiceProvider
     public const MANAGER = '/manager';
 
     /**
+     * The path to the "manager" route for your application.
+     *
+     * @var string
+     */
+    public const COMPANY = '/company';
+
+    /**
      * Define your route model bindings, pattern filters, etc.
      *
      * @return void

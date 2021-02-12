@@ -6,7 +6,7 @@
 	{{-- Header --}}
 	<div class="offcanvas-header d-flex align-items-center justify-content-between pb-10">
 		<h3 class="font-weight-bold m-0">
-			Quick Actions
+			Быстрые действия
 			<small class="text-muted font-size-sm ml-2">finance & reports</small>
 		</h3>
 		<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_actions_close">

@@ -1,6 +1,7 @@
 <?php namespace App\Interfaces;
 
 use App\Models\Permission;
+use App\Models\Role;
 
 interface OptionsRole
 {
@@ -17,6 +18,14 @@ interface OptionsRole
             Permission::ACCESS_TO_REMOVE_CARDS,
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
+
+            Permission::ACCESS_TO_CREATE_COMPANY,
+            Permission::ACCESS_TO_LOGOUT_COMPANY,
+            Permission::ACCESS_TO_ALL_COMPANY,
+
+            Permission::ACCESS_TO_UPDATE_COMPANY,
+            Permission::ACCESS_TO_SHOW_COMPANY,
+            Permission::ACCESS_TO_INSERT_COMPANY,
         ]
     ],
         ADMIN = [
@@ -30,6 +39,10 @@ interface OptionsRole
             Permission::ACCESS_TO_REMOVE_CARDS,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
+
+            Permission::ACCESS_TO_UPDATE_COMPANY,
+            Permission::ACCESS_TO_SHOW_COMPANY,
+            Permission::ACCESS_TO_INSERT_COMPANY,
         ]
 
     ],

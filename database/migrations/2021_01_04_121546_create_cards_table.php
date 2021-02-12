@@ -30,8 +30,11 @@ class CreateCardsTable extends Migration
             $table->integer('geo_id')->nullable();
 
             $table->boolean('state')->default(true);
+
+            $table->softDeletes();
             $table->timestamp('expiredAt')->useCurrent();
             $table->timestamps();
+
             $table->index(['number']);
             $table->index(['head', 'tail', 'expiredAt']);
         });
