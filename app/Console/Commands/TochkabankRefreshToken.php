@@ -38,10 +38,13 @@ class TochkabankRefreshToken extends Command
      */
     public function handle()
     {
-        $bank = BankToken::make()->refreshToken();
+        $banks = BankToken::refreshAll();
 
-        $this->info("Access token: $bank->accessToken");
-        $this->info("Refresh token: $bank->refreshToken");
+        foreach ($banks as $bank){
+            $this->info($bank->company()->first()->name);
+            $this->info("Access token: $bank->accessToken");
+            $this->info("Refresh token: $bank->refreshToken");
+        }
 
         return 0;
     }

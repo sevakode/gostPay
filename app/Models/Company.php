@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
-use App\Classes\TochkaBank\BankAPI;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Traits\Imageable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
 
 class Company extends Model
 {
@@ -85,5 +85,22 @@ class Company extends Model
     public function getBankAttribute()
     {
         return $this->bank()->first();
+    }
+
+    public function exportReportXls()
+    {
+        $excel = array();
+        foreach ($this->users()->get() as $user)
+        {
+            foreach ($user->cards()->get() as $card)
+            {
+                $excel[] = array(
+                    $card->amount(),
+                    $card->number,
+                    $user->fullname,
+                );
+            }
+        }
+        return (new Collection($excel))->downloadExcel('report.xlsx', null, false);
     }
 }

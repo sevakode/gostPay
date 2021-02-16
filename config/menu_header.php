@@ -31,7 +31,7 @@ return [
                         'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY['title'],
                     ],
                     [
-                        'title' => 'Параметры',
+                        'title' => 'Моя компания    ',
                         'page' => 'company/edit',
                         'icon' => 'media/svg/icons/General/Settings-2.svg',
                         'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['title'],

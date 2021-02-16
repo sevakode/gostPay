@@ -5,6 +5,7 @@ namespace App\Models\Bank;
 
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -38,6 +39,16 @@ class BankToken extends Model
         'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id'
     ];
 
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id');
+    }
+
+    public function getCompanyAttribute()
+    {
+        return $this->company()->first();
+    }
+
     public static function make()
     {
         return request()->user()->company->bank;
@@ -52,21 +63,6 @@ class BankToken extends Model
     {
         return $this->url . $method;
     }
-
-//    public function getAuthCodeAttribute($value)
-//    {
-//        return $this->getToken('authCode', 2 * 60);
-//    }
-
-//    public function getAccessTokenAttribute($value)
-//    {
-//        return $this->getToken('accessToken', 24 * 60 * 60);
-//    }
-
-//    public function getRefreshTokenAttribute($value)
-//    {
-//        return $this->getToken('refreshToken', 30 * 24 * 60 * 60);
-//    }
 
     public function setAuthCodeAttribute($value)
     {
@@ -110,7 +106,7 @@ class BankToken extends Model
         }
     }
 
-    public function refreshToken()
+    public function refresh()
     {
         $api = BankAPI::make()->connectTokenRefresh();
         $this->accessToken = $api->access_token;
@@ -121,5 +117,26 @@ class BankToken extends Model
 
         $this->save();
         return $this;
+    }
+
+    public static function refreshAll()
+    {
+        foreach (self::all() as $token)
+        {
+            $api = (new BankAPI($token))->connectTokenRefresh();
+            try{
+                $token->accessToken = $api->access_token;
+                $token->refreshToken = $api->refresh_token;
+            }catch (\Exception $e) {
+                dd($api);
+            }
+            $companyName = $token->company->name;
+            $txt = "$companyName\naccess_token: $api->access_token\nrefresh_token: $api->refresh_token\n\n";
+            Storage::put('token.txt', $txt);
+
+            $token->save();
+        }
+
+        return self::all();
     }
 }

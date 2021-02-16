@@ -138,4 +138,10 @@ class CompanyController extends Controller
         return null;
     }
 
+    public function downloadReportUsersXls(Request $request)
+    {
+        $company = $request->user()->company;
+
+        return $company->exportReportXls();
+    }
 }
