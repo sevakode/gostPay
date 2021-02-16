@@ -192,7 +192,7 @@ class DatatablesController extends Controller
         $data['amountAll'] = 0;
 
         foreach ($cards->get()->where('user_id', $filter['id']) as $card) {
-            $updateAtPayments = $card->payments()->latest('updated_at')->first();
+//            $updateAtPayments = $card->payments()->latest('updated_at')->first();
 
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
@@ -206,9 +206,10 @@ class DatatablesController extends Controller
                 'countPayments' => $card->getPayments()->count(),
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
-                'updated_at' => $updateAtPayments ?
-                    $updateAtPayments->updated_at->format('M d, Y') :
-                    null,
+                'updated_at' => $card->updated_at->format('M d, Y'),
+//                'updated_at' => $updateAtPayments ?
+//                    $updateAtPayments->updated_at->format('M d, Y') :
+//                    null,
             ];
         }
 

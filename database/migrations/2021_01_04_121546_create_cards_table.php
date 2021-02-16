@@ -27,7 +27,7 @@ class CreateCardsTable extends Migration
 
             $table->integer('user_id')->nullable();
             $table->integer('company_id')->nullable();
-            $table->integer('geo_id')->nullable();
+//            $table->integer('geo_id')->nullable();
 
             $table->boolean('state')->default(true);
 
