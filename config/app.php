@@ -178,6 +178,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RolesServiceProvider::class,
         App\Providers\PermissionServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
 
 //        AncientPenguin\TochkaBankApi\Providers\TochkaBankProvider::class,
@@ -237,7 +238,7 @@ return [
         // Metronic Aliases
         'Metronic' => App\Classes\Theme\Metronic::class,
         'Menu' => App\Classes\Theme\Menu::class,
-//        'TochkaBank' => \AncientPenguin\TochkaBankApi\Faccades\TochkaBank::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class
 
     ],
 

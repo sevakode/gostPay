@@ -32,9 +32,16 @@
                 @include('pages.company.navbar.item', [
                     'svg' => 'General/Settings-2.svg',
                     'route' => route('company.edit'),
-                    'title' => 'Параметры',
+                    'title' => 'Моя компания',
                     'description' => 'Изменить данные Компании',
-                    'permission' => \App\Interfaces\OptionsPermissions::OWNER
+                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                    ])
+                @include('pages.company.navbar.item', [
+                    'svg' => 'Files/DownloadedFile.svg',
+                    'route' => route('company.download.report.users.xls'),
+                    'title' => 'Отчет',
+                    'description' => 'Получить отчет компании в XLS',
+                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
                     ])
                 <!--end::Item-->
                 <!--begin::Item-->

@@ -109,6 +109,12 @@ Route::middleware('auth')->group(function () {
 
             Route::post('/update', [CompanyController::class, 'update'])->name('company.update')
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['title']);
+
+            Route::prefix('/download')->group(function () {
+                Route::get('report/users/xls', [CompanyController::class, 'downloadReportUsersXls'])
+                    ->name('company.download.report.users.xls')
+                    ->middleware('auth.permission:'.OptionsPermissions::ADMIN_ROLE_SET['title']);
+            });
         });
 
     Route::prefix(RouteServiceProvider::MANAGER)
