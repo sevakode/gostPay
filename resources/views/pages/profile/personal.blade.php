@@ -9,10 +9,8 @@
 
 {{-- Content --}}
 @section('content_profile')
-    <!--begin::Content-->
-    <div class="flex-row-fluid ml-lg-8">
-        <!--begin::Card-->
-        <div class="card card-custom card-stretch">
+    <!--begin::Card-->
+    <div class="card card-custom card-stretch">
             <!--begin::Header-->
             <div class="card-header py-3">
                 <div class="card-title align-items-start flex-column">
@@ -185,7 +183,6 @@
             </form>
             <!--end::Form-->
         </div>
-    </div>
     <!--end::Content-->
 @endsection
 

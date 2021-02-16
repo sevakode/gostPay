@@ -17,7 +17,7 @@ class Card extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $dates = ['expiredAt'];
+    protected $dates = ['expiredAt', 'updated_at'];
 
     public function user()
     {
@@ -166,7 +166,7 @@ class Card extends Model
 
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
-        $cardsApi = BankAPI::make()->getCards();
+        $cardsApi = (new BankAPI(BankToken::first()))->getCards();
 
         if(!isset($cardsApi->Data)) {
             dd($cardsApi);

@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
+use App\Traits\TableCards;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
@@ -15,6 +17,8 @@ use Illuminate\Support\Str;
 
 class DatatablesController extends Controller
 {
+    use TableCards;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -32,21 +36,19 @@ class DatatablesController extends Controller
 
         $cards = $request->user()->company->cards();
 
-        if(isset($filter['query']['state']))
-            $cards = $cards->where('state',(boolean) $filter['query']['state']);
+        if(isset($filter['sort']) and count($filter['sort']) == 2) {
+            $this->sortNumber($cards, $filter);
+            $this->sortUpdateAt($cards, $filter);
+        }
+        if(isset($filter['query']))
+        {
+            $this->filterSearch($cards, $filter);
+            $this->filterStatus($cards, $filter);
+            $this->filterUsers($cards, $filter);
+        }
 
-        if(isset($filter['query']['type']) and $filter['query']['type'] !== '')
-            $cards = $cards->where('user_id', $filter['query']['type']);
-
-        if(isset($filter['query']['generalSearch']))
-            $cards = $cards
-                ->where('number', 'like', '%' . $filter['query']['generalSearch'] . '%')
-                ->orWhere('card_type', 'like', '%' . $filter['query']['generalSearch'] . '%')
-                ->orWhereHas('user', function (Builder $query) use($filter){
-                    $query->where('first_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
-                    $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
-                });
         foreach ($cards->get() as $card) {
+            $updateAtPayments = $card->payments()->latest('updated_at')->first();
             $data['data'][] = [
                 'number' => $card->number,
                 'numberLink' => route('card', $card->id),
@@ -57,8 +59,13 @@ class DatatablesController extends Controller
                 'countPayments' => $card->getPayments()->count(),
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
+                'updated_at' => $updateAtPayments ?
+                    $updateAtPayments->updated_at->format('M d, Y') :
+                    $card->updated_at->format('M d, Y')
             ];
         }
+
+        $data['data'] = $this->getSort(collect($data['data']), $filter);
 
         return new JsonResponse($data);
     }
@@ -100,8 +107,8 @@ class DatatablesController extends Controller
             $dateEnd = Carbon::createFromFormat('m#d#Y', $date['end'])->setTime(0,0,0);
 
             $cards = $cards->whereHas('payments', function (Builder $query) use($dateStart, $dateEnd){
-                $query->where('operationAt', '>=', $dateStart);
-                $query->where('operationAt', '<=', $dateEnd);
+                $query->where('updated_at', '>=', $dateStart);
+                $query->where('updated_at', '<=', $dateEnd);
             });
         }
 
@@ -176,11 +183,17 @@ class DatatablesController extends Controller
             }
         }
 
+        if(isset($filter['sort']) and count($filter['sort']) == 2) {
+            $this->sortNumber($cards, $filter);
+            $this->sortUpdateAt($cards, $filter);
+        }
 
         $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->where('user_id', null)->count();
         $data['amountAll'] = 0;
 
         foreach ($cards->get()->where('user_id', $filter['id']) as $card) {
+            $updateAtPayments = $card->payments()->latest('updated_at')->first();
+
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
                 'id' => $card->id,
@@ -193,8 +206,13 @@ class DatatablesController extends Controller
                 'countPayments' => $card->getPayments()->count(),
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
+                'updated_at' => $updateAtPayments ?
+                    $updateAtPayments->updated_at->format('M d, Y') :
+                    null,
             ];
         }
+
+        $data['data'] = $this->getSort(collect($data['data']), $filter);
 
         $data['amountAll'] .= '₽';
 

@@ -9,11 +9,10 @@
 
 {{-- Content --}}
 @section('content_profile')
-    <div class="flex-row-fluid ml-lg-8">
-        <div class="card card-custom gutter-b">
-            @include('pages.manager.nav_panel_widgets.user-cards-table',  ['user' => $user, 'access_cards' => true])
-        </div>
-        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
+    <div class="card card-custom gutter-b">
+        @include('pages.manager.nav_panel_widgets.user-cards-table',  ['user' => $user, 'access_cards' => true])
+    </div>
+    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
         <div class="card card-custom gutter-b">
             <div class="card-body">
                 <div class="form-group row mb-6">
@@ -36,8 +35,7 @@
                 </div>
             </div>
         </div>
-        @endif
-    </div>
+    @endif
 @endsection
 
 @section('scripts')

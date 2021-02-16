@@ -85,9 +85,14 @@
                 pageSize: 10,
                 serverPaging: true,
                 serverFiltering: true,
-                serverSorting: true,
+                serverSorting: true
             },
-
+            layout: {
+                scroll: true,
+            },
+            rows: {
+                autoHide: false,
+            },
             sortable: true,
             pagination: true,
             search: {
@@ -116,27 +121,16 @@
                     }
                 },
                 {
-                    field: 'type',
-                    title: 'Тип карты',
-                },
-                {
-                    field: 'state',
-                    title: 'Статус',
-                    template: function template(row) {
-                        return row.state;
-                    }
-                },
-                {
                     field: 'countPayments',
                     title: 'Количество платежей',
                 },
                 {
-                    field: 'expiredAt',
-                    title: 'Дата истечения срока',
-                },
-                {
                     field: 'amount',
                     title: 'Сумма платежей',
+                },
+                {
+                    field: 'updated_at',
+                    title: 'Дата обновления',
                 },
             ],
         });

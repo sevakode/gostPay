@@ -15,13 +15,13 @@ class Payment extends Model
     const EXPENDITURE='expenditure';
     const REVENUE='revenue';
 
-    protected $dates = ['operationAt'];
+    protected $dates = ['operationAt', 'updated_at'];
 
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
         $payments = array();
         foreach (Statement::all() as $statement) {
-            $statement = BankAPI::make()->getStatement($statement->accountId, $statement->statementId);
+            $statement = (new BankAPI(BankToken::first()))->getStatement($statement->accountId, $statement->statementId);
             foreach ($statement->Data->Statement[0]->Transaction as $payment)
             {
                 preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);

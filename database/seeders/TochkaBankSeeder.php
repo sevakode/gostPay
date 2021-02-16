@@ -21,8 +21,8 @@ class TochkaBankSeeder extends Seeder
         $token->bankId = 'RWN9klVG8aBD9Jf8WZZx0e8WKVdyRccF';
         $token->bankSecret = 'fPIOPTSBbpdnzyka8psZyZ1nTyJRTamC';
 
-        $token->accessToken = 'qSd1dpkL4vmY35ksEMZu6A1A8fwdnDH5';
-        $token->refreshToken = '3dT0gyxV0ApKE5HljEy5iKuVtbdm5SsI';
+        $token->accessToken = 'tgXyx3Oak2dAFn1pGUYSM2GaAcuy50f3';
+        $token->refreshToken = 'B1Ez6okT6AIjJynIesqCwvciUTlHV1Ow';
 
         $token->company_id = Company::whereName('Gost Agency')->first()->id;
 

@@ -57,19 +57,6 @@
                     <input type="text" id="date-end" class="form-control" name="end">
                 </div>
             </div>
-{{--            @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))--}}
-{{--            <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">--}}
-{{--                <a href="#" id="remove-cards" class="btn btn-light-danger px-6 font-weight-bold">Отсоединить</a>--}}
-{{--            </div>--}}
-{{--            @endif--}}
-{{--            @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))--}}
-{{--            <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">--}}
-{{--                <a href="#" id="remove-cards" class="btn btn-light-danger px-6 font-weight-bold">--}}
-{{--                    <img src="{{ asset('media/svg/icons/Navigation/Minus.svg') }}"/>--}}
-{{--                    {{ Metronic::getSVG('media/svg/icons/Navigation/Minus.svg') }}--}}
-{{--                </a>--}}
-{{--            </div>--}}
-{{--            @endif--}}
 
             <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
             </div>
@@ -178,6 +165,9 @@
                     input: $('#add_cards_datatable_search_query'),
                     key: 'generalSearch'
                 },
+                layout: {
+                    scroll: true,
+                },
                 rows: {
                     autoHide: false,
                     afterTemplate: function (row, data, index) {
@@ -235,27 +225,16 @@
                         }
                     },
                     {
-                        field: 'type',
-                        title: 'Тип карты',
-                    },
-                    {
-                        field: 'state',
-                        title: 'Статус',
-                        template: function template(row) {
-                            return row.state;
-                        }
-                    },
-                    {
                         field: 'countPayments',
                         title: 'Количество платежей',
                     },
                     {
-                        field: 'expiredAt',
-                        title: 'Дата истечения срока',
-                    },
-                    {
                         field: 'amount',
                         title: 'Сумма платежей',
+                    },
+                    {
+                        field: 'updated_at',
+                        title: 'Дата обновления',
                     },
                 ],
             });

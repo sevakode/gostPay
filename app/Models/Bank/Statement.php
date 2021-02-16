@@ -13,7 +13,7 @@ class Statement extends Model
     public static function refreshApi()
     {
         self::truncate();
-        $api = BankAPI::make();
+        $api = (new BankAPI(BankToken::first()));
         $accountList = $api->getAccountsList();
         $statements = array();
 
@@ -21,7 +21,7 @@ class Statement extends Model
 
         foreach ($accountList->Data->Account as $account)
         {
-            $statement = BankAPI::make()->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
+            $statement = $api->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
 
             $statements[] = [
                 'accountId' => $statement->Data->Statement->accountId,
