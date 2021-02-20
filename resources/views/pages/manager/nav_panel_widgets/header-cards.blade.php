@@ -32,13 +32,6 @@
                         </a>
                     </div>
                     <!--end::Item-->
-{{--                    <!--begin::Item-->--}}
-{{--                    <div class="navi-item mr-2">--}}
-{{--                        <a href="/metronic/demo1/custom/apps/todo/files.html" class="navi-link">--}}
-{{--                            <span class="navi-text">Files</span>--}}
-{{--                        </a>--}}
-{{--                    </div>--}}
-                    <!--end::Item-->
                 </div>
                 <!--end::Navi-->
             </div>

@@ -1,7 +1,8 @@
-$(window).load(realTime());
-function realTime() {
-    sendNotification();
-    setTimeout(realTime, 6000);
+function messageNotify(data) {
+    $.each( data, function( key, value ) {
+        data = value['data'];
+        $.notify(data['options'], data['settings']);
+    });
 }
 
 function sendNotification() {
@@ -21,9 +22,9 @@ function sendNotification() {
     });
 }
 
-function messageNotify(data) {
-    $.each( data, function( key, value ) {
-        data = value['data'];
-        $.notify(data['options'], data['settings']);
-    });
+function realTime() {
+    sendNotification();
+    setTimeout(realTime, 6000);
 }
+
+$(document).ready(realTime());

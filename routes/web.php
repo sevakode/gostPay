@@ -39,6 +39,12 @@ Route::middleware('auth')->group(function () {
             Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])
                 ->name('datatables.company-cards');
 
+            Route::post('company-projects', [\App\Http\Controllers\DatatablesController::class, 'companyProjects'])
+                ->name('datatables.company-projects');
+
+            Route::post('company-project-cards', [\App\Http\Controllers\DatatablesController::class, 'companyProjectCards'])
+                ->name('datatables.project-cards');
+
             Route::post('payment-chart', [\App\Http\Controllers\DatatablesController::class, 'paymentChart'])
                 ->name('datatables.payment-chart');
 
@@ -50,16 +56,6 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::get('/', 'PagesController@index')->name('home');
-//    Route::get('/datatables', 'PagesController@datatables');
-//    Route::get('/ktdatatables', 'PagesController@ktDatatables');
-//    Route::get('/select2', 'PagesController@select2');
-//    Route::get('/jquerymask', 'PagesController@jQueryMask');
-//    Route::get('/icons/custom-icons', 'PagesController@customIcons');
-//    Route::get('/icons/flaticon', 'PagesController@flaticon');
-//    Route::get('/icons/fontawesome', 'PagesController@fontawesome');
-//    Route::get('/icons/lineawesome', 'PagesController@lineawesome');
-//    Route::get('/icons/socicons', 'PagesController@socicons');
-//    Route::get('/icons/svg', 'PagesController@svg');
 
     Route::prefix(RouteServiceProvider::PROFILE)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['title'])
@@ -136,29 +132,47 @@ Route::middleware('auth')->group(function () {
         });
 
 
-    Route::prefix('/bank')
+    Route::prefix(RouteServiceProvider::BANK)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title'])
         ->group(function () {
 
-            Route::get('cards', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
+            Route::prefix('/cards')->group(function () {
+                Route::get('/', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
 
-            Route::get('cards/create', [\App\Http\Controllers\CardController::class, 'create'])
-                ->name('cards.create');
+                Route::get('/create', [\App\Http\Controllers\CardController::class, 'create'])
+                    ->name('cards.create');
 
-            Route::post('cards/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])
-                ->name('cards.create.pdf');
+                Route::post('/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])
+                    ->name('cards.create.pdf');
 
-            Route::post('cards/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
-                ->name('cards.create.xlsx');
+                Route::post('/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
+                    ->name('cards.create.xlsx');
 
+                Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
+                    ->name('cards.download.txt')
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title']);
+            });
             Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
-
-            Route::post('cards/download', [\App\Http\Controllers\CardController::class, 'download'])
-                ->name('cards.download.txt')
-                ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
-                ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title']);
         });
+
+    Route::prefix(RouteServiceProvider::PROJECTS)->group(function () {
+        Route::get('/', [\App\Http\Controllers\ProjectController::class, 'list'])->name('projects');
+
+        Route::get('create', [\App\Http\Controllers\ProjectController::class, 'create'])
+            ->name('projects.create');
+        Route::post('creating', [\App\Http\Controllers\ProjectController::class, 'creating'])
+            ->name('projects.creating');
+
+        Route::get('{slug}/edit', [\App\Http\Controllers\ProjectController::class, 'update'])
+            ->name('projects.edit');
+        Route::post('{slug}/updating', [\App\Http\Controllers\ProjectController::class, 'updating'])
+            ->name('projects.updating');
+
+        Route::get('{slug}/show', [\App\Http\Controllers\ProjectController::class, 'show'])
+            ->name('projects.show');
+    });
 
     Route::prefix('api')->group(function () {
     //        Route::get('register', [TochkaBankController::class, 'register']);

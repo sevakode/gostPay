@@ -18,10 +18,14 @@
                     <!--begin::Item-->
                 @include('pages.manager.nav_panel_widgets.e-commerce')
                 <!--end::Item-->
-                    <!--begin::Item-->
-
-                    <!--end::Item-->
-                    <!--begin::Item-->
+                @include('pages.company.navbar.item', [
+                'svg' => 'Communication/Clipboard-list.svg',
+                'route' => route('projects'),
+                'title' => 'Проекты',
+                'description' => 'Список проектов',
+                'count' => request()->user()->company->projects()->count(),
+                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                ])
                 {{--                                    <div class="d-flex align-items-center pb-9">--}}
                 {{--                                        <!--begin::Symbol-->--}}
                 {{--                                        <div class="symbol symbol-45 symbol-light mr-4">--}}

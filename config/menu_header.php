@@ -86,6 +86,28 @@ return [
             ],
             'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title']
         ],
+        [
+            'title' => 'Projects',
+            'root' => true,
+            'toggle' => 'click',
+            'submenu' => [
+                'type' => 'classic',
+                'alignment' => 'left',
+                'items' => [
+                    [
+                        'title' => 'Проекты',
+                        'page' => 'projects',
+                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                    ],
+                    [
+                        'title' => 'Добавить проект',
+                        'page' => 'projects/create',
+                        'icon' => 'media/svg/icons/Navigation/Plus.svg',
+                    ],
+                ]
+            ],
+            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title']
+        ],
 //        [
 //            'title' => 'Crud',
 //            'root' => true,

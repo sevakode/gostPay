@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
+use App\Models\Bank\Project;
+use App\Traits\HasProjects;
 use App\Traits\Imageable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,7 +16,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class Company extends Model
 {
-    use HasFactory, SoftDeletes, Imageable;
+    use HasFactory, SoftDeletes, Imageable, HasProjects;
 
     /**
      * The attributes that are mass assignable.
@@ -50,6 +52,11 @@ class Company extends Model
     public function cards()
     {
         return Card::where('company_id', $this->id);
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
     }
 
     public function users()

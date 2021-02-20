@@ -1,8 +1,6 @@
-
-
 <div class="card-header flex-wrap border-0 pt-6 pb-0">
     <div class="card-title">
-        <h3 class="card-label">Карты
+        <h3 class="card-label">Проекты
             <div class="text-muted pt-2 font-size-sm">{{ \Illuminate\Support\Facades\Auth::user()->company->name }}</div>
         </h3>
     </div>
@@ -18,16 +16,6 @@
                         <div class="input-icon">
                             <input type="text" class="form-control" placeholder="Search..." id="add_cards_datatable_search_query"/>
                             <span><i class="flaticon2-search-1 text-muted"></i></span>
-                        </div>
-                    </div>
-                    <div class="col-md-4 my-2 my-md-0">
-                        <div class="d-flex align-items-center">
-                            <label class="mr-3 mb-0 d-none d-md-block">Статус:</label>
-                            <select class="form-control" id="add_cards_datatable_search_status">
-                                <option value="">Все</option>
-                                <option value="1">Активная</option>
-                                <option value="0">Пассивный</option>
-                            </select>
                         </div>
                     </div>
                     @isset($searchUser)
@@ -46,9 +34,6 @@
                     @endisset
                 </div>
             </div>
-{{--            <div class="col-lg-3 col-xl-2 mt-5 mt-lg-0">--}}
-{{--                <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>--}}
-{{--            </div>--}}
         </div>
     </div>
     <!--end::Search Form-->
@@ -66,7 +51,7 @@
                 type: 'remote',
                 source: {
                     read: {
-                        url: '{{ route('datatables.company-cards') }}',
+                        url: '{{ route('datatables.company-projects') }}',
                         method: 'POST',
                         contentType: 'application/json',
                         headers: {
@@ -103,36 +88,25 @@
 
             columns: [
                 {
-                    field: 'number',
-                    title: 'Номер карты',
+                    field: 'name',
+                    title: 'Название',
                     template: function template(row) {
-                        return '<a class="text-dark" href="'+ row.numberLink +'">'+ row.number +'</a>'
+                        return '<a class="text-dark" href="'+ row.project_slug +'">'+ row.name +'</a>'
                     }
                 },
                 {
-                    field: 'user',
-                    title: 'Пользователь',
-                    template: function template(row) {
-                        if(row.user !== 'none') {
-                            return '<a class="text-dark" href="'+ row.userLink +'">'+ row.user +'</a>'
-                        }
-                        else {
-                            return row.user
-                        }
-                    }
+                    field: 'users',
+                    title: 'Количество пользователей',
                 },
                 {
-                    field: 'project',
-                    title: 'Проект',
+                    field: 'cards',
+                    title: 'Количество карт',
                 },
                 {
-                    field: 'amount',
-                    title: 'Сумма платежей',
+                    field: 'expense',
+                    title: 'Расходы',
                 },
-                {
-                    field: 'updated_at',
-                    title: 'Дата выдачи',
-                },
+
             ],
         });
         $('#add_cards_datatable_search_status').on('change', function () {

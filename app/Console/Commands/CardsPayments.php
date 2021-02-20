@@ -41,6 +41,8 @@ class CardsPayments extends Command
     {
         Statement::refreshApi();
         Payment::refreshApi();
+
+        $this->info("Данные с банка обновлены");
         return 0;
     }
 }

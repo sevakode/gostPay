@@ -112,7 +112,6 @@
 
 
 @section('scripts_next')
-
     <script>
         window.addEventListener('load', function () {
             var datatable = $('#add_cards_datatable').KTDatatable({
@@ -225,8 +224,8 @@
                         }
                     },
                     {
-                        field: 'countPayments',
-                        title: 'Количество платежей',
+                        field: 'project',
+                        title: 'Проект',
                     },
                     {
                         field: 'amount',
@@ -253,7 +252,11 @@
             $('#adding_random_cards').on('click', function () {
                 datatable.setDataSourceParam('query.removeCards', '');
                 datatable.setDataSourceParam('query.downloadCardsTxt', '');
-                datatable.search(sliderInput.value, 'countCards');
+                datatable.search({
+                    "count": sliderInput.value,
+                    "project": $('#selectpicker_project').val()
+                }, 'countCards');
+                // datatable.search($('#selectpicker_project').val(), 'projectSlug');
                 datatable.setDataSourceParam('query.countCards', '')
             });
 
@@ -261,7 +264,10 @@
                 datatable.setDataSourceParam('query.removeCards', '');
                 datatable.setDataSourceParam('query.downloadCardsTxt', '');
                 datatable.setDataSourceParam('query.countCards', '')
-                datatable.search($('#kt_select2_3').select2('data'), 'listCartForAdding');
+                datatable.search({
+                    "cards": $('#kt_select2_3').select2('data'),
+                    "project": $('#selectpicker_project').val()
+                }, 'listCartForAdding');
                 $('#kt_select2_3').val(null).trigger('change');
             });
 
@@ -307,9 +313,6 @@
                 });
             });
 
-            $()
-
-
             $('#kt_datepicker_5').datepicker().on('changeDate', function(e) {
                 date_start = $("#date-start").val();
                 date_end = $("#date-end").val();
@@ -336,7 +339,6 @@
             };
     </script>
     <script>
-        console.log($('.event_click_checkbox'));
             $('.event_click_checkbox').on('click', function () {
                 var status_check = 0;
                 $('input[name="checkboxes"]').each(function () {
@@ -353,6 +355,5 @@
             });
     </script>
 @endsection
-{{--@endsection--}}
 
 

@@ -46,9 +46,6 @@
                     @endisset
                 </div>
             </div>
-{{--            <div class="col-lg-3 col-xl-2 mt-5 mt-lg-0">--}}
-{{--                <a href="#" class="btn btn-light-primary px-6 font-weight-bold">Search</a>--}}
-{{--            </div>--}}
         </div>
     </div>
     <!--end::Search Form-->
@@ -66,11 +63,14 @@
                 type: 'remote',
                 source: {
                     read: {
-                        url: '{{ route('datatables.company-cards') }}',
+                        url: '{{ route('datatables.project-cards') }}',
                         method: 'POST',
                         contentType: 'application/json',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        params: {
+                            slug: "{{ $slug }}",
                         },
                         timeout: 60000,
                         map: function map(raw) {
@@ -120,10 +120,6 @@
                             return row.user
                         }
                     }
-                },
-                {
-                    field: 'project',
-                    title: 'Проект',
                 },
                 {
                     field: 'amount',
