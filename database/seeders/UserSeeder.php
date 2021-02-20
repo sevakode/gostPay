@@ -21,11 +21,7 @@ class UserSeeder extends Seeder
         $testCompany = Company::all()->first();
 
         $ownerRole = Role::getSlug(Role::OWNER);
-//        $adminRole = Role::getSlug(Role::ADMIN);
         $demoRole = Role::getSlug(Role::DEMO);
-//        $managerRole = Role::getSlug(Role::MANAGER);
-//        $userMainRole = Role::getSlug(Role::MAIN_USER);
-//        $userRole = Role::getSlug(Role::USER);
 
         User::truncate();
 

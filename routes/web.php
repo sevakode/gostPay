@@ -158,20 +158,26 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::prefix(RouteServiceProvider::PROJECTS)->group(function () {
-        Route::get('/', [\App\Http\Controllers\ProjectController::class, 'list'])->name('projects');
+        Route::get('/', [\App\Http\Controllers\ProjectController::class, 'list'])->name('projects')
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['title']);
 
         Route::get('create', [\App\Http\Controllers\ProjectController::class, 'create'])
-            ->name('projects.create');
+            ->name('projects.create')
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['title']);
         Route::post('creating', [\App\Http\Controllers\ProjectController::class, 'creating'])
-            ->name('projects.creating');
+            ->name('projects.creating')
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['title']);
 
         Route::get('{slug}/edit', [\App\Http\Controllers\ProjectController::class, 'update'])
-            ->name('projects.edit');
+            ->name('projects.edit')
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['title']);
         Route::post('{slug}/updating', [\App\Http\Controllers\ProjectController::class, 'updating'])
-            ->name('projects.updating');
+            ->name('projects.updating')
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['title']);
 
         Route::get('{slug}/show', [\App\Http\Controllers\ProjectController::class, 'show'])
-            ->name('projects.show');
+            ->name('projects.show')
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_PROJECTS_COMPANY['title']);
     });
 
     Route::prefix('api')->group(function () {

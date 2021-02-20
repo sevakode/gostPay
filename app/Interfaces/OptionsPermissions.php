@@ -57,6 +57,23 @@ interface OptionsPermissions
     ];
 
     const
+        ACCESS_TO_CREATE_PROJECTS_COMPANY = [
+        'title' => 'access to create projects company'
+        ],
+        ACCESS_TO_UPDATE_PROJECTS_COMPANY = [
+        'title' => 'access to update projects company'
+        ],
+        ACCESS_TO_SHOW_PROJECTS_COMPANY = [
+        'title' => 'access to show projects company'
+        ],
+        ACCESS_TO_ALL_PROJECTS_COMPANY = [
+        'title' => 'access to all projects company'
+        ],
+        ACCESS_TO_ADD_PROJECTS_COMPANY = [
+        'title' => 'access to add projects company'
+        ];
+
+    const
         ADMIN_ROLE_SET = [
         'title' => 'Admin role set',
         'roles' => [
@@ -93,5 +110,11 @@ interface OptionsPermissions
         self::ACCESS_TO_UPDATE_COMPANY,
         self::ACCESS_TO_SHOW_COMPANY,
         self::ACCESS_TO_INSERT_COMPANY,
+
+        self::ACCESS_TO_CREATE_PROJECTS_COMPANY,
+        self::ACCESS_TO_UPDATE_PROJECTS_COMPANY,
+        self::ACCESS_TO_SHOW_PROJECTS_COMPANY,
+        self::ACCESS_TO_ALL_PROJECTS_COMPANY,
+        self::ACCESS_TO_ADD_PROJECTS_COMPANY,
     ];
 }

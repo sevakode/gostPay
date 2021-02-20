@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class RegistrationRoleAndPermissionSeeder extends Seeder
@@ -23,6 +24,11 @@ class RegistrationRoleAndPermissionSeeder extends Seeder
                 $permission->roles()->attach(Role::getSlug($role));
             }
         }
+
+        $ownerRole = Role::getSlug(Role::OWNER);
+        $user1 = User::whereEmail('sevakode@gmail.com')->first();
+        $user1->role_id = $ownerRole->id;
+        $user1->save();
 
     }
 }

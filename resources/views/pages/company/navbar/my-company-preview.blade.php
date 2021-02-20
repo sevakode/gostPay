@@ -24,9 +24,4 @@
         <!--end::Text-->
     </div>
 @else
-{{--    <div class="d-flex flex-column flex-center">--}}
-{{--        <span href="" class="bgi-no-repeat bgi-size-cover rounded min-h-30px">--}}
-{{--            Нет компании--}}
-{{--        </span>--}}
-{{--    </div>--}}
 @endisset
