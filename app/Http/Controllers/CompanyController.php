@@ -88,7 +88,6 @@ class CompanyController extends Controller
 
         $parametersBank = $this->getParametersBank($request->typeBank);
         $bank = BankToken::create(
-//            $request->only(['bankId', 'bankSecret']),
             array_merge($request->only(['bankId', 'bankSecret', 'accessToken', 'refreshToken']), array_merge($parametersBank, ['company_id' => $company->id]))
         );
 
@@ -107,12 +106,11 @@ class CompanyController extends Controller
             $company->image('avatar')->make($file, 'images/company/avatar/original/');
 
         $parametersBank = $this->getParametersBank($request->typeBank);
-        $bank = BankToken::create(
-            array_merge(
-                $request->only(['bankId', 'bankSecret', 'accessToken', 'refreshToken']),
-                array_merge($parametersBank, ['company_id' => $company->id])
-            )
-        );
+        $company->bank->update( array_merge(
+            $request->only(['key', 'bankId', 'bankSecret', 'accessToken', 'refreshToken']),
+            array_merge($parametersBank, ['company_id' => $company->id])
+        ));
+
         Notify::send($request->user(), DataNotification::success());
 
         return redirect()->back();

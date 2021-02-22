@@ -5,6 +5,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TochkaBankController;
 use App\Interfaces\OptionsPermissions;
 use App\Interfaces\OptionsRole;
 use App\Providers\RouteServiceProvider;
@@ -182,7 +183,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('api')->group(function () {
     //        Route::get('register', [TochkaBankController::class, 'register']);
-    //        Route::get('tauth', [TochkaBankController::class, 'tokenAuth']);
+            Route::get('tauth/{company}', [TochkaBankController::class, 'tokenAuth'])->name('api.tauth');
         });
 
     Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');

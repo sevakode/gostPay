@@ -25,10 +25,13 @@ class RegistrationRoleAndPermissionSeeder extends Seeder
             }
         }
 
-        $ownerRole = Role::getSlug(Role::OWNER);
-        $user1 = User::whereEmail('sevakode@gmail.com')->first();
-        $user1->role_id = $ownerRole->id;
-        $user1->save();
+        if(User::whereEmail('sevakode@gmail.com')->exists())
+        {
+            $ownerRole = Role::getSlug(Role::OWNER);
+            $user1 = User::whereEmail('sevakode@gmail.com')->first();
+            $user1->role_id = $ownerRole->id;
+            $user1->save();
+        }
 
     }
 }

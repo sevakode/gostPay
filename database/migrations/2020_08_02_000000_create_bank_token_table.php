@@ -32,6 +32,8 @@ class CreateBankTokenTable extends Migration
 			$table->string('rsUrl');
             $table->string('apiVersion');
 
+            $table->string('key')->nullable()->default(Str::random('32'))->unique();
+
 			$table->string('bankId');
 			$table->string('bankSecret');
 

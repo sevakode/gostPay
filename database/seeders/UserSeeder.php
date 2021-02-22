@@ -23,8 +23,6 @@ class UserSeeder extends Seeder
         $ownerRole = Role::getSlug(Role::OWNER);
         $demoRole = Role::getSlug(Role::DEMO);
 
-        User::truncate();
-
         $user1 = new User();
         $user1->first_name = 'Sevakode';
         $user1->last_name = '';

@@ -36,7 +36,7 @@ class BankToken extends Model
     ];
 
     protected $fillable = [
-        'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id'
+        'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id', 'key'
     ];
 
     public function company()
