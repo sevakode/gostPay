@@ -214,10 +214,10 @@
         let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
         console.log(link);
 
-        var $tmp = $("<input>");
+        var tmp = $("<input>");
         $("body").append($tmp);
-        $tmp.val(link).select();
+        tmp.val(link).select();
         document.execCommand("copy");
-        $tmp.remove();
+        tmp.remove();
     }
 </script>
