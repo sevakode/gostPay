@@ -13,12 +13,7 @@ class CreatePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('permissions', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('slug');
-            $table->timestamps();
-        });
+        \App\Console\Commands\Permissions::createPermissions();
     }
 
     /**
@@ -28,6 +23,8 @@ class CreatePermissionsTable extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('permissions');
+        Schema::enableForeignKeyConstraints();
     }
 }

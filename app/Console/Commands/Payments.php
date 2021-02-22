@@ -6,21 +6,21 @@ use App\Models\Bank\Payment;
 use App\Models\Bank\Statement;
 use Illuminate\Console\Command;
 
-class CardsPayments extends Command
+class Payments extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'cards:payments';
+    protected $signature = 'payment:refresh';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Обновляет счета';
 
     /**
      * Create a new command instance.

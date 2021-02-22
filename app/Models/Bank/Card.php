@@ -37,12 +37,17 @@ class Card extends Model
 
     public function project()
     {
-        return DB::table('projects_cards')->where('card_id', $this->id);
+        $projectsCards = DB::table('projects_cards')->where('card_id', $this->id)->first();
+        return $projectsCards ?
+            Project::find($projectsCards->project_id) :
+            null;
     }
 
     public function getProjectAttribute()
     {
-        return $this->project()->first();
+        return $this->project() ?
+                $this->project()->first() :
+                null;
     }
 
     public function getAccountIdAttribute()

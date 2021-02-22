@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Bank\Card;
 use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
 use App\Traits\HasRolesAndPermissions;
@@ -107,8 +106,8 @@ class User extends Authenticatable
     public function getTelegramLinkAttribute(): string
     {
         return  $this->telegram ?
-                "https://t.me/$this->telegram" :
-                '';
+            "https://t.me/$this->telegram" :
+            '';
     }
 
     public function getAvatarAttribute(): string

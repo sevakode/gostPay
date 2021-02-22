@@ -5,14 +5,14 @@
 @section('content')
     <div class="d-flex flex-row">
         <div class="flex-md-row-auto w-md-275px w-xl-325px">
-            @yield('asides_start')
+        @yield('asides_start')
 
-            <!--begin::Profile Card-->
+        <!--begin::Profile Card-->
             <div class="card card-custom gutter-b">
                 <!--begin::Body-->
                 <div class="card-body pt-4">
                     <!--begin::Toolbar-->
-                <!--end::Toolbar-->
+                    <!--end::Toolbar-->
                     <!--begin::User-->
                     <div class="d-flex align-items-center">
                         <div class="symbol symbol-60 symbol-xxl-100 mr-5 align-self-start align-self-xxl-center">
@@ -34,10 +34,10 @@
                             </div>
                         @endisset
                         @isset($user->phone)
-                        <div class="d-flex align-items-center justify-content-between mb-2">
-                            <span class="font-weight-bold mr-2">Телефон:</span>
-                            <span class="text-muted">{{ $user->phone }}</span>
-                        </div>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="font-weight-bold mr-2">Телефон:</span>
+                                <span class="text-muted">{{ $user->phone }}</span>
+                            </div>
                         @endisset
 
                         @isset($user->telegram)
@@ -64,11 +64,11 @@
 
             @yield('asides_end')
         </div>
-                    <!--end::Aside-->
+        <!--end::Aside-->
         <div class="col-xl-9">
             @yield('content_profile')
         </div>
-            <!--end::Entry-->
+        <!--end::Entry-->
     </div>
 
 @endsection

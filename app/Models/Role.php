@@ -20,7 +20,7 @@ class Role extends Model implements OptionsRole
         'id',
         'name',
         'slug'
-        ];
+    ];
 
     public static function getSlug($array)
     {

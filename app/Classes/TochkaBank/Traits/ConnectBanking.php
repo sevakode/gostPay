@@ -56,9 +56,12 @@ trait ConnectBanking
             'refresh_token' => $this->bank->refreshToken,
         ];
 
-        $response = Http::asForm()->post($url, $data);
+        $response = Http::asForm()->post($url, $data)
+            ->object();
 
-        return $response->object();
+        if(isset($response->error)) dd($response);
+
+        return (object) $response;
     }
 
     public function connectAuthorize()

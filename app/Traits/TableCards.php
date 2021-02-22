@@ -16,7 +16,6 @@ trait TableCards
         if(isset($sort['sort']))
         {
             $this->sortDataUsers($data, $sort);
-            $this->sortDataCountPayments($data, $sort);
             $this->sortDataAmount($data, $sort);
             $this->sortDataProject($data, $sort);
             $this->sortDataUpdateAt($data, $sort);
@@ -62,7 +61,7 @@ trait TableCards
     public function sortDataCountPayments(&$data, $filter)
     {
         $sort = function ($product) {
-            return $product['countPayments'];
+            return $product['countPayments']['cards'];
         };
 
         if($filter['sort']['field'] == 'countPayments')

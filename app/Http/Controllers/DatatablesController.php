@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
 use Illuminate\Support\Str;
@@ -61,9 +60,7 @@ class DatatablesController extends Controller
                 'project' => $card->project->name ?? 'Нет проекта',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
-                'updated_at' => $updateAtPayments ?
-                    $updateAtPayments->updated_at->format('M d, Y') :
-                    $card->updated_at->format('M d, Y')
+                'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null
             ];
         }
 
@@ -198,11 +195,10 @@ class DatatablesController extends Controller
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
                 'type' => $card->card_type,
                 'state' => $card->state,
-//                'countPayments' => $card->getPayments()->count(),
                 'project' => $card->project->name ?? 'Нет проекта',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
-                'updated_at' => $card->updated_at->format('M d, Y'),
+                'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null
             ];
         }
 
@@ -285,82 +281,6 @@ class DatatablesController extends Controller
                     $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
                 });
 
-
-//        if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['title'])) {
-//            if(isset($filter['query']['countCards'])) {
-//                $countCards = $filter['query']['countCards']['count'];
-//                $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
-//                $userId =  $filter['id'];
-//
-//                if($project = $project->first()) {
-//                    $cardsNoUser = $request->user()->company->cards()->where('user_id', null);
-//
-//                    if($cardsNoUser->count() >= (integer)$countCards) {
-//                        $cardsNoUser = $cardsNoUser->get()->shuffle()->forPage(1, $countCards);
-//
-//                        foreach ($cardsNoUser as $card) {
-//                            $card->user_id = $userId;
-//                            $card->save();
-//
-//                            $project->cards()->attach($card->id);
-//                        }
-//                        $cards = $request->user()->company->cards()->where('user_id', $userId);
-//                        Notify::send($request->user(), DataNotification::success());
-//                    }
-//                    else {
-//                        DataNotification::sendErrors(['Осталось ' .$cardsNoUser->count(). ' карт!']);
-//                    }
-//                }
-//                else {
-//                    DataNotification::sendErrors(['Не указан проект для карт!']);
-//                }
-//            }
-//            if(isset($filter['query']['removeCards'])) {
-//                $removeCards = explode(',', $filter['query']['removeCards']);
-//                $userId = $filter['id'];
-//                $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
-//                $cardsChecked->update(['user_id'=>null]);
-//            }
-//            if(isset($filter['query']['downloadCardsTxt'])) {
-//                $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
-//                $userId = $filter['id'];
-//                $cardsChecked = $request->user()->company->cards()
-//                    ->where('user_id', $userId)
-//                    ->whereIn('id', $downloadCardsTxt);
-//                $txt = '';
-//                foreach ($cardsChecked->get() as $card) {
-//                    $txt .= $card->number;
-//                    $txt .= "\n";
-//                }
-//                $dirPath = public_path('download/');
-//                $fileName = Str::random(10).'.txt';
-//                $fullPath = $dirPath.$fileName;
-//
-//                if(!File::isDirectory($dirPath)) File::makeDirectory($dirPath);
-//                File::put($fullPath, $txt);
-//
-//                return response()->download($fullPath)->deleteFileAfterSend();
-//            }
-//            if(isset($filter['query']['listCartForAdding'])) {
-//                $userId =  $filter['id'];
-//                $project = $request->user()->company->projects()->whereSlug($filter['query']['listCartForAdding']['project']);
-//                if($project = $project->first()) {
-//                    foreach ($filter['query']['listCartForAdding']['cards'] as $card) {
-//                        $card = Card::find($card['id']);
-//                        $card->user_id = $userId;
-//                        $card->save();
-//
-//                        $project->cards()->attach($card->id);
-//                    }
-//
-//                    Notify::send($request->user(), DataNotification::success());
-//                }
-//                else {
-//                    DataNotification::sendErrors(['Не указан проект для карт!']);
-//                }
-//            }
-//        }
-
         if(isset($filter['sort']) and count($filter['sort']) == 2) {
             $this->sortNumber($cards, $filter);
             $this->sortUpdateAt($cards, $filter);
@@ -370,7 +290,6 @@ class DatatablesController extends Controller
         $data['amountAll'] = 0;
 
         foreach ($cards->get() as $card) {
-//            $updateAtPayments = $card->payments()->latest('updated_at')->first();
 
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
@@ -381,11 +300,10 @@ class DatatablesController extends Controller
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
                 'type' => $card->card_type,
                 'state' => $card->state,
-//                'countPayments' => $card->getPayments()->count(),
                 'project' => $card->project->name ?? 'Нет проекта',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
-                'updated_at' => $card->updated_at->format('M d, Y'),
+                'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null,
             ];
         }
 
