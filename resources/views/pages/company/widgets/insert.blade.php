@@ -203,21 +203,23 @@
     </div>
 </form>
 
-<script>
-    function clickFunction() {
-        /* Get the text field */
-        var copyText = document.getElementById("copy-key");
+@push('scripts')
+    <script>
+        function clickFunction() {
+            /* Get the text field */
+            var copyText = document.getElementById("copy-key");
 
-        /* Select the text field */
-        // copyText.select();
+            /* Select the text field */
+            // copyText.select();
 
-        let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
-        console.log(link);
+            let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
+            console.log(link);
 
-        var tmp = $("<input>");
-        $("body").append(tmp);
-        tmp.val(link).select();
-        document.execCommand("copy");
-        tmp.remove();
-    }
-</script>
+            var tmp = $("<input>");
+            $("body").append(tmp);
+            tmp.val(link).select();
+            document.execCommand("copy");
+            tmp.remove();
+        }
+    </script>
+@endpush
