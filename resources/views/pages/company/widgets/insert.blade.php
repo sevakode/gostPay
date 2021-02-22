@@ -34,97 +34,119 @@
                 <span class="form-text text-muted">Allowed file types: png, jpg, jpeg.</span>
             </div>
         </div>
+
         <div class="form-group row">
             <label class="col-xl-3 col-lg-3 col-form-label">Название</label>
             <div class="col-lg-9 col-xl-6">
                 <input class="form-control form-control-lg form-control-solid" type="text"
                        value="{{ $company->name ?? '' }}" name="name"/>
-                @error('first_name')
+                @error('name')
                     <span class="form-text text-danger">
                         {{ $message }}
                     </span>
                 @enderror
             </div>
         </div>
-                        <div class="row">
-                            <label class="col-xl-3"></label>
-                            <div class="col-lg-9 col-xl-6">
-                                <h5 class="font-weight-bold mt-10 mb-6">Интеграция с банком</h5>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-xl-3 col-lg-3 col-form-label">Тип банка
-                                <span class="text-danger">*</span></label>
-                            <select class="form-control col-lg-9 col-xl-6" name="typeBank" required>
-                                <option value="tochkabank">Tochka Bank</option>
-                            </select>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-xl-3 col-lg-3 col-form-label">Клиент ID</label>
-                            <div class="col-lg-9 col-xl-6">
-                                <div class="input-group input-group-lg input-group-solid">
-                                    <div class="input-group-prepend">
-                                    </div>
-                                    <input type="text" class="form-control form-control-lg form-control-solid"
-                                           value="{{ $company->bank->bankId ?? '' }}" placeholder="Client ID" name="bankId"/>
-                                    @error('phone')
-                                    <span class="form-text text-danger">
-                                    {{ $message }}
-                                </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-xl-3 col-lg-3 col-form-label">Секретный ключ</label>
-                            <div class="col-lg-9 col-xl-6">
-                                <div class="input-group input-group-lg input-group-solid">
-                                    <div class="input-group-prepend">
-                                    </div>
-                                    <input type="text" class="form-control form-control-lg form-control-solid"
-                                           value="{{ $company->bank->bankSecret ?? '' }}" placeholder="Client Secret" name="bankSecret"/>
-                                    @error('phone')
-                                    <span class="form-text text-danger">
-                                    {{ $message }}
-                                </span>
-                                    @enderror
-                                </div>
+
+        <div class="row">
+            <label class="col-xl-3"></label>
+            <div class="col-lg-9 col-xl-6">
+                <h5 class="font-weight-bold mt-10 mb-6">Интеграция с банком</h5>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Тип банка
+                <span class="text-danger">*</span></label>
+            <select class="form-control col-lg-9 col-xl-6" name="typeBank" required>
+                <option value="tochkabank">Tochka Bank</option>
+            </select>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Ключ для интеграции</label>
+            <div class="col-lg-9 col-xl-6 input-group">
+                <input type="text" class="form-control form-control-lg" placeholder="Small size"
+                       aria-describedby="basic-addon2"
+                       value="{{ $company->bank->key ?? '' }}"
+                       name="key" id="copy-key">
+                @isset($company)
+
+                    <button onclick="clickFunction()" type="button" class="example-copy">
+                        <i class="la la-copy"></i>
+                    </button>
+                @endisset
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Клиент ID</label>
+            <div class="col-lg-9 col-xl-6">
+                <div class="input-group input-group-lg input-group-solid">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control form-control-lg form-control-solid"
+                           value="{{ $company->bank->bankId ?? '' }}" placeholder="Client ID" name="bankId"/>
+                    @error('phone')
+                    <span class="form-text text-danger">
+                    {{ $message }}
+                </span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Секретный ключ</label>
+            <div class="col-lg-9 col-xl-6">
+                <div class="input-group input-group-lg input-group-solid">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control form-control-lg form-control-solid"
+                           value="{{ $company->bank->bankSecret ?? '' }}" placeholder="Client Secret" name="bankSecret"/>
+                    @error('phone')
+                    <span class="form-text text-danger">
+                    {{ $message }}
+                </span>
+                    @enderror
+                </div>
 {{--                                <span class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту.</span>--}}
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-xl-3 col-lg-3 col-form-label">Access Токен</label>
-                            <div class="col-lg-9 col-xl-6">
-                                <div class="input-group input-group-lg input-group-solid">
-                                    <div class="input-group-prepend">
-                                    </div>
-                                    <input type="text" class="form-control form-control-lg form-control-solid"
-                                           value="{{ $company->bank->accessToken ?? '' }}" placeholder="Access Token" name="accessToken"/>
-                                    @error('phone')
-                                    <span class="form-text text-danger">
-                                    {{ $message }}
-                                </span>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label class="col-xl-3 col-lg-3 col-form-label">Refresh Токен</label>
-                            <div class="col-lg-9 col-xl-6">
-                                <div class="input-group input-group-lg input-group-solid">
-                                    <div class="input-group-prepend">
-                                    </div>
-                                    <input type="text" class="form-control form-control-lg form-control-solid"
-                                           value="{{ $company->bank->refreshToken ?? '' }}" placeholder="Refresh Token" name="refreshToken"/>
-                                    @error('phone')
-                                    <span class="form-text text-danger">
-                                    {{ $message }}
-                                </span>
-                                    @enderror
-                                </div>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Access Токен</label>
+            <div class="col-lg-9 col-xl-6">
+                <div class="input-group input-group-lg input-group-solid">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control form-control-lg form-control-solid"
+                           value="{{ $company->bank->accessToken ?? '' }}" placeholder="Access Token" name="accessToken"/>
+                    @error('phone')
+                    <span class="form-text text-danger">
+                    {{ $message }}
+                </span>
+                    @enderror
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-xl-3 col-lg-3 col-form-label">Refresh Токен</label>
+            <div class="col-lg-9 col-xl-6">
+                <div class="input-group input-group-lg input-group-solid">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control form-control-lg form-control-solid"
+                           value="{{ $company->bank->refreshToken ?? '' }}" placeholder="Refresh Token" name="refreshToken"/>
+                    @error('phone')
+                    <span class="form-text text-danger">
+                    {{ $message }}
+                </span>
+                    @enderror
+                </div>
 {{--                                <span class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту.</span>--}}
-                            </div>
-                        </div>
+            </div>
+        </div>
 {{--                        <div class="form-group row">--}}
 {{--                            <label class="col-xl-3 col-lg-3 col-form-label">Адрес электронной почты</label>--}}
 {{--                            <div class="col-lg-9 col-xl-6">--}}
@@ -180,3 +202,22 @@
         <button type="submit" form="form-create-personal" class="btn btn-success mr-2">Сохранить изменения</button>
     </div>
 </form>
+
+<script>
+    function clickFunction() {
+        /* Get the text field */
+        var copyText = document.getElementById("copy-key");
+
+        /* Select the text field */
+        // copyText.select();
+
+        let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
+        console.log(link);
+
+        var $tmp = $("<input>");
+        $("body").append($tmp);
+        $tmp.val(link).select();
+        document.execCommand("copy");
+        $tmp.remove();
+    }
+</script>
