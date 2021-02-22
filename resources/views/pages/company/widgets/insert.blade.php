@@ -215,7 +215,7 @@
         console.log(link);
 
         var tmp = $("<input>");
-        $("body").append($tmp);
+        $("body").append(tmp);
         tmp.val(link).select();
         document.execCommand("copy");
         tmp.remove();
