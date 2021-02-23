@@ -57,7 +57,7 @@ class DatatablesController extends Controller
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
                 'type' => $card->card_type,
                 'state' => $card->state,
-                'project' => $card->project->name ?? 'Нет проекта',
+                'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
                 'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null
@@ -184,7 +184,6 @@ class DatatablesController extends Controller
         $data['amountAll'] = 0;
 
         foreach ($cards->get()->where('user_id', $filter['id']) as $card) {
-//            $updateAtPayments = $card->payments()->latest('updated_at')->first();
 
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
@@ -195,7 +194,7 @@ class DatatablesController extends Controller
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
                 'type' => $card->card_type,
                 'state' => $card->state,
-                'project' => $card->project->name ?? 'Нет проекта',
+                'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
                 'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null
@@ -300,7 +299,7 @@ class DatatablesController extends Controller
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
                 'type' => $card->card_type,
                 'state' => $card->state,
-                'project' => $card->project->name ?? 'Нет проекта',
+                'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
                 'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null,
