@@ -1,6 +1,6 @@
 {{-- Stats Widget 7 --}}
 
-@if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET))
+@if( request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['title']))
     <div class="card card-custom {{ @$class }}">
         {{-- Body --}}
         <div class="card-body d-flex flex-column p-0">

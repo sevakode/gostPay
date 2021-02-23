@@ -1,5 +1,5 @@
 
-@if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET))
+@if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['title']))
     <div class="card card-custom bg-light-info card-stretch gutter-b">
         <!--begin::Body-->
         <div class="card-body">
