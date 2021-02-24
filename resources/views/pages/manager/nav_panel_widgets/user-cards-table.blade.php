@@ -131,6 +131,8 @@
                             },
                             timeout: 60000,
                             map: function map(raw) {
+                                datatable.setDataSourceParam('query.listCartForAdding', '');
+
                                 var dataSet = raw;
                                 if (typeof raw.data !== 'undefined') {
                                     dataSet = raw.data;
@@ -263,15 +265,17 @@
             $('#adding_cards').on('click', function () {
                 datatable.setDataSourceParam('query.removeCards', '');
                 datatable.setDataSourceParam('query.downloadCardsTxt', '');
-                datatable.setDataSourceParam('query.countCards', '')
+                datatable.setDataSourceParam('query.countCards', '');
                 datatable.search({
                     "cards": $('#kt_select2_3').select2('data'),
                     "project": $('#selectpicker_project').val()
                 }, 'listCartForAdding');
                 $('#kt_select2_3').val(null).trigger('change');
+                datatable.setDataSourceParam('query.listCartForAdding', '');
             });
 
             $('#remove-cards').on('click', function () {
+                datatable.setDataSourceParam('query.listCartForAdding', '');
                 var checkboxes_value = [];
                 $('input[name="checkboxes"]').each(function(){
                     //if($(this).is(":checked")) {
@@ -281,6 +285,7 @@
                 });
                 checkboxes_value = checkboxes_value.toString();
                 datatable.search(checkboxes_value, 'removeCards');
+                datatable.setDataSourceParam('query.removeCards', '');
             });
 
             $('#download-cards-txt').on('click', function () {
@@ -314,6 +319,11 @@
             });
 
             $('#kt_datepicker_5').datepicker().on('changeDate', function(e) {
+                datatable.setDataSourceParam('query.listCartForAdding', '');
+                datatable.setDataSourceParam('query.removeCards', '');
+                datatable.setDataSourceParam('query.downloadCardsTxt', '');
+                datatable.setDataSourceParam('query.countCards', '');
+
                 date_start = $("#date-start").val();
                 date_end = $("#date-end").val();
 

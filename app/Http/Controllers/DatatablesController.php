@@ -82,8 +82,8 @@ class DatatablesController extends Controller
             $dateEnd = Carbon::createFromFormat('m#d#Y', $date['end'])->setTime(0,0,0);
 
             $cards = $cards->whereHas('payments', function (Builder $query) use($dateStart, $dateEnd){
-                $query->where('updated_at', '>=', $dateStart);
-                $query->where('updated_at', '<=', $dateEnd);
+                $query->where('operationAt', '>=', $dateStart);
+                $query->where('operationAt', '<=', $dateEnd);
             });
         }
 
@@ -107,12 +107,12 @@ class DatatablesController extends Controller
                 $userId =  $filter['id'];
 
                 if($project = $project->first()) {
-                    $cardsNoUser = $request->user()->company->cards()->where('user_id', null);
+                    $cardsFree = $request->user()->company->cards()->free();
 
-                    if($cardsNoUser->count() >= (integer)$countCards) {
-                        $cardsNoUser = $cardsNoUser->get()->shuffle()->forPage(1, $countCards);
+                    if($cardsFree->count() >= (integer)$countCards) {
+                        $cardsFree = $cardsFree->get()->shuffle()->forPage(1, $countCards);
 
-                        foreach ($cardsNoUser as $card) {
+                        foreach ($cardsFree as $card) {
                             $card->user_id = $userId;
                             $card->save();
 
@@ -122,7 +122,7 @@ class DatatablesController extends Controller
                         Notify::send($request->user(), DataNotification::success());
                     }
                     else {
-                        DataNotification::sendErrors(['Осталось ' .$cardsNoUser->count(). ' карт!']);
+                        DataNotification::sendErrors(['Осталось ' .$cardsFree->count(). ' карт!']);
                     }
                 }
                 else {
@@ -133,6 +133,9 @@ class DatatablesController extends Controller
                 $removeCards = explode(',', $filter['query']['removeCards']);
                 $userId = $filter['id'];
                 $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
+
+                foreach ($cardsChecked->get() as $card) $card->project()->detach();
+
                 $cardsChecked->update(['user_id'=>null]);
             }
             if(isset($filter['query']['downloadCardsTxt'])) {
@@ -155,7 +158,7 @@ class DatatablesController extends Controller
 
                 return response()->download($fullPath)->deleteFileAfterSend();
             }
-            if(isset($filter['query']['listCartForAdding'])) {
+            if(isset($filter['query']['listCartForAdding']) and $filter['query']['listCartForAdding'] != null) {
                 $userId =  $filter['id'];
                 $project = $request->user()->company->projects()->whereSlug($filter['query']['listCartForAdding']['project']);
                 if($project = $project->first()) {
@@ -180,11 +183,10 @@ class DatatablesController extends Controller
             $this->sortUpdateAt($cards, $filter);
         }
 
-        $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->where('user_id', null)->count();
+        $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->free()->count();
         $data['amountAll'] = 0;
 
         foreach ($cards->get()->where('user_id', $filter['id']) as $card) {
-
             $data['amountAll'] += $card->amount();
             $data['data'][] = [
                 'id' => $card->id,
@@ -201,7 +203,8 @@ class DatatablesController extends Controller
             ];
         }
 
-        $data['data'] = $this->getSort(collect($data['data']), $filter);
+        if(isset($data['data']))
+            $data['data'] = $this->getSort(collect($data['data']), $filter);
 
         $data['amountAll'] .= '₽';
 
@@ -285,7 +288,7 @@ class DatatablesController extends Controller
             $this->sortUpdateAt($cards, $filter);
         }
 
-        $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->where('user_id', null)->count();
+        $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->free()->count();
         $data['amountAll'] = 0;
 
         foreach ($cards->get() as $card) {

@@ -35,12 +35,33 @@ class Card extends Model
         return $this->hasMany(Payment::class, 'card_id');
     }
 
+    public function scopeFree($query)
+    {
+        return $query
+            ->where('user_id', null)
+            ->has('payments', '==', null);
+    }
+
+    public function scopeExit($query)
+    {
+        foreach ($query->get() as $card) $card->project()->detach();
+
+        $query->update(['user_id'=>null]);
+
+        return $query;
+    }
+
+    public function exit()
+    {
+        $this->project()->detach();
+
+        $this->user_id = null;
+        $this->save();
+    }
+
     public function project()
     {
-        $projectsCards = DB::table('projects_cards')->where('card_id', $this->id)->first();
-        return $projectsCards ?
-            Project::find($projectsCards->project_id) :
-            null;
+        return $this->belongsToMany(Project::class, 'projects_cards');
     }
 
     public function getProjectAttribute()
@@ -234,7 +255,6 @@ class Card extends Model
     public function getPayments()
     {
         return $this->payments()->where('amount', '>', 0);
-
     }
 
     public function amount()

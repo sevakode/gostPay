@@ -163,7 +163,7 @@
             step: 1,
             range: {
                 'min': [ 0 ],
-                'max': [ {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->where('user_id', null)->count() }} ]
+                'max': [ {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->free()->count() }} ]
             },
             format: wNumb({
                 decimals: 0

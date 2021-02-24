@@ -66,7 +66,7 @@
         <div class="form-group row">
             <label class="col-xl-3 col-lg-3 col-form-label">Ключ для интеграции</label>
             <div class="col-lg-9 col-xl-6 input-group">
-                <input type="text" class="form-control form-control-lg" placeholder="Small size"
+                <input type="text" class="form-control form-control-lg" placeholder="Company key"
                        aria-describedby="basic-addon2"
                        value="{{ $company->bank->key ?? '' }}"
                        name="key" id="copy-key">
@@ -204,22 +204,23 @@
 </form>
 
 @push('scripts')
-    <script>
-        function clickFunction() {
-            /* Get the text field */
-            var copyText = document.getElementById("copy-key");
+    @isset($company)
+        <script>
+            function clickFunction() {
+                /* Get the text field */
+                var copyText = document.getElementById("copy-key");
 
-            /* Select the text field */
-            // copyText.select();
+                /* Select the text field */
+                // copyText.select();
 
-            let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
-            console.log(link);
+                let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
 
-            var tmp = $("<input>");
-            $("body").append(tmp);
-            tmp.val(link).select();
-            document.execCommand("copy");
-            tmp.remove();
-        }
-    </script>
+                var tmp = $("<input>");
+                $("body").append(tmp);
+                tmp.val(link).select();
+                document.execCommand("copy");
+                tmp.remove();
+            }
+        </script>
+    @endisset
 @endpush
