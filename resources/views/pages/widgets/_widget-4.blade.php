@@ -1,5 +1,5 @@
 
-@if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['title']))
+
     <div class="card card-custom bg-light-info card-stretch gutter-b">
         <!--begin::Body-->
         <div class="card-body">
@@ -16,11 +16,11 @@
                 </svg>
                 <!--end::Svg Icon-->
             </span>
-            <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">
+            <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block"
+                id="sum-cards">
                 ₽{{ request()->user()->company->sumCardsPayments() }}
             </span>
             <span class="font-weight-bold text-muted font-size-sm">Всего расходов компании</span>
         </div>
         <!--end::Body-->
     </div>
-@endif

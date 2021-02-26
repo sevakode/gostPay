@@ -55,6 +55,11 @@ Route::middleware('auth')->group(function () {
             Route::post('select-add-cards', [\App\Http\Controllers\DatatablesController::class, 'selectAddCard'])
                 ->name('datatables.select-add-cards');
         });
+    Route::prefix('charts')
+        ->group(function () {
+            Route::post('areas', [\App\Http\Controllers\ChartsController::class, 'area'])
+                ->name('charts.areas');
+        });
 
     Route::get('/', 'PagesController@index')->name('home');
 

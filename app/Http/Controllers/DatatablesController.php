@@ -328,6 +328,7 @@ class DatatablesController extends Controller
         $company = $user->company;
 
         $i = 0;
+
         foreach ($company->users()->get() as $user)
         {
             $cards = $user->cards();
@@ -342,6 +343,9 @@ class DatatablesController extends Controller
 
             $i++;
         }
+        $carts[] = $data;
+
+
         return new JsonResponse($data, 200);
     }
 }

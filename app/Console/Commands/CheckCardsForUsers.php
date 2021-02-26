@@ -40,11 +40,8 @@ class CheckCardsForUsers extends Command
     {
         $count = 0;
         foreach (Company::all() as $company)
-        {
             foreach ($company->users()->get() as $user)
-            {
-                foreach ($user->cards()->has('payments', '!=', null)->get() as $card)
-                {
+                foreach ($user->cards()->has('payments', '!=', null)->get() as $card) {
                     $payments = $card->payments()->where('operationAt', '<=', $card->updated_at);
                     if($payments->count()) {
                         $card->exit();
@@ -52,8 +49,6 @@ class CheckCardsForUsers extends Command
                         $count += 1;
                     }
                 }
-            }
-        }
         $this->info("$count карт исправлено");
         return 0;
     }
