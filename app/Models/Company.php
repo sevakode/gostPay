@@ -105,6 +105,7 @@ class Company extends Model
                     $card->amount(),
                     $card->number,
                     $user->fullname,
+                    $card->project->name
                 );
             }
         }
