@@ -165,7 +165,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix(RouteServiceProvider::PROJECTS)->group(function () {
         Route::get('/', [\App\Http\Controllers\ProjectController::class, 'list'])->name('projects')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_PROJECTS_COMPANY['title']);
 
         Route::get('create', [\App\Http\Controllers\ProjectController::class, 'create'])
             ->name('projects.create')
