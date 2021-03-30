@@ -7,6 +7,7 @@ interface OptionsRole
 {
     const OWNER = [
         'title' => 'Поддержка',
+        'slug' => 'owner',
         'permissions' => [
             Permission::OWNER,
             Permission::ADMIN_ROLE_SET,
