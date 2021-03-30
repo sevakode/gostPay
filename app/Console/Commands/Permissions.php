@@ -49,7 +49,6 @@ class Permissions extends Command
      */
     public function handle()
     {
-
         Schema::disableForeignKeyConstraints();
         foreach ($this->databases as $database)
             Schema::dropIfExists($database);

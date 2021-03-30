@@ -60764,6 +60764,23 @@ code {
   border-left-color: #181C32 /*rtl:ignore*/;
 }
 
+.tooltip.tooltip-success .tooltip-inner {
+    color: #00b300;
+    background-color: #C9F7F5;
+}
+.tooltip.tooltip-dark.bs-tooltip-top .arrow::before, .tooltip.tooltip-dark.bs-tooltip-auto[x-placement^=top] .arrow::before {
+  border-top-color: #C9F7F5;
+}
+.tooltip.tooltip-dark.bs-tooltip-right .arrow::before, .tooltip.tooltip-dark.bs-tooltip-auto[x-placement^=right] .arrow::before {
+  border-right-color: #C9F7F5/*rtl:ignore*/;
+}
+.tooltip.tooltip-dark.bs-tooltip-bottom .arrow::before, .tooltip.tooltip-dark.bs-tooltip-auto[x-placement^=bottom] .arrow::before {
+  border-bottom-color: #C9F7F5;
+}
+.tooltip.tooltip-dark.bs-tooltip-left .arrow::before, .tooltip.tooltip-dark.bs-tooltip-auto[x-placement^=left] .arrow::before {
+  border-left-color: #C9F7F5 /*rtl:ignore*/;
+}
+
 .accordion .card {
   overflow: visible !important;
 }

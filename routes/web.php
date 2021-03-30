@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/', 'PagesController@index')->name('home');
 
     Route::prefix(RouteServiceProvider::PROFILE)
-        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['title'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['slug'])
         ->group(function () {
 
             Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
@@ -81,47 +81,47 @@ Route::middleware('auth')->group(function () {
     Route::prefix(RouteServiceProvider::COMPANY)
         ->group(function () {
             Route::get('/', [CompanyController::class, 'list'])->name('company.list')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug']);
 
             Route::get('/login/{id}', [CompanyController::class, 'loginAndShow'])->name('company.login.get')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug']);
 
             Route::post('/login', [CompanyController::class, 'login'])->name('company.login.post')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['title'])
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])
                 ->middleware('isAjax');
 
             Route::get('/show/{id?}', [CompanyController::class, 'show'])->name('company.show')
                 ->whereNumber('id');
-//                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_COMPANY['title']);
+//                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_COMPANY['slug']);
 
             Route::get('/create', [CompanyController::class, 'create'])->name('company.create.show')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug']);
 
             Route::post('/creating', [CompanyController::class, 'creating'])->name('company.create')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug']);
 
             Route::delete('/closed', [CompanyController::class, 'destroy'])->name('company.delete')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug']);
 
             Route::get('/logout', [CompanyController::class, 'logout'])->name('company.logout')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_LOGOUT_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_LOGOUT_COMPANY['slug']);
 
             Route::get('/edit', [CompanyController::class, 'edit'])->name('company.edit')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['slug']);
 
             Route::post('/update', [CompanyController::class, 'update'])->name('company.update')
-                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['title']);
+                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['slug']);
 
             Route::prefix('/download')->group(function () {
                 Route::get('report/users/xls', [CompanyController::class, 'downloadReportUsersXls'])
                     ->name('company.download.report.users.xls')
-                    ->middleware('auth.permission:'.OptionsPermissions::ADMIN_ROLE_SET['title']);
+                    ->middleware('auth.permission:'.OptionsPermissions::ADMIN_ROLE_SET['slug']);
             });
         });
 
     Route::prefix(RouteServiceProvider::MANAGER)
-        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
-        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug'])
         ->group(function () {
 
             Route::get('/', [ManagerController::class, 'dashboard'])->name('dashboard');
@@ -139,8 +139,8 @@ Route::middleware('auth')->group(function () {
 
 
     Route::prefix(RouteServiceProvider::BANK)
-        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
-        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug'])
         ->group(function () {
 
             Route::prefix('/cards')->group(function () {
@@ -157,33 +157,33 @@ Route::middleware('auth')->group(function () {
 
                 Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
                     ->name('cards.download.txt')
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['title'])
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['title']);
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
             });
             Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
         });
 
     Route::prefix(RouteServiceProvider::PROJECTS)->group(function () {
         Route::get('/', [\App\Http\Controllers\ProjectController::class, 'list'])->name('projects')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_PROJECTS_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_PROJECTS_COMPANY['slug']);
 
         Route::get('create', [\App\Http\Controllers\ProjectController::class, 'create'])
             ->name('projects.create')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']);
         Route::post('creating', [\App\Http\Controllers\ProjectController::class, 'creating'])
             ->name('projects.creating')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']);
 
         Route::get('{slug}/edit', [\App\Http\Controllers\ProjectController::class, 'update'])
             ->name('projects.edit')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['slug']);
         Route::post('{slug}/updating', [\App\Http\Controllers\ProjectController::class, 'updating'])
             ->name('projects.updating')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['slug']);
 
         Route::get('{slug}/show', [\App\Http\Controllers\ProjectController::class, 'show'])
             ->name('projects.show')
-            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_PROJECTS_COMPANY['title']);
+            ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_PROJECTS_COMPANY['slug']);
     });
 
     Route::prefix('api')->group(function () {

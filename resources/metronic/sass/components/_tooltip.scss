@@ -47,7 +47,11 @@
     }
 
     // Dark Theme
-    &.tooltip-dark {
-        @include tooltip-theme($white, $dark);
+    //&.tooltip-dark {
+    //    @include tooltip-theme($white, $dark);
+    //}
+    // Green Theme
+    &.tooltip-success {
+        @include tooltip-theme($success, $success-light);
     }
 }

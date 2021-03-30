@@ -20,28 +20,32 @@
                     'title' => 'Компании',
                     'description' => 'Просмотр и Управление всех компаний',
                     'count' => \App\Models\Company::count(),
-                    'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_COMPANY
+                    'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_COMPANY,
+                    'scripts' => asset('js/pages/custom/profile/profile.js'),
                     ])
                 @include('pages.company.navbar.item', [
                     'svg' => 'Navigation/Plus.svg',
                     'route' => route('company.create.show'),
                     'title' => 'Открыть',
                     'description' => 'Открыть новую Компанию',
-                    'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY
+                    'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY,
+                    'scripts' => asset('js/pages/custom/profile/profile.js'),
                     ])
                 @include('pages.company.navbar.item', [
                     'svg' => 'General/Settings-2.svg',
                     'route' => route('company.edit'),
                     'title' => 'Моя компания',
                     'description' => 'Изменить данные Компании',
-                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET,
+                    'scripts' => asset('js/pages/custom/profile/profile.js'),
                     ])
                 @include('pages.company.navbar.item', [
                     'svg' => 'Files/DownloadedFile.svg',
                     'route' => route('company.download.report.users.xls'),
                     'title' => 'Отчет',
                     'description' => 'Получить отчет компании в XLS',
-                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET,
+                    'scripts' => asset('js/pages/custom/profile/profile.js'),
                     ])
                 <!--end::Item-->
                 <!--begin::Item-->

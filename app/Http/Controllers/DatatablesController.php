@@ -60,7 +60,7 @@ class DatatablesController extends Controller
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
-                'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null
+                'updated_at' => isset($card->user) ? $card->updated_at->format('M d, Y H:i:s') : 'none'
             ];
         }
 
@@ -100,7 +100,7 @@ class DatatablesController extends Controller
                 });
 
 
-        if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['title'])) {
+        if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
             if(isset($filter['query']['countCards'])) {
                 $countCards = $filter['query']['countCards']['count'];
                 $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
@@ -199,7 +199,7 @@ class DatatablesController extends Controller
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() .'₽',
-                'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null
+                'updated_at' => isset($card->user) ? $card->updated_at->format('M d, Y H:i:s') : 'none'
             ];
         }
 
@@ -240,6 +240,7 @@ class DatatablesController extends Controller
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
 
+        dd($request->user()->projects());
         foreach ($request->user()->company->projects()->get() as $project) {
             $data['data'][] = [
                 'name' => $project->name,

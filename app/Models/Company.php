@@ -7,6 +7,8 @@ use App\Models\Bank\Card;
 use App\Models\Bank\Project;
 use App\Traits\HasProjects;
 use App\Traits\Imageable;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -99,13 +101,27 @@ class Company extends Model
         $excel = array();
         foreach ($this->users()->get() as $user)
         {
-            foreach ($user->cards()->get() as $card)
+            $cards = $user->cards();
+
+            $dateStart = request()->get('date_start');
+            $dateEnd = request()->get('date_end');
+
+            if($dateStart and $dateEnd) {
+                $dateStart = Carbon::createFromFormat('m#d#Y', $dateStart)
+                    ->setTime(0,0,0);
+                $dateEnd = Carbon::createFromFormat('m#d#Y', $dateEnd)
+                    ->setTime(0,0,0);
+                $cards = $cards->isDatePayments($dateStart, $dateEnd);
+            }
+
+            foreach ($cards->get() as $card)
             {
                 $excel[] = array(
                     $card->amount(),
                     $card->number,
                     $user->fullname,
-                    $card->project ? $card->project->name : null
+                    $card->project ? $card->project->name : null,
+                    isset($card->user) ? $card->updated_at->format('M d, Y H:i:s') : 'none'
                 );
             }
         }

@@ -6,7 +6,7 @@ use App\Models\Role;
 interface OptionsRole
 {
     const OWNER = [
-        'title' => 'Owner',
+        'title' => 'Поддержка',
         'permissions' => [
             Permission::OWNER,
             Permission::ADMIN_ROLE_SET,
@@ -35,7 +35,7 @@ interface OptionsRole
         ]
     ],
         ADMIN = [
-        'title' => 'Admin',
+        'title' => 'Админ',
         'permissions' => [
             Permission::ADMIN_ROLE_SET,
             Permission::MANAGER_ROLE_SET,
@@ -59,7 +59,7 @@ interface OptionsRole
 
     ],
         DEMO = [
-        'title' => 'Demo',
+        'title' => 'Демо',
         'permissions' => [
             Permission::DEMO,
             Permission::ADMIN_ROLE_SET,
@@ -74,7 +74,7 @@ interface OptionsRole
 
     ],
         MANAGER = [
-        'title' => 'Manager',
+        'title' => 'Менеджер',
         'permissions' => [
             Permission::MANAGER_ROLE_SET,
             Permission::ACCESS_TO_PROFILE,
@@ -91,7 +91,8 @@ interface OptionsRole
         ]
     ],
         MAIN_USER = [
-        'title' => 'Main User',
+        'title' => 'Пользователь+',
+        'slug' => 'user-plus',
         'permissions' => [
             Permission::ACCESS_TO_PROFILE,
             Permission::ACCESS_TO_ADD_CARDS,
@@ -99,7 +100,8 @@ interface OptionsRole
         ],
     ],
         USER = [
-        'title' => 'User',
+        'title' => 'Пользователь',
+        'slug' => 'user',
         'permissions' => [
             Permission::ACCESS_TO_PROFILE,
         ]

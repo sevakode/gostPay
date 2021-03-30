@@ -1,4 +1,4 @@
-@if(isset($permission) and \Illuminate\Support\Facades\Auth::user()->hasPermission($permission['title']))
+@if(isset($permission) and \Illuminate\Support\Facades\Auth::user()->hasPermission($permission['slug']))
 {{--@isset()--}}
     <div class="d-flex align-items-center pb-9">
         <!--begin::Symbol-->
@@ -15,6 +15,7 @@
         <!--begin::Text-->
         <div class="d-flex flex-column flex-grow-1">
             <a href="{{ $route }}"
+               @isset($id) id="{{ $id }}" @endisset
                class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">
                 {{ $title }}
             </a>
@@ -24,12 +25,30 @@
         @isset($count)
         <!--begin::label-->
             <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{ $count }}</span>
-            <!--end::label-->
+        <!--end::label-->
         @endisset
     </div>
 @endisset
 
+@isset($scripts)
 
-@section('scripts')
-    <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
-@endsection
+    @section('scripts')
+        <script src="{{ $scripts }}" type="text/javascript"></script>
+    @endsection
+@endisset
+
+<script>
+    let a = {
+        'ivan' : 1212,
+        'sergey' : true,
+        'petya' : 'adsas'
+    }
+
+    let b = [
+        'dasads' => 'asda'
+
+    ]
+    b.append('sdasa')//0
+    b.append(123)//1
+    b.append(true)//2
+</script>

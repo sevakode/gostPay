@@ -22,24 +22,24 @@ return [
                         'title' => 'Управление Компаниями',
                         'page' => 'company',
                         'icon' => 'media/svg/icons/Shopping/Sort3.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_COMPANY['title'],
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'],
                     ],
                     [
                         'title' => 'Создать компанию',
                         'page' => 'company/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY['title'],
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug'],
                     ],
                     [
                         'title' => 'Моя компания    ',
                         'page' => 'company/edit',
                         'icon' => 'media/svg/icons/General/Settings-2.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['title'],
+                        'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'],
                     ],
                 ],
-                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['title'],
+                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'],
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::OWNER['title'],
+            'permission' => \App\Interfaces\OptionsPermissions::OWNER['slug'],
 
         ],
         [
@@ -62,7 +62,7 @@ return [
                     ],
                 ]
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_MANAGER['title']
+            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_MANAGER['slug']
         ],
         [
             'title' => 'Bank',
@@ -76,15 +76,22 @@ return [
                         'title' => 'Карты компании',
                         'page' => 'bank/cards',
                         'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
                     ],
                     [
                         'title' => 'Добавить карты',
                         'page' => 'bank/cards/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+                    ],
+                    [
+                        'title' => 'Мои карты',
+                        'page' => 'profile/cards',
+                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
                     ],
                 ]
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title']
         ],
         [
             'title' => 'Projects',
@@ -106,7 +113,7 @@ return [
                     ],
                 ]
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['title']
+            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
         ],
 //        [
 //            'title' => 'Crud',

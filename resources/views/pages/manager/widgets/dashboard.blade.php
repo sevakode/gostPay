@@ -39,7 +39,21 @@
                     </span>
                     <!--end::Text-->
                     <!--begin::Dropdown-->
-                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Быстрые действия">
+{{--                    <ul style="list-style-type: '+ '; color: #00b300">--}}
+{{--                        <li>adsf</li>--}}
+{{--                        <li>asdf</li>--}}
+{{--                        <li>asdf</li>--}}
+{{--                        <li>sadf</li>--}}
+{{--                        <li>asfd</li>--}}
+{{--                    </ul>--}}
+                    <style>
+                        .plus-permissions {
+                            /*list-style-type: "+ ";*/
+                            color: #00b300;
+                        }
+                    </style>
+                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" data-html="true" data-placement="left"
+                         data-original-title="">
                         <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="ki ki-bold-more-hor"></i>
                         </a>
@@ -52,12 +66,19 @@
                                 </li>
                                 <li class="navi-separator mb-3 opacity-70"></li>
                                 @foreach(Auth::user()->getRolesListForPermissions() as $role)
-                                    <li class="navi-item">
+                                    <li class="navi-item tooltip-dark" data-theme="success"
+                                        data-toggle="tooltip" data-html="true" data-placement="right"
+                                        data-original-title=
+                                        "
+                                            @foreach($role->permissions()->get() as $permission)
+                                                <span class='plus-permissions'>+ {{$permission->name }}</span><br>
+                                            @endforeach
+                                        ">
                                         <span class="navi-link">
                                             <span class="navi-text roleEvent"
                                                   data-role-id="{{ $role->id }}"
                                                   data-user-id="{{ $user->id }}">
-                                                <span class="label label-xl label-inline label-light-success">
+                                                <span class="label label-xl label-inline label-light-info">
                                                     {{ $role->name }}
                                                 </span>
                                             </span>

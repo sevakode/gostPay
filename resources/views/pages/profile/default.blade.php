@@ -42,8 +42,8 @@
 
                         @isset($user->telegram)
                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                <span class="font-weight-bold mr-2">telegram:</span>
-                                <a href="{{$user->telegramLink}}" class="text-muted text-hover-primary">
+                                <span class="font-weight-bold mr-2">Telegram:</span>
+                                <a target="_blank" href="{{$user->telegramLink}}" class="text-muted text-hover-primary">
                                     {{ $user->telegram }}
                                 </a>
                             </div>

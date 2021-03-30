@@ -18,7 +18,7 @@ class HasDemo
      */
     public function handle(Request $request, Closure $next)
     {
-        $demo = OptionsPermissions::DEMO['title'];
+        $demo = OptionsPermissions::DEMO['slug'];
         if(!$request->user()->hasPermissionTo($demo)) return $next($request);
 
         DataNotification::sendErrors(['Вы используете '. $demo . ' версию!']);

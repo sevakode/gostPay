@@ -6,7 +6,7 @@
 
     {{-- Dashboard 1 --}}
     <div class="row" >
-        @if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['title']))
+        @if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
             <div class="col-lg-6 col-xxl-6">
                 @include('pages.widgets._widget-3', ['class' => 'card-stretch gutter-b'])
             </div>
@@ -180,9 +180,12 @@
         jQuery(document).ready(function () {
             chartArea();
             $('#datepicker_chart').datepicker().on('changeDate', function(e) {
-                console.log(chart);
                 date_start = $("#date-start").val();
                 date_end = $("#date-end").val();
+
+                let a = $('#get-parameters-date');
+                a.attr('href', '{{ route('company.download.report.users.xls') }}' + '?date_start=' + date_start + '&date_end=' + date_end)
+                console.log(a.attr('href'))
 
                 $.ajax({
                     type: 'post',

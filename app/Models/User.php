@@ -68,6 +68,11 @@ class User extends Authenticatable
         return $this->company->cards()->where('user_id', $this->id);
     }
 
+    public function projects()
+    {
+        return $this->company->projects()->first()->users()->get();
+    }
+
     /**
      * @param $value
      * @return string

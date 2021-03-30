@@ -42,6 +42,14 @@ class Card extends Model
             ->has('payments', '==', null);
     }
 
+    public function scopeIsDatePayments($query, Carbon $dateStart, Carbon $dateEnd)
+    {
+        return $query->whereHas('payments', function (Builder $query) use($dateStart, $dateEnd){
+            $query->where('operationAt', '>=', $dateStart);
+            $query->where('operationAt', '<=', $dateEnd);
+        });
+    }
+
     public function scopeExit($query)
     {
         foreach ($query->get() as $card) $card->project()->detach();
@@ -50,6 +58,7 @@ class Card extends Model
 
         return $query;
     }
+
 
     public function exit()
     {
@@ -259,6 +268,6 @@ class Card extends Model
 
     public function amount()
     {
-        return $this->payments()->sum('amount');
+        return (integer) $this->payments()->sum('amount');
     }
 }

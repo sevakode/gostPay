@@ -101,8 +101,15 @@ trait TableCards
 
     public function sortDataUsers(&$data, $filter)
     {
-        if($filter['sort']['field'] == 'user') {
-            $data = $data->sortBy([$filter['sort']['field'], $filter['sort']['sort']]);
+        $field = $filter['sort']['field'];
+        $sort = function ($product) use($field){
+            return $product[$field];
+        };
+
+        if($field == 'user')
+        {
+            if($filter['sort']['sort'] == 'desc') $data = $data->sortByDesc($sort);
+            if($filter['sort']['sort'] == 'asc') $data = $data->sortBy($sort);
         }
     }
 
