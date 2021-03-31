@@ -38,12 +38,14 @@ class CardController extends Controller
 
     public function sendCard(Request $request)
     {
-        if(strlen($request->number) < 16)
+        if(strlen($request->number) < 16 or !is_numeric($request->number))
             return DataNotification::sendErrors(['Номер карты не валиден'], $request->user());
-        if(strlen($request->cvc) < 3)
+        if(strlen($request->cvc) < 3 or !is_numeric($request->cvc))
             return DataNotification::sendErrors(['CVC не валиден'], $request->user());
-        if($request->date_month < 1 or $request->date_month > 12)
+        if($request->date_month < 1 or $request->date_month > 12 or !is_numeric($request->date_month))
             return DataNotification::sendErrors(['Число месяца указано не верно'], $request->user());
+        if(!is_numeric($request->date_year))
+            return DataNotification::sendErrors(['Год указан не верно'], $request->user());
 
 
         $expiredAt = Carbon::createFromFormat('m#y#d H', "$request->date_month-$request->date_year-1 00");
