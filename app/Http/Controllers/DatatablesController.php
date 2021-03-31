@@ -105,6 +105,7 @@ class DatatablesController extends Controller
                 $countCards = $filter['query']['countCards']['count'];
                 $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
                 $userId =  $filter['id'];
+                dd($project->get(), $filter);
 
                 if($project = $project->first()) {
                     $cardsFree = $request->user()->company->cards()->free();

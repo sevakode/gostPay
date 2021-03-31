@@ -36,19 +36,3 @@
         <script src="{{ $scripts }}" type="text/javascript"></script>
     @endsection
 @endisset
-
-<script>
-    let a = {
-        'ivan' : 1212,
-        'sergey' : true,
-        'petya' : 'adsas'
-    }
-
-    let b = [
-        'dasads' => 'asda'
-
-    ]
-    b.append('sdasa')//0
-    b.append(123)//1
-    b.append(true)//2
-</script>

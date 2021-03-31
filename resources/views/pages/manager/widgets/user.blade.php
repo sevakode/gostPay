@@ -182,9 +182,6 @@
         });
     </script>
     <script>
-        // $('#kt_select2_3').select2({
-        //     placeholder: "Select a state",
-        // });
         $("#kt_select2_3").select2({
         placeholder: "Поиск свободных карт",
         allowClear: true,

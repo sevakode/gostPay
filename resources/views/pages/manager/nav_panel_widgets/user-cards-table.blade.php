@@ -252,6 +252,7 @@
             $('#add_cards_datatable_search_status, #add_cards_datatable_search_type').selectpicker();
 
             $('#adding_random_cards').on('click', function () {
+                console.log($('#selectpicker_project').val());
                 datatable.setDataSourceParam('query.removeCards', '');
                 datatable.setDataSourceParam('query.downloadCardsTxt', '');
                 datatable.search({
