@@ -98,6 +98,7 @@ class CardController extends Controller
         }
         catch (\Exception $e) {
             DataNotification::sendErrors(['Файл зашифрован'], $request->user());
+            dd($e);
         }
 
         return new JsonResponse();

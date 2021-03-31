@@ -190,9 +190,9 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('api')->group(function () {
-    //        Route::get('register', [TochkaBankController::class, 'register']);
-            Route::get('tauth/{company}', [TochkaBankController::class, 'tokenAuth'])->name('api.tauth');
-        });
+//        Route::get('register', [TochkaBankController::class, 'register']);
+        Route::get('tauth/{company}', [TochkaBankController::class, 'tokenAuth'])->name('api.tauth');
+    });
 
     Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');
 });

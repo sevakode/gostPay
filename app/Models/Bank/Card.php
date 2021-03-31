@@ -140,8 +140,17 @@ class Card extends Model
     {
         $listCards = array();
         foreach ($XLSX as $text){
-            preg_match("/(\d{4}) (\d{4}) (\d{4}) (\d{4}) ([^q]{5}) (\d{3})/", $text[0], $cardsTx);
-            $listCards[] = $cardsTx;
+//            preg_match("/(\d{4}) (\d{4}) (\d{4}) (\d{4}) ([^q]{5}) (\d{3})/", $text[0], $cardsTx);
+            preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $text[0], $cardsAr);
+
+            $number = self::getNumberSplit($cardsAr[1]);
+            $cardsTxt = [$cardsAr[0]];
+
+            unset($cardsAr[0]);
+            unset($cardsAr[1]);
+
+            $cardAr = array_merge($cardsTxt, $number, $cardsAr);
+            $listCards[] = $cardAr;
         }
         self::parsing($listCards);
     }
@@ -150,17 +159,18 @@ class Card extends Model
     {
         $cards = [];
         foreach ($listCards as $card) {
-
             $number = $card[1] . $card[2] . $card[3] . $card[4];
             $head = $card[1];
             $tail = $card[4];
-            $date = explode('/',$card[5]);
-            $expiredAt = new Carbon("$date[0]/1/$date[1] 0:0:0");
+            $date = explode('/',$card[6]);
+            $expiredAt = Carbon::createFromFormat('m#y#d H', $card[6]. '-1 00');
+            $cvc = $card[5];
 
-            $cvc = $card[6];
+            $count = 0;
 
             $isCard=Card::where('head', $head)->where('tail', $tail)->where('expiredAt', $date)->exists();
             if(!$isCard){
+                $count++;
                 $cards[] = [
                     'account_code' => $apiCard['account_code'] ?? null,
                     'bank_code' => $apiCard['bank_code'] ?? null,
