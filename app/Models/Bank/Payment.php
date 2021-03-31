@@ -35,7 +35,7 @@ class Payment extends Model
 
                 if(isset($cards[1], $cards[2])) {
                     $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
-                        Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id   :
+                        Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
                         null;
 
                     $payments[] = [
@@ -43,7 +43,7 @@ class Payment extends Model
                         'description' => $payment->description,
                         'account_id' => $statement->Data->Statement[0]->accountId,
                         'card_id' => $cardId,
-                        'type' => $payment->creditDebitIndicator == 'Debit' ? self::REVENUE : self::EXPENDITURE,
+                        'type' => $payment->creditDebitIndicator == 'Credit' ? self::REVENUE : self::EXPENDITURE,
                         'status' => $payment->status,
                         'amount' => $payment->Amount->amount,
                         'currency' => $payment->Amount->currency,

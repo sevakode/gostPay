@@ -295,7 +295,7 @@ class Card extends Model
 
     public function amount(): int
     {
-        return (integer) $this->payments()->sum('amount');
+        return $this->amountExpenditure() - $this->amountRevenue();
     }
 
     public function amountExpenditure(): int

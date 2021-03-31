@@ -78,7 +78,8 @@
                             <td class="text-left pt-7 align-middle">
                                 {{ $payment->description }}
                             </td>
-                            <td class="text-primary pr-0 pt-7 text-right align-middle">{{ $payment->amount }}</td>
+                            <td class="{{ $payment->type == \App\Models\Bank\Payment::EXPENDITURE ? 'text-danger' : 'text-success' }}
+                                pr-0 pt-7 text-right align-middle">{{ $payment->amount }}</td>
                             <td class="text-right pt-7 align-middle">{{ $payment->currency }}</td>
                         </tr>
                         @endforeach
