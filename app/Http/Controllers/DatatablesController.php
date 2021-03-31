@@ -343,8 +343,8 @@ class DatatablesController extends Controller
 
             $i++;
         }
-        $carts[] = $data;
 
+        $carts[] = $data;
 
         return new JsonResponse($data, 200);
     }

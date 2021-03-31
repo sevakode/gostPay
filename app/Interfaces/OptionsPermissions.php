@@ -7,6 +7,7 @@ interface OptionsPermissions
     const
         OWNER = [
         'title' => 'Owner',
+        'slug' => 'owner',
         'roles' => [
             Role::ADMIN,
             Role::MANAGER,
