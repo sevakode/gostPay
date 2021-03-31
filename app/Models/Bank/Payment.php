@@ -30,8 +30,6 @@ class Payment extends Model
             $statement = (new BankAPI(BankToken::first()))->getStatement($statement->accountId, $statement->statementId);
             foreach ($statement->Data->Statement[0]->Transaction as $payment)
             {
-                if($payment->creditDebitIndicator == 'Debit') continue;
-
                 preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
                 preg_match("/дата операции:([^q]{10})/", $payment->description, $data);
 
