@@ -297,4 +297,14 @@ class Card extends Model
     {
         return (integer) $this->payments()->sum('amount');
     }
+
+    public function amountExpenditure()
+    {
+        return (integer) $this->payments()->expenditure()->sum('amount');
+    }
+
+    public function amountRevenue()
+    {
+        return (integer) $this->payments()->revenue()->sum('amount');
+    }
 }

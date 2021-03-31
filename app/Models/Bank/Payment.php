@@ -74,4 +74,15 @@ class Payment extends Model
             ]
         );
     }
+
+
+    public function scopeExpenditure($query)
+    {
+        return $query->where('type', Payment::EXPENDITURE);
+    }
+
+    public function scopeRevenue($query)
+    {
+        return $query->where('type', Payment::REVENUE);
+    }
 }
