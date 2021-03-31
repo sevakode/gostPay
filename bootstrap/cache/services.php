@@ -39,6 +39,7 @@
     35 => 'App\\Providers\\RouteServiceProvider',
     36 => 'App\\Providers\\RolesServiceProvider',
     37 => 'App\\Providers\\PermissionServiceProvider',
+    38 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
   ),
   'eager' => 
   array (
@@ -67,6 +68,7 @@
     22 => 'App\\Providers\\RouteServiceProvider',
     23 => 'App\\Providers\\RolesServiceProvider',
     24 => 'App\\Providers\\PermissionServiceProvider',
+    25 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
   ),
   'deferred' => 
   array (
