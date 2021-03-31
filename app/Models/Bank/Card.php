@@ -293,17 +293,17 @@ class Card extends Model
         return $this->payments()->where('amount', '>', 0);
     }
 
-    public function amount()
+    public function amount(): int
     {
         return (integer) $this->payments()->sum('amount');
     }
 
-    public function amountExpenditure()
+    public function amountExpenditure(): int
     {
         return (integer) $this->payments()->expenditure()->sum('amount');
     }
 
-    public function amountRevenue()
+    public function amountRevenue(): int
     {
         return (integer) $this->payments()->revenue()->sum('amount');
     }

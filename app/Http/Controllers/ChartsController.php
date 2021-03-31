@@ -54,8 +54,8 @@ class ChartsController extends Controller
             $data['amount'][$i] = 0;
             foreach ($cards->get() as $card)
             {
-                $data['amount'][$i] += $card->amount();
-                $data['amounts'] += $card->amount();
+                $data['amount'][$i] += $card->amountExpenditure();
+                $data['amounts'] += $card->amountExpenditure();
             }
 
             $i++;
@@ -90,7 +90,7 @@ class ChartsController extends Controller
             $data['amount'][$i] = 0;
             foreach ($cards->get() as $card)
             {
-                $data['amount'][$i] += $card->amount();
+                $data['amount'][$i] += $card->amountExpenditure();
             }
             $i++;
         }
