@@ -6,6 +6,7 @@ use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
 use Aspera\Spreadsheet\XLSX\Reader;
 use Aspera\Spreadsheet\XLSX\SharedStringsConfiguration;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -35,7 +36,33 @@ class CardController extends Controller
         return view('pages.manager.widgets.cards-create', compact('cards', 'page_title', 'page_description'));
     }
 
-    public function sendPDF(Request $request)
+    public function sendCard(Request $request)
+    {
+        if(strlen($request->number) < 16)
+            return DataNotification::sendErrors(['Номер карты не валиден'], $request->user());
+        if(strlen($request->cvc) < 3)
+            return DataNotification::sendErrors(['CVC не валиден'], $request->user());
+        if($request->date_month < 1 or $request->date_month > 12)
+            return DataNotification::sendErrors(['Число месяца указано не верно'], $request->user());
+
+
+        $expiredAt = Carbon::createFromFormat('m#y#d H', "$request->date_month-$request->date_year-1 00");
+        try {
+            $card = new Card();
+            $card->number = $request->number;
+            $card->cvc = $request->cvc;
+            $card->expiredAt = $expiredAt;
+            $card->company_id = $request->user()->company->id;
+            $card->save();
+        }
+        catch (\Exception $e) {
+            DataNotification::sendErrors(['Файл зашифрован'], $request->user());
+            dd($e);
+        }
+
+    }
+
+    public function sendPDF(Request $request): JsonResponse
     {
         if(!$request->file('pdf')) return DataNotification::sendErrors(['Файл не указан'], $request->user());
 

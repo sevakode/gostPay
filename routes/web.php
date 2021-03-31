@@ -143,6 +143,7 @@ Route::middleware('auth')->group(function () {
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug'])
         ->group(function () {
 
+            Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
             Route::prefix('/cards')->group(function () {
                 Route::get('/', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
 
@@ -155,12 +156,14 @@ Route::middleware('auth')->group(function () {
                 Route::post('/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
                     ->name('cards.create.xlsx');
 
+                Route::post('/create', [\App\Http\Controllers\CardController::class, 'sendCard'])
+                    ->name('cards.create');
+
                 Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
                     ->name('cards.download.txt')
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
             });
-            Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card');
         });
 
     Route::prefix(RouteServiceProvider::PROJECTS)->group(function () {

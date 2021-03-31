@@ -63,8 +63,9 @@
                         <thead>
                         <tr>
                             <th class="pl-0 font-weight-bold text-muted text-uppercase">Дата</th>
+                            <th class="pl-0 font-weight-bold text-muted text-uppercase">Описание</th>
 {{--                            <th class="text-right font-weight-bold text-muted text-uppercase">Qty</th>--}}
-                                <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">Сумма</th>
+                            <th class="text-right pr-0 font-weight-bold text-muted text-uppercase">Сумма</th>
                             <th class="text-right font-weight-bold text-muted text-uppercase">Валюта</th>
                         </tr>
                         </thead>
@@ -72,11 +73,11 @@
                         @foreach($card->payments()->get() as $payment)
                         <tr class="font-weight-boldest">
                             <td class="border-0 pl-0 pt-7 d-flex align-items-center">
-                                <!--begin::Symbol-->
-                                <!--end::Symbol-->
                                 {{ $payment->operationAt->format('M d, Y') }}
                             </td>
-{{--                            <td class="text-right pt-7 align-middle">2</td>--}}
+                            <td class="text-left pt-7 align-middle">
+                                {{ $payment->description }}
+                            </td>
                             <td class="text-primary pr-0 pt-7 text-right align-middle">{{ $payment->amount }}</td>
                             <td class="text-right pt-7 align-middle">{{ $payment->currency }}</td>
                         </tr>

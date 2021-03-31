@@ -3,7 +3,6 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
-use App\Models\Company;
 use App\Models\User;
 use App\Notifications\DataNotification;
 use Carbon\Carbon;
@@ -12,12 +11,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\DB;
 
+/**
+ * Class Card
+ * @package App\Models\Bank
+ *
+ * @property string $number
+ * @property string $cvc
+ * @property integer $head
+ * @property integer $tail
+ */
 class Card extends Model
 {
     use HasFactory, SoftDeletes;
 
+    const ACTIVE = 'active';
+    const PENDING = 'pending';
+    const CLOSE = 'close';
     protected $dates = ['expiredAt', 'updated_at'];
 
     public function user()
@@ -95,16 +105,12 @@ class Card extends Model
             $number = self::getNumberSplit($value);
         }
 
+        $this->attributes['number'] = Crypt::encrypt($value);
         $this->attributes['head'] = $number[0];
         $this->attributes['tail'] = $number[3];
     }
 
-    public function setNumberAttribute(string $value): void
-    {
-        $this->updateNumberAttribute($value);
-    }
-
-    private static function getNumberSplit($number): array
+    public static function getNumberSplit($number): array
     {
         $number = str_replace(' ', '', $number);
         return str_split($number, 4);
@@ -144,7 +150,6 @@ class Card extends Model
     public static function parsing(array $listCards)
     {
         $cards = [];
-        $apiCards = Card::getCollectApi();
         foreach ($listCards as $card) {
 
             $number = $card[1] . $card[2] . $card[3] . $card[4];
@@ -156,13 +161,7 @@ class Card extends Model
             $cvc = $card[6];
 
             $isCard=Card::where('head', $head)->where('tail', $tail)->where('expiredAt', $date)->exists();
-            $apiCard = $apiCards
-                ->where('head', $head)
-                ->where('tail', $tail)
-                ->where('expiredAt', $expiredAt)
-                ->first();
-
-            if(!$isCard and $apiCard){
+            if(!$isCard){
                 $cards[] = [
                     'account_code' => $apiCard['account_code'] ?? null,
                     'bank_code' => $apiCard['bank_code'] ?? null,
@@ -172,7 +171,7 @@ class Card extends Model
                     'card_description' => $apiCard['card_description'] ?? null,
                     'card_type' => $apiCard['card_type'] ?? 'None',
                     'expiredAt' => $expiredAt,
-                    'state' => isset($apiCard['state']) ? $apiCard['state'] : true,
+                    'state' => self::ACTIVE,
                     'cvc' => $cvc,
                     'company_id' => request()->user()->company->id
                 ];
@@ -250,15 +249,34 @@ class Card extends Model
         return $this->attributes['state'] ? 'Активная' : 'Закрытая';
     }
 
-    public function getNumberAttribute()
+    public function getNumberAttribute($val): string
     {
+        if(!isset($this->attributes['number'])) return $val;
         $matches = self::getNumberSplit($this->attributes['number']);
+        if(!is_numeric($matches[0]))
+            $matches = self::getNumberSplit(Crypt::decrypt($this->attributes['number']));
+
         return $matches[0] . '********' . $matches[3];
     }
 
     public function getNumberFullAttribute()
     {
-        return $this->attributes['number'];
+        $matches = self::getNumberSplit($this->attributes['number']);
+        if(is_numeric($matches[0]))
+            $result = $this->attributes['number'];
+        else $result = Crypt::decrypt($this->attributes['number']);
+
+        return $result;
+    }
+
+    public function getCvcAttribute($val)
+    {
+        if(!isset($this->attributes['cvc'])) return $val;
+        if(is_numeric($this->attributes['cvc']))
+            $result = $this->attributes['cvc'];
+        else $result = Crypt::decrypt($this->attributes['cvc']);
+
+        return $result;
     }
 
     public function getPayments()
