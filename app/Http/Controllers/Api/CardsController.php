@@ -24,6 +24,6 @@ class CardsController extends Controller
         $cards = $company->cards()->select('tail')->get();
         $cardsAr = $cards->toArray();
 
-        return new JsonResponse($cardsAr);
+        return new JsonResponse($cardsAr, 200);
     }
 }
