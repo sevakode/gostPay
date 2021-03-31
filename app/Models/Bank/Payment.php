@@ -43,7 +43,7 @@ class Payment extends Model
                         'description' => $payment->description,
                         'account_id' => $statement->Data->Statement[0]->accountId,
                         'card_id' => $cardId,
-                        'type' => $payment->creditDebitIndicator == 'Credit' ? self::EXPENDITURE : self::REVENUE,
+                        'type' => $payment->creditDebitIndicator == 'Debit' ? self::REVENUE : self::EXPENDITURE,
                         'status' => $payment->status,
                         'amount' => $payment->Amount->amount,
                         'currency' => $payment->Amount->currency,
@@ -72,7 +72,6 @@ class Payment extends Model
             ]
         );
     }
-
 
     public function scopeExpenditure($query)
     {
