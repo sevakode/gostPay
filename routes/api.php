@@ -19,5 +19,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::middleware( 'throttle:60,10')->group(function () {
-    Route::get('/cards', [CardsController::class, 'init']);
+    Route::get('/cards/{slug}/{token}', [CardsController::class, 'companyCards']);
 });
