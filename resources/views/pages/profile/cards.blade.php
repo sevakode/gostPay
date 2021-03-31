@@ -9,7 +9,8 @@
     <div class="card card-custom gutter-b">
         @include('pages.manager.nav_panel_widgets.user-cards-table',  ['user' => $user, 'access_cards' => true])
     </div>
-    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
+    @if(\Illuminate\Support\Facades\Auth::user()
+        ->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']))
         <div class="card card-custom gutter-b">
             <div class="card-body">
                 <div class="form-group row mb-6">
@@ -89,7 +90,7 @@
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
     @yield('scripts_next')
-    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
+    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']))
         <script>
             var slider = document.getElementById('kt_nouislider_1');
 

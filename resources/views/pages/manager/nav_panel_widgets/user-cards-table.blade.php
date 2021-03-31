@@ -80,7 +80,7 @@
                         <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">
                             Выберите действие:
                         </li>
-                        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))
+                        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']))
                         <li class="navi-item">
                             <a href="#" id="remove-cards" class="navi-link disabled">
                                 <span class="navi-icon"><i class="flaticon-circle text-danger"></i></span>
