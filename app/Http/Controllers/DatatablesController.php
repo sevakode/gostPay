@@ -99,13 +99,11 @@ class DatatablesController extends Controller
                     $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
                 });
 
-
         if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
             if(isset($filter['query']['countCards'])) {
                 $countCards = $filter['query']['countCards']['count'];
                 $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
                 $userId =  $filter['id'];
-                dd($project->get(), $filter);
 
                 if($project = $project->first()) {
                     $cardsFree = $request->user()->company->cards()->free();

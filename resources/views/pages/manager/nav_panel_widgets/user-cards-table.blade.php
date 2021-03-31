@@ -257,7 +257,7 @@
                 datatable.setDataSourceParam('query.downloadCardsTxt', '');
                 datatable.search({
                     "count": sliderInput.value,
-                    "project": $('#selectpicker_project').val()
+                    "project": $('#selectpicker_random_project').val()
                 }, 'countCards');
                 // datatable.search($('#selectpicker_project').val(), 'projectSlug');
                 datatable.setDataSourceParam('query.countCards', '')
