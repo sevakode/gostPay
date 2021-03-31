@@ -118,7 +118,6 @@ class Card extends Model
 
     public static function parsePdf($PDF)
     {
-
         $texts = explode("\n", $PDF->getText());
         array_shift($texts);
 

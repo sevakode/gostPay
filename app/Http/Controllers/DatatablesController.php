@@ -240,7 +240,6 @@ class DatatablesController extends Controller
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
 
-        dd($request->user()->projects());
         foreach ($request->user()->company->projects()->get() as $project) {
             $data['data'][] = [
                 'name' => $project->name,
