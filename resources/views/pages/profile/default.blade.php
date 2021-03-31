@@ -7,7 +7,7 @@
         <div class="flex-md-row-auto w-md-275px w-xl-325px">
         @yield('asides_start')
 
-        <!--begin::Profile Card-->
+        <!--begin::Profile CardObserve-->
             <div class="card card-custom gutter-b">
                 <!--begin::Body-->
                 <div class="card-body pt-4">
@@ -60,7 +60,7 @@
                 </div>
                 <!--end::Body-->
             </div>
-            <!--end::Profile Card-->
+            <!--end::Profile CardObserve-->
 
             @yield('asides_end')
         </div>

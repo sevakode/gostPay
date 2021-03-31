@@ -154,7 +154,7 @@
 @endsection
 
 @push('scripts')
-    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['title']))
+    @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']))
     <script>
         var slider = document.getElementById('kt_nouislider_1');
 
