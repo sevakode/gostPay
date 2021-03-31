@@ -70,12 +70,11 @@
                        aria-describedby="basic-addon2"
                        value="{{ $company->bank->key ?? '' }}"
                        name="key" id="copy-key">
-                @isset($company)
-
+                @if(isset($company) and isset($company->bank->key))
                     <button onclick="clickFunction()" type="button" class="example-copy">
                         <i class="la la-copy"></i>
                     </button>
-                @endisset
+                @endif
             </div>
         </div>
 
@@ -110,7 +109,6 @@
                 </span>
                     @enderror
                 </div>
-{{--                                <span class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту.</span>--}}
             </div>
         </div>
 
@@ -144,67 +142,15 @@
                 </span>
                     @enderror
                 </div>
-{{--                                <span class="form-text text-muted">Мы никогда никому не передадим вашу электронную почту.</span>--}}
             </div>
         </div>
-{{--                        <div class="form-group row">--}}
-{{--                            <label class="col-xl-3 col-lg-3 col-form-label">Адрес электронной почты</label>--}}
-{{--                            <div class="col-lg-9 col-xl-6">--}}
-{{--                                <div class="input-group input-group-lg input-group-solid">--}}
-{{--                                    <div class="input-group-prepend">--}}
-{{--                                <span class="input-group-text">--}}
-{{--                                    <i class="la la-at"></i>--}}
-{{--                                </span>--}}
-{{--                                    </div>--}}
-{{--                                    <input type="text" class="form-control form-control-lg form-control-solid"--}}
-{{--                                           value="{{ $company->email ?? '' }}" placeholder="Email" name="email" />--}}
-{{--                                    @error('email')--}}
-{{--                                    <span class="form-text text-danger">--}}
-{{--                                    {{ $message }}--}}
-{{--                                </span>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="form-group row">--}}
-{{--                            <label class="col-xl-3 col-lg-3 col-form-label">Telegram</label>--}}
-{{--                            <div class="col-lg-9 col-xl-6">--}}
-{{--                                <div class="input-group input-group-lg input-group-solid">--}}
-{{--                                    <div class="input-group-append">--}}
-{{--                                        <span class="input-group-text">@</span>--}}
-{{--                                    </div>--}}
-{{--                                    <input type="text" class="form-control form-control-lg form-control-solid"--}}
-{{--                                           placeholder="Telegram" value="{{ $company->telegram ?? '' }}"--}}
-{{--                                           name="telegram" />--}}
-{{--                                    @error('telegram')--}}
-{{--                                    <span class="form-text text-danger">--}}
-{{--                                {{ $message }}--}}
-{{--                            </span>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="form-group row">--}}
-{{--                            <label class="col-xl-3 col-lg-3 col-form-label">Пароль</label>--}}
-{{--                            <div class="col-lg-9 col-xl-6">--}}
-{{--                                <div class="input-group input-group-lg input-group-solid">--}}
-{{--                                    <input type="password" class="form-control form-control-lg form-control-solid"--}}
-{{--                                           value="" placeholder="Пароль" name="password" />--}}
-{{--                                    @error('password')--}}
-{{--                                    <span class="form-text text-danger">--}}
-{{--                                    {{ $message }}--}}
-{{--                                </span>--}}
-{{--                                    @enderror--}}
-{{--                                </div>--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
 
         <button type="submit" form="form-create-personal" class="btn btn-success mr-2">Сохранить изменения</button>
     </div>
 </form>
 
 @push('scripts')
-    @isset($company)
+    @if(isset($company) and isset($company->bank->key))
         <script>
             function clickFunction() {
                 /* Get the text field */
@@ -222,5 +168,5 @@
                 tmp.remove();
             }
         </script>
-    @endisset
+    @endif
 @endpush
