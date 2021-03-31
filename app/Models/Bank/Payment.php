@@ -45,7 +45,7 @@ class Payment extends Model
                         'description' => $payment->description,
                         'account_id' => $statement->Data->Statement[0]->accountId,
                         'card_id' => $cardId,
-                        'type' => self::EXPENDITURE,
+                        'type' => $payment->creditDebitIndicator == 'Credit' ? self::EXPENDITURE : self::REVENUE,
                         'status' => $payment->status,
                         'amount' => $payment->Amount->amount,
                         'currency' => $payment->Amount->currency,

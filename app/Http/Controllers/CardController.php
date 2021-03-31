@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Notification as Notify;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\JsonResponse;
@@ -56,10 +57,12 @@ class CardController extends Controller
             $card->expiredAt = $expiredAt;
             $card->company_id = $request->user()->company->id;
             $card->save();
+
+            Notify::send($request->user(), DataNotification::success());
         }
         catch (\Exception $e) {
             DataNotification::sendErrors(['Файл зашифрован'], $request->user());
-            dd($e);
+            dd($e->getMessage());
         }
 
     }
