@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Crypt;
  * @package App\Models\Bank
  *
  * @property string $number
+ * @property string $numberFull
  * @property string $cvc
  * @property integer $head
  * @property integer $tail
@@ -33,11 +34,6 @@ class Card extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function getUserAttribute()
-    {
-        return $this->user()->first();
     }
 
     public function payments()
@@ -88,11 +84,6 @@ class Card extends Model
         return $this->project() ?
                 $this->project()->first() :
                 null;
-    }
-
-    public function getAccountIdAttribute()
-    {
-        return $this->account_code .'/'. $this->bank_code;
     }
 
     public function updateNumberAttribute(string $value = null): void
@@ -251,6 +242,16 @@ class Card extends Model
                 'card_type'
             ]
         );
+    }
+
+    public function getAccountIdAttribute()
+    {
+        return $this->account_code .'/'. $this->bank_code;
+    }
+
+    public function getUserAttribute()
+    {
+        return $this->user()->first();
     }
 
     public function getStateAttribute()

@@ -48,6 +48,12 @@ class CardController extends Controller
         if(!is_numeric($request->date_year))
             return DataNotification::sendErrors(['Год указан не верно'], $request->user());
 
+        $cardAr = Card::getNumberSplit($request->number);
+        $cards = Card::where('head', $cardAr[0])->where('tail', $cardAr[3]);
+        foreach ($cards->get() as $card) {
+            if($card->numberFull == $request->number)
+                return DataNotification::sendErrors(['Такая карта уже существует'], $request->user());
+        }
 
         $expiredAt = Carbon::createFromFormat('m#y#d H', "$request->date_month-$request->date_year-1 00");
         try {

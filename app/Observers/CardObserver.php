@@ -15,10 +15,9 @@ class CardObserver
      */
     public function creating(Card $card)
     {
-        $number = Card::getNumberSplit($card->number);
-
-        if(is_numeric(Card::getNumberSplit($card->number)[0]))
-            $card->number = Crypt::encrypt($card->number);
+        $number = Card::getNumberSplit($card->numberFull);
+        if(is_numeric(Card::getNumberSplit($card->numberFull)[0]))
+            $card->number = Crypt::encrypt($card->numberFull);
         if(isset($card->cvc) and is_numeric($card->cvc))
             $card->cvc = Crypt::encrypt($card->cvc);
 
