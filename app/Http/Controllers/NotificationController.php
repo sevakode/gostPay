@@ -25,7 +25,7 @@ class NotificationController extends Controller
 
         return new JsonResponse($notify);
     }
-    public function sendMessageTelegramNotification(Request $request): JsonResponse
+    public function sendMessageTelegramNotification()
     {
         dd(Card::select('id')->get()->unreadNotifications);
 
