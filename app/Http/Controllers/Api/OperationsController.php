@@ -23,8 +23,13 @@ class OperationsController extends Controller
         if($bank == self::TOCHKABANK) {
             foreach ($request->operations as $operation) {
                 preg_match_all('/В процессе\Wn(FACEBK .{3,20}) .*?[^W]([0-9]{4}|^0-9{4})/', $operation, $operationAr);
-
                 $operationAr = $operationAr[0] ? array_column($operationAr, 0) : $operationAr;
+
+                $isCopy = Card::select('id')
+                    ->unreadNotifications()
+                    ->where('data','LIKE','%'.$operationAr[1].'%')
+                    ->exists();
+                if($isCopy) continue;
 
                 $cards = Card::where('tail', $operationAr[2]);
 //                    ->whereHas('user', function (Builder $query) {
