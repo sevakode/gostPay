@@ -140,7 +140,7 @@ class OperationsController extends Controller
                     });
 
                 if($cards->exists()) $cards->each(function (Card $card) {
-                    TelegramNotification::sendOperations($card, $card->user());
+                    TelegramNotification::sendOperations($card, $card->user(), ['adsf']);
                 });
 //                if($operationAr[0] != []) dd($operationAr[0], !is_null($operationAr[0]));
 //                dd(isset($operationAr[0]), $operationAr);

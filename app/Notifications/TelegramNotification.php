@@ -22,7 +22,7 @@ class TelegramNotification extends Notification
      * @param int $user
      * @param string $message
      */
-    public function __construct(int $card, int $user, string $message)
+    public function __construct(Card $card, User $user, string $message)
     {
         $this->notify = array(
             'user' => $user,
@@ -31,7 +31,7 @@ class TelegramNotification extends Notification
         );
     }
 
-    public static function sendOperations(int $card, int $user, $messages)
+    public static function sendOperations(Card $card, User $user, $messages)
     {
         foreach($messages as $message)
         {
