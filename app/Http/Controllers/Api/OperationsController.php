@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bank\Card;
-use App\Models\Company;
-use App\Models\User;
 use App\Notifications\TelegramNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
