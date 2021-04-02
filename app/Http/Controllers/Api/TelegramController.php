@@ -13,11 +13,11 @@ class TelegramController extends Controller
 {
     const TOKEN = '1642701852:AAFGin0id2ulxImyv05QLtkLThbymmCZZJ4';
 
-    public function init($token)
+    public function init(Request $request, $token)
     {
         if($token !== self::TOKEN)
             return new JsonResponse(['error' => 'Неверный токен'], 405);
 
-        dd('гуд');
+        dd($request);
     }
 }
