@@ -16,6 +16,7 @@ class OperationsController extends Controller
 
     public function notifyOperations(Request $request, $bank, $token)
     {
+        dd($request->operations);
         if($token !== self::TOKEN)
             return new JsonResponse(['error' => 'Неверный токен'], 405);
 
