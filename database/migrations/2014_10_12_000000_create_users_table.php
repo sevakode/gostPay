@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name')->nullable();
             $table->string('email')->unique();
             $table->string('telegram')->nullable();
+            $table->string('telegram_chat')->nullable();
             $table->string('phone')->nullable();
             $table->timestamp('email_verified_at')->nullable();
 
