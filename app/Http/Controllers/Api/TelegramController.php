@@ -8,6 +8,8 @@ use App\Models\Company;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use function MongoDB\BSON\toJSON;
 
 class TelegramController extends Controller
 {
@@ -18,6 +20,6 @@ class TelegramController extends Controller
         if($token !== self::TOKEN)
             return new JsonResponse(['error' => 'Неверный токен'], 405);
 
-        dd($request);
+        Log::info(serialize($request->toArray()));
     }
 }
