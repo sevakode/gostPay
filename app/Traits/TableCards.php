@@ -119,6 +119,8 @@ trait TableCards
             $cards = $cards
                 ->where('number', 'like', '%' . $filter['query']['generalSearch'] . '%')
                 ->orWhere('card_type', 'like', '%' . $filter['query']['generalSearch'] . '%')
+                ->orWhere('head', 'like', $filter['query']['generalSearch'] . '%')
+                ->orWhere('tail', 'like', $filter['query']['generalSearch'] . '%')
                 ->orWhereHas('user', function (Builder $query) use($filter){
                     $query->where('first_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
                     $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');

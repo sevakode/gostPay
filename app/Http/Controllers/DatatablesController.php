@@ -90,14 +90,16 @@ class DatatablesController extends Controller
         if(isset($filter['query']['state']))
             $cards = $cards->where('state',(boolean) $filter['query']['state']);
 
-        if(isset($filter['query']['generalSearch']))
-            $cards = $cards
-                ->where('number', 'like', '%' . $filter['query']['generalSearch'] . '%')
-                ->orWhere('card_type', 'like', '%' . $filter['query']['generalSearch'] . '%')
-                ->orWhereHas('user', function (Builder $query) use($filter){
-                    $query->where('first_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
-                    $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
-                });
+//        if(isset($filter['query']['generalSearch']))
+//            $cards = $cards
+//                ->where('number', 'like', '%' . $filter['query']['generalSearch'] . '%')
+//                ->orWhere('card_type', 'like', '%' . $filter['query']['generalSearch'] . '%')
+//                ->orWhereHas('user', function (Builder $query) use($filter){
+//                    $query->where('first_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
+//                    $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
+//                });
+
+        $this->filterSearch($cards, $filter);
 
         if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
             if(isset($filter['query']['countCards'])) {
