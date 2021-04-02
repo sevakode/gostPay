@@ -32,7 +32,8 @@ class NotificationController extends Controller
         foreach (Card::select('id')->unreadNotifications()->get() as $notify) {
             (object) $data = json_decode($notify->data);
 
-            $chatId = $data->user->telegram_chat;
+            if(!$chatId = $data->user->telegram_chat) continue;
+
             $code = $data->message;
             $tail = $data->card->tail;
 

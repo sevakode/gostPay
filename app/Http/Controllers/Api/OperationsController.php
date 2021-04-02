@@ -25,10 +25,10 @@ class OperationsController extends Controller
 
                 $operationAr = $operationAr[0] ? array_column($operationAr, 0) : $operationAr;
 
-                $cards = Card::where('tail', $operationAr[2])
-                    ->whereHas('user', function (Builder $query) {
-                        $query->whereNotNull('telegram_chat');
-                    });
+                $cards = Card::where('tail', $operationAr[2]);
+//                    ->whereHas('user', function (Builder $query) {
+//                        $query->whereNotNull('telegram_chat');
+//                    });
 
                 if($cards->exists()) $cards->each(function (Card $card) use ($operationAr) {
                     TelegramNotification::sendOperations($card, $card->user, [$operationAr[1]]);
