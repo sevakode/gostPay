@@ -39,7 +39,7 @@ class TelegramNotification extends Notification
         }
     }
 
-    public static function sendMessage($chatId, $message): bool|string
+    public static function sendMessage($chatId, $message)
     {
         $botToken = env('TELEGRAM_TOKEN');
 
@@ -59,23 +59,13 @@ class TelegramNotification extends Notification
         return $result;
     }
 
-    public static function sendMessageFacebook($chatId, $code, $tail): bool|string
+    public static function sendMessageFacebook($chatId, $code, $tail)
     {
+//        if(preg_match('/(FACEBK)/', $code))
+        preg_match('/(FACEBK)/', $code);
         $message = "$tail\n Код: $code";
 
         return self::sendMessage($chatId, $message);
-    }
-
-    public static function sendErrors(array $messages, User $user = null, $title = '') {
-        $user = is_null($user) ? Auth::user() : $user;
-        foreach($messages as $message)
-        {
-            $data = new TelegramNotification(
-                'dark', $title, $message, 'icon flaticon-exclamation text-danger icon-xl', 5000,
-                '', self::TEMPLATE_XL
-            );
-            Notify::send($user, $data);
-        }
     }
 
     /**

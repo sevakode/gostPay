@@ -129,6 +129,7 @@ class OperationsController extends Controller
             return new JsonResponse(['error' => 'Неверный токен'], 405);
 
         if($bank == self::TOCHKABANK) {
+//            foreach ($request->operations as $operation) {
             foreach ($operations as $operation) {
                 preg_match_all('/В процессе\Wn(FACEBK .{3,20}) .*?[^W]([0-9]{4}|^0-9{4})/', $operation, $operationAr);
 
@@ -139,20 +140,12 @@ class OperationsController extends Controller
                         $query->whereNotNull('telegram_chat');
                     });
 
-                if($cards->exists()) $cards->each(function (Card $card) {
-                    TelegramNotification::sendOperations($card, $card->user, ['adsf']);
+                if($cards->exists()) $cards->each(function (Card $card) use ($operationAr) {
+                    TelegramNotification::sendOperations($card, $card->user, [$operationAr[1]]);
                 });
-//                if($operationAr[0] != []) dd($operationAr[0], !is_null($operationAr[0]));
-//                dd(isset($operationAr[0]), $operationAr);
-//                $cards = Card::where('tail', $operationAr[1]);
-//                $cards =Card::where('tail', 4567)->where('telegram_id', '!=', null)->select('user_id');
-//                $userIds =array_column($cards->get()->toArray(), 'user_id');
-//                $users = User::whereIn('id', $userIds);
-
             }
         }
 
-
-//        return new JsonResponse('ok', 200);
+        return new JsonResponse('ok', 200);
     }
 }

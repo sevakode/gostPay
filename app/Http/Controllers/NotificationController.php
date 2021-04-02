@@ -37,6 +37,8 @@ class NotificationController extends Controller
             $tail = $data->card->tail;
 
             TelegramNotification::sendMessageFacebook($chatId, $code, $tail);
+
+            $notify->markAsRead();
         }
 
         return new JsonResponse(true);
