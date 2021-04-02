@@ -18,31 +18,45 @@ class TelegramNotification extends Notification
 
     /**
      * Create a new notification instance.
-     * @param array $users
+     * @param int $card
+     * @param int $user
      * @param string $message
-     * @param integer $tail
      */
-    public function __construct(array $users, string $message, Integer $tail)
+    public function __construct(int $card, int $user, string $message)
     {
         $this->notify = array(
-            'users' => $users,
-            'tail' => $tail,
+            'user' => $user,
+            'card' => $card,
             'message' => $message,
         );
     }
 
-    public static function sendOperations(Card $card, $users, $message)
+    public static function sendOperations(int $card, int $user, $messages)
     {
-
+        foreach($messages as $message)
+        {
+            $data = new TelegramNotification($card, $user, $message);
+            Notify::send($card, $data);
+        }
     }
 
-    public static function success(): TelegramNotification
+    public static function sendMessage($chatId, $message)
     {
-        return new TelegramNotification(
-            'dark', '',
-            'Данные обновлены!', 'icon icon-xl flaticon2-check-mark text-success',
-            50000, '', self::TEMPLATE_XL
-        );
+        $botToken = env('TELEGRAM_TOKEN');
+
+        $website = "https://api.telegram.org/bot".$botToken;
+        $params=[
+            'chat_id' => $chatId,
+            'text' => $message,
+        ];
+        $ch = curl_init($website . '/sendMessage');
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $result = curl_exec($ch);
+        curl_close($ch);
     }
 
     public static function sendErrors(array $messages, User $user = null, $title = '') {
