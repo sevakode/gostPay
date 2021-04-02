@@ -6,7 +6,6 @@ use App\Models\Bank\Card;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification as Notify;
 
 class TelegramNotification extends Notification
@@ -17,8 +16,8 @@ class TelegramNotification extends Notification
 
     /**
      * Create a new notification instance.
-     * @param int $card
-     * @param int $user
+     * @param Card $card
+     * @param User $user
      * @param string $message
      */
     public function __construct(Card $card, User $user, string $message)
@@ -61,9 +60,9 @@ class TelegramNotification extends Notification
 
     public static function sendMessageFacebook($chatId, $code, $tail)
     {
-//        if(preg_match('/(FACEBK)/', $code))
-        preg_match('/(FACEBK)/', $code);
-        $message = "$tail\n Код: $code";
+        if (! preg_match('/(FACEBK)/', $code)) return;
+
+        $message = "На привязанную вам карту **** **** **** $tail пришло сообщение.\n Код: $code";
 
         return self::sendMessage($chatId, $message);
     }

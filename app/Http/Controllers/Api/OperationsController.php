@@ -146,6 +146,6 @@ class OperationsController extends Controller
             }
         }
 
-        return new JsonResponse('ok', 200);
+        return new JsonResponse(true, 200);
     }
 }

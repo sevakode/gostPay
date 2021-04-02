@@ -27,7 +27,8 @@ class NotificationController extends Controller
 
         return new JsonResponse($notify);
     }
-    public function sendMessageTelegramNotification(): JsonResponse
+
+    public static function sendMessageTelegramNotification(): JsonResponse
     {
         foreach (Card::select('id')->unreadNotifications()->get() as $notify) {
             (object) $data = json_decode($notify->data);
@@ -38,10 +39,12 @@ class NotificationController extends Controller
 
             TelegramNotification::sendMessageFacebook($chatId, $code, $tail);
 
-            $notify->markAsRead();
+            Card::select('id')->unreadNotifications()->where('id', $notify->id)->update([
+                'read_at' => now()
+            ]);
         }
 
-        return new JsonResponse(true);
+        return new JsonResponse(True);
     }
 
 }

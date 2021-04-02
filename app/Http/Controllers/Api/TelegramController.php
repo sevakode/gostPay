@@ -15,7 +15,7 @@ use function MongoDB\BSON\toJSON;
 class TelegramController extends Controller
 {
 
-    public function init(Request $request, $token)
+    public function init(Request $request, $token): JsonResponse
     {
         if($token !== env('TELEGRAM_TOKEN')) return new JsonResponse(['error' => 'Неверный токен'], 405);
 
