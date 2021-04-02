@@ -20,8 +20,7 @@ class OperationsController extends Controller
         if($token !== self::TOKEN)
             return new JsonResponse(['error' => 'Неверный токен'], 405);
 
-        if($bank == self::TOCHKABANK) {
-            Log::info(json_encode($request->operations));
+        if($bank == self::TOCHKABANK) {;
             foreach ($request->operations as $operation) {
                 preg_match_all('/В процессе\Wn(FACEBK .{3,20}) .*?[^W]([0-9]{4}|^0-9{4})/', $operation, $operationAr);
                 $operationAr = $operationAr[0] ? array_column($operationAr, 0) : $operationAr;
