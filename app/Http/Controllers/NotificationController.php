@@ -6,7 +6,6 @@ use App\Models\Bank\Card;
 use App\Notifications\TelegramNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Notifications\Notification;
 
 class NotificationController extends Controller
 {

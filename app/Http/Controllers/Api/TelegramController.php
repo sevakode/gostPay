@@ -59,5 +59,7 @@ class TelegramController extends Controller
                 break;
         }
 
+
+        return new JsonResponse(true, 200);
     }
 }
