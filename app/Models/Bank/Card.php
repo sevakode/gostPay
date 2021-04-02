@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Crypt;
 
 /**
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\Crypt;
  */
 class Card extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, Notifiable;
 
     const ACTIVE = 'active';
     const PENDING = 'pending';
@@ -131,7 +132,6 @@ class Card extends Model
     {
         $listCards = array();
         foreach ($XLSX as $text){
-//            preg_match("/(\d{4}) (\d{4}) (\d{4}) (\d{4}) ([^q]{5}) (\d{3})/", $text[0], $cardsTx);
             preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $text[0], $cardsAr);
 
             $number = self::getNumberSplit($cardsAr[1]);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank\Card;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -26,11 +27,10 @@ class NotificationController extends Controller
     }
     public function sendMessageTelegramNotification(Request $request): JsonResponse
     {
-        $notify = $request->user()->unreadNotifications;
-        $notify->markAsRead();
+        dd(Card::select('id')->get()->unreadNotifications);
 
-        return new JsonResponse($notify);
+        return new JsonResponse('$notify');
     }
 
-    
+
 }
