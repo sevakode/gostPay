@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\CardsController;
+use App\Http\Controllers\Api\OperationsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,4 +21,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 Route::middleware( 'throttle:60,10')->group(function () {
     Route::get('/cards/{slug}/{token}', [CardsController::class, 'companyCards']);
+
+    Route::get('/operations/{bank}/{token}', [OperationsController::class, 'notifyOperations']);
+    Route::get('/telegram/bot{token}', [OperationsController::class, 'notifyOperations']);
 });

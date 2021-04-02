@@ -24,4 +24,13 @@ class NotificationController extends Controller
 
         return new JsonResponse($notify);
     }
+    public function sendMessageTelegramNotification(Request $request): JsonResponse
+    {
+        $notify = $request->user()->unreadNotifications;
+        $notify->markAsRead();
+
+        return new JsonResponse($notify);
+    }
+
+    
 }
