@@ -8,6 +8,7 @@ use App\Notifications\TelegramNotification;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 class OperationsController extends Controller
 {
@@ -20,6 +21,7 @@ class OperationsController extends Controller
             return new JsonResponse(['error' => 'Неверный токен'], 405);
 
         if($bank == self::TOCHKABANK) {
+            Log::info(json_encode($request->operations));
             foreach ($request->operations as $operation) {
                 preg_match_all('/В процессе\Wn(FACEBK .{3,20}) .*?[^W]([0-9]{4}|^0-9{4})/', $operation, $operationAr);
                 $operationAr = $operationAr[0] ? array_column($operationAr, 0) : $operationAr;
