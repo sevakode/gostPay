@@ -24,5 +24,5 @@ Route::middleware( 'throttle:60,10')->group(function () {
     Route::get('/cards/{slug}/{token}', [CardsController::class, 'companyCards']);
 
     Route::get('/operations/{bank}/{token}', [OperationsController::class, 'notifyOperations']);
-    Route::post('/telegram/bot{token}', [TelegramController::class, 'init']);
+    Route::post('/telegram/{token}', [TelegramController::class, 'init']);
 });

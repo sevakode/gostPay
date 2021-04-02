@@ -17,8 +17,8 @@ class TelegramController extends Controller
 
     public function init(Request $request, $token)
     {
-        if($token !== self::TOKEN)
-            return new JsonResponse(['error' => 'Неверный токен'], 405);
+        // if($token !== self::TOKEN)
+        //     return new JsonResponse(['error' => 'Неверный токен'], 405);
 
         Log::info(serialize($request->toArray()));
     }
