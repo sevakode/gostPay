@@ -5,11 +5,13 @@ namespace App\Models\Bank;
 use App\Classes\TochkaBank\BankAPI;
 use App\Models\User;
 use App\Notifications\DataNotification;
+use App\Traits\ScopeNotifiable;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\HasDatabaseNotifications;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Crypt;
 
@@ -25,7 +27,7 @@ use Illuminate\Support\Facades\Crypt;
  */
 class Card extends Model
 {
-    use HasFactory, SoftDeletes, Notifiable;
+    use HasFactory, SoftDeletes, Notifiable, ScopeNotifiable;
 
     const ACTIVE = 'active';
     const PENDING = 'pending';

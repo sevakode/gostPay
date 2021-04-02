@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Bank\Card;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Notifications\Notification;
 
 class NotificationController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+       // $this->middleware('auth');
     }
 
     public function index()
@@ -27,7 +28,7 @@ class NotificationController extends Controller
     }
     public function sendMessageTelegramNotification()
     {
-        dd(Card::select('id')->get()->unreadNotifications);
+        dd(Card::all()->notifications());
 
         return new JsonResponse('$notify');
     }
