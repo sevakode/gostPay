@@ -39,7 +39,7 @@ class TelegramNotification extends Notification
         }
     }
 
-    public static function sendMessage($chatId, $message)
+    public static function sendMessage($chatId, $message): bool|string
     {
         $botToken = env('TELEGRAM_TOKEN');
 
@@ -56,6 +56,14 @@ class TelegramNotification extends Notification
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         $result = curl_exec($ch);
         curl_close($ch);
+        return $result;
+    }
+
+    public static function sendMessageFacebook($chatId, $code, $tail): bool|string
+    {
+        $message = "$tail\n Код: $code";
+
+        return self::sendMessage($chatId, $message);
     }
 
     public static function sendErrors(array $messages, User $user = null, $title = '') {

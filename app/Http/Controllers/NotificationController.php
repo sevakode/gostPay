@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bank\Card;
+use App\Notifications\TelegramNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notification;
@@ -11,7 +12,7 @@ class NotificationController extends Controller
 {
     public function __construct()
     {
-       // $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     public function index()
@@ -26,12 +27,19 @@ class NotificationController extends Controller
 
         return new JsonResponse($notify);
     }
-    public function sendMessageTelegramNotification()
+    public function sendMessageTelegramNotification(): JsonResponse
     {
-        dd(Card::all()->notifications());
+        foreach (Card::select('id')->unreadNotifications()->get() as $notify) {
+            (object) $data = json_decode($notify->data);
 
-        return new JsonResponse('$notify');
+            $chatId = $data->user->telegram_chat;
+            $code = $data->message;
+            $tail = $data->card->tail;
+
+            TelegramNotification::sendMessageFacebook($chatId, $code, $tail);
+        }
+
+        return new JsonResponse(true);
     }
-
 
 }
