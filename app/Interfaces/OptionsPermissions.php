@@ -19,6 +19,10 @@ interface OptionsPermissions
         'title' => 'Demo',
         'slug' => 'demo'
     ],
+        ACCESS_TO_INVISIBLE = [
+        'title' => 'Доступ к неведимке',
+        'slug' => 'access-to-invisible'
+    ],
         ACCESS_TO_PROFILE = [
         'title' => 'Доступ к профилю',
         'slug' => 'access-to-profile'

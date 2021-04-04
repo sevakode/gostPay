@@ -10,9 +10,11 @@ interface OptionsRole
         'slug' => 'owner',
         'permissions' => [
             Permission::OWNER,
+
+            Permission::ACCESS_TO_INVISIBLE,
+
             Permission::ADMIN_ROLE_SET,
             Permission::MANAGER_ROLE_SET,
-
             Permission::ACCESS_TO_PROFILE,
             Permission::ACCESS_TO_MANAGER,
             Permission::ACCESS_TO_ADD_CARDS,
