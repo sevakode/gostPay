@@ -141,5 +141,7 @@ interface OptionsPermissions
         self::ACCESS_TO_SHOW_PROJECTS_COMPANY,
         self::ACCESS_TO_ALL_PROJECTS_COMPANY,
         self::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+        self::ACCESS_TO_INVISIBLE,
     ];
 }

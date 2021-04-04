@@ -14,7 +14,7 @@
         <!--end::Header-->
         <!--begin::Body-->
         <div class="card-body pt-2">
-        @foreach(Auth::user()->companyUsers()->get() as $user)
+        @foreach(Auth::user()->companyUsers()->withPermissionInvisible()->get() as $user)
             <!--begin::Item-->
                 <div class="d-flex align-items-center mb-10">
                     <!--begin::Symbol-->

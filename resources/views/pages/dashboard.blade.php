@@ -3,7 +3,6 @@
 
 {{-- Content --}}
 @section('content')
-
     {{-- Dashboard 1 --}}
     <div class="row" >
         @if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
@@ -17,9 +16,9 @@
             <div class="col-lg-12 col-xxl-12">
                 @include('pages.widgets._widget-1', ['class' => 'card-stretch gutter-b'])
             </div>
-            <div class="col-lg-6 col-xxl-2 order-1 order-xxl-1">
-                @include('pages.widgets._widget-4', ['class' => 'card-stretch gutter-b'])
-            </div>
+{{--            <div class="col-lg-6 col-xxl-2 order-1 order-xxl-1">--}}
+{{--                @include('pages.widgets._widget-4', ['class' => 'card-stretch gutter-b'])--}}
+{{--            </div>--}}
         @endif
     </div>
 

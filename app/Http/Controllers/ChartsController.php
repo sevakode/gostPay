@@ -34,13 +34,9 @@ class ChartsController extends Controller
         $i = 0;
 
         $data['count'] = 0;
-        $users = $company->users()->hasWhere('role', function (Builder $query) {
-            $query->hasWhere('permissions', function (Builder $query) {
-                $query->where('slug', OptionsPermissions::ACCESS_TO_INVISIBLE['slug']);
-            });
-        });
-        dd($users->get());
-        foreach ($users->get() as $user) {
+        foreach ($company->users()->getUsers()->get() as $user) {
+            if($user->hasPermission(OptionsPermissions::ACCESS_TO_INVISIBLE['slug'])) continue;
+
             $cards = $user->cards();
 
             $this->filterDate($cards, $request->date_start, $request->date_end);
