@@ -34,7 +34,7 @@ class ChartsController extends Controller
         $i = 0;
 
         $data['count'] = 0;
-        foreach ($company->users()->withPermissionIvisible()->get() as $user) {
+        foreach ($company->users()->withPermissionInvisible()->get() as $user) {
             if($user->hasPermission(OptionsPermissions::ACCESS_TO_INVISIBLE['slug'])) continue;
 
             $cards = $user->cards();
