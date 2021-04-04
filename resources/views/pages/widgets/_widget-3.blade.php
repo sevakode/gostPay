@@ -9,7 +9,7 @@
                 </div>
                 <span class="symbol symbol-light-success symbol-45">
                     <span class="symbol-label font-weight-bolder font-size-h6">
-                        +{{ request()->user()->company->users()->count() }}
+                        +{{ request()->user()->company->users()->withPermissionInvisible()->count() }}
                     </span>
                 </span>
             </div>

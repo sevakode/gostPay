@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Interfaces\OptionsPermissions;
 use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
 use App\Traits\HasRolesAndPermissions;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Matrix\Builder;
 
 
 /**
@@ -128,6 +130,19 @@ class User extends Authenticatable
     public function getCompanyAttribute()
     {
         return $this->company()->first();
+    }
+
+    public function scopeWithPermissionInvisible($query)
+    {
+        $queryInvisible = clone $query;
+        $queryInvisible->whereHas('role', function ( $query) {
+            $query->whereHas('permissions', function ($query) {
+                $query->where('slug', OptionsPermissions::ACCESS_TO_INVISIBLE['slug']);
+            });
+        });
+
+        $idsInvisible = array_column($queryInvisible->select('id')->get()->toArray(), 'id');
+        return $query->whereNotIn('id', $idsInvisible);
     }
 
     public function getRoleAttribute()

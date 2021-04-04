@@ -19,6 +19,10 @@ interface OptionsPermissions
         'title' => 'Demo',
         'slug' => 'demo'
     ],
+        ACCESS_TO_INVISIBLE = [
+        'title' => 'Доступ к неведимке',
+        'slug' => 'access-to-invisible'
+    ],
         ACCESS_TO_PROFILE = [
         'title' => 'Доступ к профилю',
         'slug' => 'access-to-profile'
@@ -137,5 +141,7 @@ interface OptionsPermissions
         self::ACCESS_TO_SHOW_PROJECTS_COMPANY,
         self::ACCESS_TO_ALL_PROJECTS_COMPANY,
         self::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+        self::ACCESS_TO_INVISIBLE,
     ];
 }
