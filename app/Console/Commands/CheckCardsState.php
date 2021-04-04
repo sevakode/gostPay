@@ -2,24 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\NotificationController;
+use App\Models\Bank\Card;
 use Illuminate\Console\Command;
 
-class NotificationTelegram extends Command
+class CheckCardsState extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'notify:telegram';
+    protected $signature = 'cards:state';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Отправка уведомлений - Телеграмм';
+    protected $description = 'Command description';
 
     /**
      * Create a new command instance.
@@ -36,9 +36,11 @@ class NotificationTelegram extends Command
      *
      * @return int
      */
-    public function handle(): int
+    public function handle()
     {
-        NotificationController::sendMessageTelegramNotification();
+        $cards = Card::where('state', '!=', Card::ACTIVE)->where('state', '!=', Card::PENDING)->where('state', '!=', Card::CLOSE);
+
+        $cards->update(['state' => Card::ACTIVE]);
 
         return 0;
     }
