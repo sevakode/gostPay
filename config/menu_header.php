@@ -88,7 +88,6 @@ return [
                         'title' => 'Мои карты',
                         'page' => 'profile/cards',
                         'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
                     ],
                 ]
             ],
