@@ -77,5 +77,5 @@
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
 
-    @stack('scripts')
+    @stack('scripts_push')
 @endsection

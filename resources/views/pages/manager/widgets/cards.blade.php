@@ -16,6 +16,6 @@
 </div>
 @endsection
 
-@section('scripts')
+@section('scripts_next')
     <script src="{{ asset('js/pages/crud/ktdatatable/base/html-table.js') }}" type="text/javascript"></script>
 @endsection

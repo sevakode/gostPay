@@ -1,6 +1,7 @@
 <?php namespace App\Traits;
 
 
+use App\Models\Bank\Card;
 use Illuminate\Database\Eloquent\Builder;
 
 trait TableCards
@@ -132,8 +133,10 @@ trait TableCards
 
     public function filterStatus(&$cards, $filter)
     {
-        if(isset($filter['query']['state']))
-            $cards = $cards->where('state',(boolean) $filter['query']['state']);
+        if (isset($filter['query']['state']))
+            $cards = $cards->where('state', $filter['query']['state']);
+        else if(isset($filter['query']))
+            $cards = $cards->where('state', Card::ACTIVE);
     }
 
     public function filterUsers(&$cards, $filter)

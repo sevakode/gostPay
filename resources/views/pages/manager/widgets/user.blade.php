@@ -152,7 +152,7 @@
         </div>
     </div>
 @endsection
-@push('scripts')
+@push('scripts_push')
     @if(\Illuminate\Support\Facades\Auth::user()
             ->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']))
     <script>
@@ -226,6 +226,5 @@
     @endif
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
-
     @yield('scripts_next')
 @endpush

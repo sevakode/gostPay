@@ -86,7 +86,7 @@
     @endif
 @endsection
 
-@push('scripts')
+@push('scripts_push')
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
     @yield('scripts_next')

@@ -24,10 +24,10 @@
                         <div class="d-flex align-items-center">
                             <label class="mr-3 mb-0 d-none d-md-block">Статус:</label>
                             <select class="form-control" id="add_cards_datatable_search_status">
-                                <option value="">Все</option>
                                 <option value="{{ \App\Models\Bank\Card::ACTIVE }}">Активные</option>
                                 <option value="{{ \App\Models\Bank\Card::PENDING }}">В процессе</option>
                                 <option value="{{ \App\Models\Bank\Card::CLOSE }}">Зыкрытые</option>
+                                <option value="">Все</option>
                             </select>
                         </div>
                     </div>
