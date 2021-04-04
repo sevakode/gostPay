@@ -228,7 +228,8 @@
                                 color = 'text-danger';
                             }
 
-                            return '<a class="'+ color +' " href="'+ row.numberLink +'"><span>a</span>'+ row.number +'</a>';
+                            return '<a class="text-dark" href="'+ row.numberLink +'">'+ row.number +'</a><span class="'+
+                                color +' ">*</span>';
                         }
                     },
                     {

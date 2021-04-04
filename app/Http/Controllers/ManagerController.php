@@ -42,8 +42,7 @@ class ManagerController extends Controller
     public function closingCard(Request $request)
     {
         $card = Card::find($request->card_id);
-
-        $card->state = $request->status ? Card::CLOSE : Card::ACTIVE;
+        $card->state = $request->status == 'true' ? Card::CLOSE : Card::ACTIVE;
         $card->save();
 
         Notification::send(request()->user(), DataNotification::success());
