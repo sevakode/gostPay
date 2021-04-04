@@ -255,9 +255,12 @@ class Card extends Model
         return $this->user()->first();
     }
 
-    public function getStateAttribute()
+    public function getStateRuAttribute()
     {
-        return $this->attributes['state'] ? 'Активная' : 'Закрытая';
+        if ($this->attributes['state'] == self::ACTIVE) $state = 'Активная';
+        elseif ($this->attributes['state'] == self::CLOSE) $state = 'Закрытая';
+        else $state = 'В процессе закрытия';
+        return $state;
     }
 
     public function getNumberAttribute($val): string

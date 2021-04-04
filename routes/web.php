@@ -130,10 +130,15 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/user/add', [ManagerController::class, 'addUser'])->name('add_user');
 
+            Route::get('/cards/closing_list', [ManagerController::class, 'closingList'])->name('cards_closing_list');
+
             Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update')
                 ->middleware('auth.demo');
 
             Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update')
+                ->middleware('auth.demo');
+
+            Route::post('/cards/closing', [ManagerController::class, 'closingCard'])->name('cards_closing')
                 ->middleware('auth.demo');
         });
 

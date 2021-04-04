@@ -70,7 +70,6 @@
         </div>
         <!--end::Entry-->
     </div>
-
 @endsection
 
 {{-- Scripts Section --}}

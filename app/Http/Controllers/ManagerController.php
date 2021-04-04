@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\JsonResponse;
@@ -11,18 +12,6 @@ use Illuminate\Support\Facades\Notification;
 
 class ManagerController extends Controller
 {
-    public function user($id)
-    {
-        $page_title = 'Профиль пользователя компании';
-        $page_description = $page_title;
-
-        $user = Auth::user()->company->users()->find($id);
-        $cards = $user->cards()->get();
-
-        return view('pages.manager.widgets.user',
-            compact('page_title', 'page_description', 'cards', 'user'));
-    }
-
     public function addUser()
     {
         $page_title = 'Добавление пользователя компании';
@@ -37,6 +26,49 @@ class ManagerController extends Controller
         $page_description = $page_title;
 
         return view('pages.manager.widgets.dashboard', compact('page_title', 'page_description'));
+    }
+
+    public function closingList()
+    {
+        $page_title = 'Список карт в ожидании на закрытие';
+        $page_description = $page_title;
+
+        $cards = request()->user()->company->cards()->where('state', \App\Models\Bank\Card::PENDING)->get();
+
+        return view('pages.manager.widgets.cards-closing-list',
+            compact('page_title', 'page_description', 'cards'));
+    }
+
+    public function closingCard(Request $request)
+    {
+        $card = Card::find($request->card_id);
+
+        $card->state = $request->status ? Card::CLOSE : Card::ACTIVE;
+        $card->save();
+
+        Notification::send(request()->user(), DataNotification::success());
+
+        if ($card->user()->exists()) {
+            $message = $card->state == Card::CLOSE ?
+                DataNotification::success("Карта $card->number закрыта") :
+                DataNotification::success("Карта $card->number не была одобрена на закрытие!");
+
+            Notification::send($card->user()->first(), $message);
+        }
+
+        return new JsonResponse(['card_id' => $request->card_id]);
+    }
+
+    public function user($id)
+    {
+        $page_title = 'Профиль пользователя компании';
+        $page_description = $page_title;
+
+        $user = Auth::user()->company->users()->find($id);
+        $cards = $user->cards()->get();
+
+        return view('pages.manager.widgets.user',
+            compact('page_title', 'page_description', 'cards', 'user'));
     }
 
     public function updatePermission(Request $request)

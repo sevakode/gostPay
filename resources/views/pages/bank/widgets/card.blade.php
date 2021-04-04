@@ -26,14 +26,8 @@
                         </a>
                         <!--end::Logo-->
                         <span class="d-flex flex-column align-items-md-end opacity-70">
-                            @isset($card->card_description)<span>{{ $card->card_description }}</span>@endisset
-                            @isset($card->card_type)<span>{{ $card->card_type }}</span>@endisset
-                            @isset($card->state)<span class="
-                                @if($card->state == \App\Models\Bank\Card::ACTIVE) text-success
-                                @elseif($card->state == \App\Models\Bank\Card::CLOSE) text-danger
-                                @else text-light-danger @endif">
-                                {{ $card->stateRu }}
-                            </span>@endisset
+                            <span>{{ $card->card_description }}</span>
+                            <span>{{ $card->card_type }}</span>
                         </span>
                     </div>
                 </div>

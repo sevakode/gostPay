@@ -15,6 +15,15 @@
                     <!--begin::Item-->
                 @include('pages.manager.nav_panel_widgets.staff')
 {{--                @include('pages.manager.nav_panel_widgets.staff')--}}
+
+                @include('pages.company.navbar.item', [
+                'svg' => 'Communication/Clipboard-list.svg',
+                'route' => route('projects'),
+                'title' => 'Список карт на закрытие',
+                'description' => 'Список проектов',
+                'count' => request()->user()->company->projects()->count(),
+                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                ])
                 <!--end::Item-->
                     <!--begin::Item-->
                 @include('pages.manager.nav_panel_widgets.e-commerce')
@@ -26,14 +35,6 @@
                 'description' => 'Список проектов',
                 'count' => request()->user()->company->projects()->count(),
                 'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
-                ])
-                @include('pages.company.navbar.item', [
-                'svg' => 'Communication/Clipboard-list.svg',
-                'route' => route('cards_closing_list'),
-                'title' => 'Карты на закрытие',
-                'description' => 'Список карт в ожидании на закрытие',
-                'count' => request()->user()->company->cards()->where('state', \App\Models\Bank\Card::PENDING)->count(),
-                'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_MANAGER
                 ])
                 <!--end::Item-->
                 </div>

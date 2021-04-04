@@ -88,21 +88,12 @@ class DatatablesController extends Controller
         }
 
         if(isset($filter['query']['state']))
-            $cards = $cards->where('state',(boolean) $filter['query']['state']);
-
-//        if(isset($filter['query']['generalSearch']))
-//            $cards = $cards
-//                ->where('number', 'like', '%' . $filter['query']['generalSearch'] . '%')
-//                ->orWhere('card_type', 'like', '%' . $filter['query']['generalSearch'] . '%')
-//                ->orWhereHas('user', function (Builder $query) use($filter){
-//                    $query->where('first_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
-//                    $query->orWhere('last_name', 'like', '%' . $filter['query']['generalSearch'] . '%');
-//                });
+            $cards = $cards->where('state', $filter['query']['state']);
 
         $this->filterSearch($cards, $filter);
 
         if(!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
-            if(isset($filter['query']['countCards'])) {
+            if(isset($filter['query']['countCards']) and $filter['query']['countCards']['count']) {
                 $countCards = $filter['query']['countCards']['count'];
                 $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
                 $userId =  $filter['id'];
@@ -138,6 +129,19 @@ class DatatablesController extends Controller
                 foreach ($cardsChecked->get() as $card) $card->project()->detach();
 
                 $cardsChecked->update(['user_id'=>null]);
+            }
+            if(isset($filter['query']['closeCards'])) {
+                $closeCards = explode(',', $filter['query']['closeCards']);
+                $userId = $filter['id'];
+                $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
+                $cardsChecked = $cardsChecked->where('state', Card::ACTIVE);
+
+                $cardsChecked->update(['state' => Card::PENDING]);
+
+                if($cardsChecked->exists())
+                    Notify::send(\request()->user(), DataNotification::success("Запрос на закрытие карт, отправлен!"));
+                else
+                    DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
             }
             if(isset($filter['query']['downloadCardsTxt'])) {
                 $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
@@ -273,7 +277,7 @@ class DatatablesController extends Controller
         }
 
         if(isset($filter['query']['state']))
-            $cards = $cards->where('state',(boolean) $filter['query']['state']);
+            $cards = $cards->where('state', $filter['query']['state']);
 
         if(isset($filter['query']['generalSearch']))
             $cards = $cards

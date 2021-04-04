@@ -25,8 +25,9 @@
                             <label class="mr-3 mb-0 d-none d-md-block">Статус:</label>
                             <select class="form-control" id="add_cards_datatable_search_status">
                                 <option value="">Все</option>
-                                <option value="1">Активная</option>
-                                <option value="0">Пассивный</option>
+                                <option value="{{ \App\Models\Bank\Card::ACTIVE }}">Активные</option>
+                                <option value="{{ \App\Models\Bank\Card::PENDING }}">В процессе</option>
+                                <option value="{{ \App\Models\Bank\Card::CLOSE }}">Зыкрытые</option>
                             </select>
                         </div>
                     </div>
@@ -106,7 +107,18 @@
                     field: 'number',
                     title: 'Номер карты',
                     template: function template(row) {
-                        return '<a class="text-dark" href="'+ row.numberLink +'">'+ row.number +'</a>'
+                        if (row.state === '{{ \App\Models\Bank\Card::ACTIVE }}') {
+                            color = 'text-success';
+                        }
+                        else if (row.state === '{{ \App\Models\Bank\Card::PENDING }}') {
+                            color = 'text-light-danger';
+                        }
+                        else {
+                            color = 'text-danger';
+                        }
+
+                        return '<a class="text-dark" href="'+ row.numberLink +'">'+ row.number +'</a><span class="'+
+                            color +' ">*</span>';
                     }
                 },
                 {

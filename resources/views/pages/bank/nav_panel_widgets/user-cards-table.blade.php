@@ -30,9 +30,8 @@
                             <label class="mr-3 mb-0 d-none d-md-block">Статус:</label>
                             <select class="form-control" id="add_cards_datatable_search_status">
                                 <option value="">Все</option>
-                                <option value="{{ \App\Models\Bank\Card::ACTIVE }}">Активные</option>
-                                <option value="{{ \App\Models\Bank\Card::PENDING }}">В процессе</option>
-                                <option value="{{ \App\Models\Bank\Card::CLOSE }}">Зыкрытые</option>
+                                <option value="1">Активная</option>
+                                <option value="0">Пассивный</option>
                             </select>
                         </div>
                     </div>
@@ -139,7 +138,6 @@
                             timeout: 60000,
                             map: function map(raw) {
                                 datatable.setDataSourceParam('query.listCartForAdding', '');
-                                datatable.setDataSourceParam('query.countCards', '');
 
                                 var dataSet = raw;
                                 if (typeof raw.data !== 'undefined') {
@@ -228,7 +226,7 @@
                                 color = 'text-danger';
                             }
 
-                            return '<a class="'+ color +' " href="'+ row.numberLink +'"><span>a</span>'+ row.number +'</a>';
+                            return '<a class="'+ color +' " href="'+ row.numberLink +'">'+ row.number +'</a>';
                         }
                     },
                     {
@@ -270,17 +268,15 @@
             $('#add_cards_datatable_search_status, #add_cards_datatable_search_type').selectpicker();
 
             $('#adding_random_cards').on('click', function () {
+                console.log($('#selectpicker_project').val());
                 datatable.setDataSourceParam('query.removeCards', '');
                 datatable.setDataSourceParam('query.downloadCardsTxt', '');
-
-                if (sliderInput.value > 0) {
-                    datatable.search({
-                        "count": sliderInput.value,
-                        "project": $('#selectpicker_random_project').val()
-                    }, 'countCards');
-                }
+                datatable.search({
+                    "count": sliderInput.value,
+                    "project": $('#selectpicker_random_project').val()
+                }, 'countCards');
+                // datatable.search($('#selectpicker_project').val(), 'projectSlug');
                 datatable.setDataSourceParam('query.countCards', '')
-                sliderInput.value = 0;
             });
 
             $('#adding_cards').on('click', function () {

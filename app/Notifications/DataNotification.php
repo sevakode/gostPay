@@ -65,11 +65,11 @@ class DataNotification extends Notification
 
     }
 
-    public static function success(): DataNotification
+    public static function success(string $message='Данные обновлены!'): DataNotification
     {
         return new DataNotification(
             'dark', '',
-            'Данные обновлены!', 'icon icon-xl flaticon2-check-mark text-success',
+            $message, 'icon icon-xl flaticon2-check-mark text-success',
             50000, '', self::TEMPLATE_XL
         );
     }
