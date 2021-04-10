@@ -1,5 +1,7 @@
 <?php
 // Header menu
+use App\Interfaces\OptionsPermissions;
+
 return [
 
     'items' => [
@@ -22,24 +24,24 @@ return [
                         'title' => 'Управление Компаниями',
                         'page' => 'company',
                         'icon' => 'media/svg/icons/Shopping/Sort3.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'],
+                        'permission' => OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'],
                     ],
                     [
                         'title' => 'Создать компанию',
                         'page' => 'company/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug'],
+                        'permission' => OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug'],
                     ],
                     [
                         'title' => 'Моя компания    ',
                         'page' => 'company/edit',
                         'icon' => 'media/svg/icons/General/Settings-2.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'],
+                        'permission' => OptionsPermissions::ADMIN_ROLE_SET['slug'],
                     ],
                 ],
-                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'],
+                'permission' => OptionsPermissions::ADMIN_ROLE_SET['slug'],
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::OWNER['slug'],
+            'permission' => OptionsPermissions::OWNER['slug'],
 
         ],
         [
@@ -60,9 +62,14 @@ return [
                         'page' => 'manager/user/add',
                         'icon' => 'media/svg/icons/Communication/Add-user.svg',
                     ],
+                    [
+                        'title' => 'Карты на закрытие',
+                        'page' => 'manager/cards/closing_list',
+                        'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
+                    ],
                 ]
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_MANAGER['slug']
+            'permission' => OptionsPermissions::ACCESS_TO_MANAGER['slug']
         ],
         [
             'title' => 'Bank',
@@ -76,13 +83,13 @@ return [
                         'title' => 'Карты компании',
                         'page' => 'bank/cards',
                         'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+                        'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
                     ],
                     [
                         'title' => 'Добавить карты',
                         'page' => 'bank/cards/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
-                        'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+                        'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
                     ],
                     [
                         'title' => 'Мои карты',
@@ -112,7 +119,7 @@ return [
                     ],
                 ]
             ],
-            'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+            'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
         ],
 //        [
 //            'title' => 'Crud',

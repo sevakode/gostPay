@@ -156,13 +156,16 @@ Route::middleware('auth')->group(function () {
                     ->name('cards.create');
 
                 Route::post('/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])
-                    ->name('cards.create.pdf');
+                    ->name('cards.create.pdf')
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
-                    ->name('cards.create.xlsx');
+                    ->name('cards.create.xlsx')
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/create', [\App\Http\Controllers\CardController::class, 'sendCard'])
-                    ->name('cards.create');
+                    ->name('cards.create')
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
                     ->name('cards.download.txt')

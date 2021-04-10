@@ -188,6 +188,7 @@
         ajax: {
             url: "{{route('datatables.select-add-cards')}}",
             method: 'POST',
+
           dataType: 'json',
           delay: 250,
           data: function data(params) {

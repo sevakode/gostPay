@@ -25,8 +25,11 @@
     </div>
     <!--end::Text-->
     <!--begin::label-->
-    <span class="font-weight-bolder label label-xl label-light-danger label-inline px-3 py-5 min-w-45px">
-        {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->count() }}
+    <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px mr-1">
+        {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->whereActive()->count() }}
+    </span>
+    <span class="font-weight-bolder label label-xl label-light-info label-inline px-3 py-5 min-w-45px">
+        {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->free()->count() }}
     </span>
     <!--end::label-->
 </div>

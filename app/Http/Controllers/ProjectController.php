@@ -6,6 +6,7 @@ use App\Models\Bank\Project;
 use App\Notifications\DataNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification as Notify;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 
 class ProjectController extends Controller
@@ -23,14 +24,26 @@ class ProjectController extends Controller
         $page_title = 'Создать проект';
         $page_description = $page_title;
 
-        return view('pages.manager.projects.create', compact('page_title', 'page_description'));
+        return view('pages.manager.projects.create',
+            compact('page_title', 'page_description'));
     }
 
     public function creating(Request $request)
     {
+        $isSlugExists = Project::where('slug', $request->slug)->exists();
+
+        if($isSlugExists) {
+            DataNotification::sendErrors(
+                ['Такой проект уже существует!', 'Пожалуйста, Измените slug проекта'],
+                $request->user()
+            );
+
+            return Redirect::back()->withInput();
+        }
+
         $project = Project::create([
             'name' => $request->name,
-            'slug' => Str::slug($request->name),
+            'slug' => Str::slug($request->slug),
             'company_id' => $request->user()->company_id
         ]);
 

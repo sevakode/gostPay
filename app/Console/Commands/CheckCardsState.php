@@ -42,6 +42,12 @@ class CheckCardsState extends Command
 
         $cards->update(['state' => Card::ACTIVE]);
 
+        $cards = Card::where('state', 'Active');
+        $cards->update(['state' => 'ac']);
+
+        $cards = Card::where('state', 'ac');
+        $cards->update(['state' => Card::ACTIVE]);
+
         return 0;
     }
 }

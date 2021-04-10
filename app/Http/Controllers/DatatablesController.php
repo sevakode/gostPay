@@ -81,6 +81,7 @@ class DatatablesController extends Controller
             $date = $filter['query']['date'];
             $dateStart = Carbon::createFromFormat('m#d#Y', $date['start'])->setTime(0, 0, 0);
             $dateEnd = Carbon::createFromFormat('m#d#Y', $date['end'])->setTime(0, 0, 0);
+            $dateEnd = $dateStart->getTimestamp() == $dateEnd->getTimestamp() ? $dateEnd->addDay() : $dateEnd;
 
             $cards = $cards->whereHas('payments', function (Builder $query) use ($dateStart, $dateEnd) {
                 $query->where('operationAt', '>=', $dateStart);
@@ -130,12 +131,14 @@ class DatatablesController extends Controller
             if (isset($filter['query']['closeCards'])) {
                 $closeCards = explode(',', $filter['query']['closeCards']);
                 $userId = $filter['id'];
-                $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
-                $cardsChecked = $cardsChecked->where('state', Card::ACTIVE);
+                $cardsList = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
+                $cardsList = $cardsList->where('state', Card::ACTIVE);
+                $cardsListGet = $cardsList->where('state', Card::ACTIVE)->get();
+                $isCardsExists = $cardsList->exists();
 
-                $cardsChecked->update(['state' => Card::PENDING]);
-
-                if ($cardsChecked->exists())
+                $cardsList->update(['state' => Card::PENDING]);
+//                dd(Card::find(332));
+                if ($isCardsExists)
                     Notify::send(\request()->user(), DataNotification::success("Запрос на закрытие карт, отправлен!"));
                 else
                     DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
@@ -222,10 +225,12 @@ class DatatablesController extends Controller
         $cards = $request->user()->company->cards()->where('user_id', null);
 
         if ($request->q)
-            $cards = $cards->where('number', 'like', '%' . $request->q . '%');
+            $cards = $cards
+                ->where('state', Card::ACTIVE)
+                ->where('number', 'like', '%' . $request->q . '%');
 
         $data = ['items'];
-        foreach ($cards->get() as $card) {
+        foreach ($cards->get()->where('company_id', $request->user()->company()->select('id')->first()->id) as $card) {
             $data['items'][] = [
                 'id' => $card->id,
                 'text' => $card->number,

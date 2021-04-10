@@ -9,7 +9,7 @@
 		<h3 class="font-weight-bold m-0">
 			Профиль пользователя
 			<small class="text-muted font-size-sm ml-2">
-                {{ \Illuminate\Support\Facades\Auth::user()->cards()->count()}} Карт
+                {{ \Illuminate\Support\Facades\Auth::user()->cards()->whereActive()->count()}} Карт
             </small>
 		</h3>
 		<a href="#" class="btn btn-xs btn-icon btn-light btn-hover-primary" id="kt_quick_user_close">

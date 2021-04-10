@@ -35,6 +35,10 @@ interface OptionsPermissions
         'title' => 'Доступ к добавлению карт',
         'slug' => 'access-to-add-credit-cards'
     ],
+        ACCESS_TO_CREATE_CARDS = [
+        'title' => 'Доступ к созданию карт',
+        'slug' => 'access-to-create-credit-cards'
+    ],
         ACCESS_TO_REMOVE_CARDS = [
         'title' => 'Доступ к удалению карт',
         'slug' => 'access-to-add-remove-cards'
@@ -124,6 +128,7 @@ interface OptionsPermissions
         self::ACCESS_TO_PROFILE,
         self::ACCESS_TO_MANAGER,
         self::ACCESS_TO_ADD_CARDS,
+        self::ACCESS_TO_CREATE_CARDS,
         self::ACCESS_TO_REMOVE_CARDS,
         self::ACCESS_TO_ALL_CARDS_COMPANY,
         self::ACCESS_TO_ALL_USERS_COMPANY,

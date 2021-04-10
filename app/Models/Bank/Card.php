@@ -23,6 +23,9 @@ use Illuminate\Support\Facades\Crypt;
  * @property string $cvc
  * @property integer $head
  * @property integer $tail
+ * @property string $state
+ * @property $expiredAt
+ * @property integer $company_id
  */
 class Card extends Model
 {
@@ -47,7 +50,26 @@ class Card extends Model
     {
         return $query
             ->where('user_id', null)
+            ->where('state', Card::ACTIVE)
             ->has('payments', '==', null);
+    }
+
+    public function scopeWhereActive($query)
+    {
+        return $query
+            ->where('state', Card::ACTIVE);
+    }
+
+    public function scopeWherePending($query)
+    {
+        return $query
+            ->where('state', Card::PENDING);
+    }
+
+    public function scopeWhereClose($query)
+    {
+        return $query
+            ->where('state', Card::CLOSE);
     }
 
     public function scopeIsDatePayments($query, Carbon $dateStart, Carbon $dateEnd)
@@ -160,7 +182,7 @@ class Card extends Model
 
             $count = 0;
 
-            $isCard=Card::where('head', $head)->where('tail', $tail)->where('expiredAt', $date)->exists();
+            $isCard=Card::where('head', $head)->where('tail', $tail)->exists();
             if(!$isCard){
                 $count++;
                 $cards[] = [
@@ -177,6 +199,8 @@ class Card extends Model
                     'company_id' => request()->user()->company->id
                 ];
             }
+
+            else DataNotification::sendErrors(['head и tail карты совпадает!'], request()->user());
 
         }
 

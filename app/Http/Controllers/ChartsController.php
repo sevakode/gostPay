@@ -99,6 +99,8 @@ class ChartsController extends Controller
             $dateEnd = Carbon::createFromFormat('m#d#Y', $dateEnd)
                 ->setTime(0, 0, 0);
 
+            $dateEnd = $dateStart->getTimestamp() == $dateEnd->getTimestamp() ? $dateEnd->addDay() : $dateEnd;
+
             $cards = $cards->whereHas('payments', function (Builder $query) use ($dateStart, $dateEnd) {
                 $query->where('operationAt', '>=', $dateStart);
                 $query->where('operationAt', '<=', $dateEnd);

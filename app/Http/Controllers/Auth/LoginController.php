@@ -40,8 +40,6 @@ class LoginController extends Controller
             return $response;
         }
 
-
-
         return $request->wantsJson()
             ? new JsonResponse([url($this->redirectPath())], 201)
             : redirect()->intended($this->redirectPath());

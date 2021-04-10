@@ -53,6 +53,7 @@ class CardController extends Controller
         foreach ($cards->get() as $card) {
             if($card->numberFull == $request->number)
                 return DataNotification::sendErrors(['Такая карта уже существует'], $request->user());
+            else return DataNotification::sendErrors(['head и tail карты совпадает!'], $request->user());
         }
 
         $expiredAt = Carbon::createFromFormat('m#y#d H', "$request->date_month-$request->date_year-1 00");
@@ -60,6 +61,7 @@ class CardController extends Controller
             $card = new Card();
             $card->number = $request->number;
             $card->cvc = $request->cvc;
+            $card->state = Card::ACTIVE;
             $card->expiredAt = $expiredAt;
             $card->company_id = $request->user()->company->id;
             $card->save();
