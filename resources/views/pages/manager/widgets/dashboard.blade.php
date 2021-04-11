@@ -34,18 +34,11 @@
                     </div>
                     <span style="width: 122px;">
                         <span class="label label-lg font-weight-bold  label-light-primary label-inline">
-                            {{ $user->cards()->count() }}
+                            {{ $user->cards()->whereActive()->count() }}
                         </span>
                     </span>
                     <!--end::Text-->
                     <!--begin::Dropdown-->
-{{--                    <ul style="list-style-type: '+ '; color: #00b300">--}}
-{{--                        <li>adsf</li>--}}
-{{--                        <li>asdf</li>--}}
-{{--                        <li>asdf</li>--}}
-{{--                        <li>sadf</li>--}}
-{{--                        <li>asfd</li>--}}
-{{--                    </ul>--}}
                     <style>
                         .plus-permissions {
                             /*list-style-type: "+ ";*/

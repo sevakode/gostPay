@@ -42,17 +42,17 @@ trait TableCards
 
     public function sortUpdateAt(&$cards, $filter)
     {
-        if($filter['sort']['field'] == 'updated_at')
+        if($filter['sort']['field'] == 'issue_at')
             $cards = $cards->orderBy($filter['sort']['field'], $filter['sort']['sort']);
     }
 
     public function sortDataUpdateAt(&$data, $filter)
     {
         $sort = function ($product) {
-            return $product['updated_at'];
+            return $product['issue_at'];
         };
 
-        if($filter['sort']['field'] == 'updated_at')
+        if($filter['sort']['field'] == 'issue_at')
         {
             if($filter['sort']['sort'] == 'desc') $data = $data->sortByDesc($sort);
             if($filter['sort']['sort'] == 'asc') $data = $data->sortBy($sort);

@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Crypt;
  * @property string $state
  * @property $expiredAt
  * @property integer $company_id
+ * @property $issue_at
  */
 class Card extends Model
 {
@@ -34,7 +35,8 @@ class Card extends Model
     const ACTIVE = 'active';
     const PENDING = 'pending';
     const CLOSE = 'close';
-    protected $dates = ['expiredAt', 'updated_at'];
+
+    protected $dates = ['expiredAt', 'updated_at', 'issue_at'];
 
     public function user()
     {

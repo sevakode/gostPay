@@ -206,14 +206,12 @@
                             '</label>',
                         width: 20,
                         sortable: false,
-{{--                        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['title']))--}}
                         template: function template(row) {
                             return '<label class="checkbox event_click_checkbox">'+
                                 '<input class="check_cards" type="checkbox" value="'+row.id+'" name="checkboxes"/>'+
                                 '<span></span>'+
                                 '</label>'
                         }
-{{--                        @endif--}}
                     },
                     {
                         field: 'number',
@@ -254,7 +252,7 @@
                         title: 'Сумма платежей',
                     },
                     {
-                        field: 'updated_at',
+                        field: 'issue_at',
                         title: 'Дата выдачи',
                     },
                 ],
@@ -301,7 +299,6 @@
                 datatable.setDataSourceParam('query.listCartForAdding', '');
                 var checkboxes_value = [];
                 $('input[name="checkboxes"]').each(function(){
-                    //if($(this).is(":checked")) {
                     if(this.checked) {
                         checkboxes_value.push($(this).val());
                     }
@@ -332,7 +329,6 @@
                         checkboxes_value.push($(this).val());
                     }
                 });
-                // checkboxes_value = checkboxes_value.toString();
 
                 $.ajax({
                     type:'post',

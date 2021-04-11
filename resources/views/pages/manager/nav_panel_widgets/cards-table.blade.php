@@ -143,7 +143,7 @@
                     title: 'Сумма платежей',
                 },
                 {
-                    field: 'updated_at',
+                    field: 'issue_at',
                     title: 'Дата выдачи',
                 },
             ],

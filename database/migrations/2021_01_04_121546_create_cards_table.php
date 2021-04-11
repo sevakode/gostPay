@@ -27,12 +27,12 @@ class CreateCardsTable extends Migration
 
             $table->integer('user_id')->nullable();
             $table->integer('company_id')->nullable();
-//            $table->integer('geo_id')->nullable();
 
             $table->string('state')->default(\App\Models\Bank\Card::ACTIVE);
 
             $table->softDeletes();
             $table->timestamp('expiredAt')->useCurrent();
+            $table->timestamp('issue_at')->nullable();
             $table->timestamps();
 
             $table->index(['number']);

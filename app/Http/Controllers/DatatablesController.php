@@ -61,7 +61,7 @@ class DatatablesController extends Controller
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() . '₽',
-                'updated_at' => isset($card->user) ? $card->updated_at->format('M d, Y H:i:s') : 'none'
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
 
@@ -93,7 +93,7 @@ class DatatablesController extends Controller
         $this->filterSearch($cards, $filter);
 
         if (!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
-            if (isset($filter['query']['countCards']) and $filter['query']['countCards']['count']) {
+            if (isset($filter['query']['countCards']) and $filter['query']['countCards'] and $filter['query']['countCards']['count']) {
                 $countCards = $filter['query']['countCards']['count'];
                 $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
                 $userId = $filter['id'];
@@ -106,6 +106,7 @@ class DatatablesController extends Controller
 
                         foreach ($cardsFree as $card) {
                             $card->user_id = $userId;
+                            $card->issue_at = now();
                             $card->save();
 
                             $project->cards()->attach($card->id);
@@ -126,18 +127,16 @@ class DatatablesController extends Controller
 
                 foreach ($cardsChecked->get() as $card) $card->project()->detach();
 
-                $cardsChecked->update(['user_id' => null]);
+                $cardsChecked->update(['user_id' => null, 'issue_at' => null]);
             }
             if (isset($filter['query']['closeCards'])) {
                 $closeCards = explode(',', $filter['query']['closeCards']);
                 $userId = $filter['id'];
                 $cardsList = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
                 $cardsList = $cardsList->where('state', Card::ACTIVE);
-                $cardsListGet = $cardsList->where('state', Card::ACTIVE)->get();
                 $isCardsExists = $cardsList->exists();
 
                 $cardsList->update(['state' => Card::PENDING]);
-//                dd(Card::find(332));
                 if ($isCardsExists)
                     Notify::send(\request()->user(), DataNotification::success("Запрос на закрытие карт, отправлен!"));
                 else
@@ -170,6 +169,7 @@ class DatatablesController extends Controller
                     foreach ($filter['query']['listCartForAdding']['cards'] as $card) {
                         $card = Card::find($card['id']);
                         $card->user_id = $userId;
+                        $card->issue_at = now();
                         $card->save();
 
                         $project->cards()->attach($card->id);
@@ -208,7 +208,7 @@ class DatatablesController extends Controller
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() . '₽',
-                'updated_at' => isset($card->user) ? $card->updated_at->format('M d, Y H:i:s') : 'none'
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
 
@@ -316,7 +316,7 @@ class DatatablesController extends Controller
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() . '₽',
-                'updated_at' => $card->updated_at->format('M d, Y H:i:s') ?? null,
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
 
