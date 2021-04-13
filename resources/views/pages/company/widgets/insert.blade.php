@@ -1,4 +1,4 @@
-<form class="form" id="form-create-personal" enctype="multipart/form-data"
+<form class="form repeater" id="form-create-personal" enctype="multipart/form-data"
       action="{{ $route }}"
       method="POST">
     @csrf
@@ -61,6 +61,52 @@
             <select class="form-control col-lg-9 col-xl-6" name="typeBank" required>
                 <option value="tochkabank">Tochka Bank</option>
             </select>
+        </div>
+        <div id="kt_repeater_2">
+            <div class="form-group row">
+                <label class="col-xl-3 col-lg-3 col-form-label">Номер счёта:</label>
+                <div data-repeater-list="account_id" class="col-lg-9 col-xl-6" style="
+                    padding-left: 0px;
+                    padding-right: 0px;
+                ">
+                    @if($company->invoices()->exists())
+                        @foreach($company->invoices()->get() as $invoice)
+                            <div data-repeater-item class="mb-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control"
+                                           placeholder="Account ID" name="account_id" value="{{ $invoice->account_id }}"/>
+                                    <div class="input-group-append">
+                                        <a href="javascript:;" data-repeater-delete="" class="btn font-weight-bold btn-danger btn-icon">
+                                            <i class="la la-close"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div data-repeater-item class="mb-2">
+                            <div class="input-group">
+                                <input type="text" class="form-control"
+                                       placeholder="Account ID" name="account_id"/>
+                                <div class="input-group-append">
+                                    <a href="javascript:;" data-repeater-delete="" class="btn font-weight-bold btn-danger btn-icon">
+                                        <i class="la la-close"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-xl-3 col-lg-3 col-form-label"></label>
+                <div class="col-lg-4">
+                    <a href="javascript:;" data-repeater-create="" class="btn btn-sm font-weight-bolder btn-light-primary">
+                        <i class="la la-plus"></i>Добавить счет
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="form-group row">
@@ -169,4 +215,41 @@
             }
         </script>
     @endif
+
+    <script>
+        // Class definition
+        var KTFormRepeater = function() {
+
+            // Private functions
+            var demo2 = function() {
+                $('#kt_repeater_2').repeater({
+                    initEmpty: false,
+
+                    defaultValues: {
+                        'text-input': 'foo'
+                    },
+
+                    show: function() {
+                        $(this).slideDown();
+                    },
+
+                    hide: function(deleteElement) {
+                        if(confirm('Are you sure you want to delete this element?')) {
+                            $(this).slideUp(deleteElement);
+                        }
+                    }
+                });
+            }
+            return {
+                // public functions
+                init: function() {
+                    demo2();
+                }
+            };
+        }();
+
+        jQuery(document).ready(function() {
+            KTFormRepeater.init();
+        });
+    </script>
 @endpush

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Classes\TochkaBank\BankAPI;
 use App\Http\Controllers\Controller;
+use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\BankToken;
+use App\Models\Bank\Invoice;
 use App\Models\Company;
 use App\Models\User;
 use App\Notifications\DataNotification;
@@ -100,7 +102,26 @@ class CompanyController extends Controller
     {
         $company = $request->user()->company;
         $company->name = $request->name;
+        $accounts = array();
+        foreach ($request->account_id as $account)
+        {
+            $account['company_id'] = $company->id;
+            $accounts[] = $account;
+        }
         $company->save();
+
+        if($request->user()->hasPermission(OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])) {
+            Invoice::where('company_id', $company->id)
+                ->whereNotIn('account_id', array_column($accounts, 'account_id'))
+                ->delete();
+
+            Invoice::upsert(
+                $accounts,
+                ['account_id', 'company_id'],
+                ['account_id', 'company_id']
+            );
+        }
+
         $file = $request->file('company_avatar');
         if(isset($file))
             $company->image('avatar')->make($file, 'images/company/avatar/original/');

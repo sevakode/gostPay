@@ -22,6 +22,9 @@ class LoginController extends Controller
 
     use AuthenticatesUsers;
 
+    protected $maxAttempts = 2;
+    protected $decayMinutes = 6000;
+
     public function showLoginForm()
     {
         $page_title = 'Вход';
