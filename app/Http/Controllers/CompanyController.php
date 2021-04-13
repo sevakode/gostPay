@@ -102,24 +102,30 @@ class CompanyController extends Controller
     {
         $company = $request->user()->company;
         $company->name = $request->name;
+        $company->save();
+
+
         $accounts = array();
         foreach ($request->account_id as $account)
         {
             $account['company_id'] = $company->id;
             $accounts[] = $account;
         }
-        $company->save();
+        if($accounts[0] != null) {
+            if($request->user()->hasPermission(OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])) {
+                Invoice::where('company_id', $company->id)
+                    ->whereNotIn('account_id', array_column($accounts, 'account_id'))
+                    ->delete();
 
-        if($request->user()->hasPermission(OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])) {
-            Invoice::where('company_id', $company->id)
-                ->whereNotIn('account_id', array_column($accounts, 'account_id'))
-                ->delete();
-
-            Invoice::upsert(
-                $accounts,
-                ['account_id', 'company_id'],
-                ['account_id', 'company_id']
-            );
+                Invoice::upsert(
+                    $accounts,
+                    ['account_id', 'company_id'],
+                    ['account_id', 'company_id']
+                );
+            }
+            else {
+                DataNotification::sendErrors(['У вас недостаточно прав для изменений счетов']);
+            }
         }
 
         $file = $request->file('company_avatar');
