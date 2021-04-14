@@ -14,11 +14,13 @@ class CreateInvoicesTable extends Migration
     public function up()
     {
         Schema::create('invoices', function (Blueprint $table) {
+            $table->id();
             $table->string('account_id')->unique();
 
             $table->integer('company_id');
 
-            $table->integer('amount')->nullable();
+            $table->float('avail')->nullable();
+            $table->float('current')->nullable();
             $table->string('currency')->default('RUB');
 
             $table->timestamps();
