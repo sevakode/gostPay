@@ -21,19 +21,8 @@
                 <!--end::Item-->
                 @include('pages.company.navbar.item', [
                 'svg' => 'Communication/Clipboard-list.svg',
-                'route' => route('projects'),
-                'title' => 'Проекты',
-                'description' => 'Список проектов',
-                'count' => request()->user()->company->projects()->count(),
-                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
-                ])
-                @include('pages.company.navbar.item', [
-                'svg' => 'Communication/Clipboard-list.svg',
                 'route' => route('cards_closing_list'),
-                'title' => 'Карты на закрытие',
-                'description' => 'Список карт в ожидании на закрытие',
                 'count' => request()->user()->company->cards()->where('state', \App\Models\Bank\Card::PENDING)->count(),
-                'permission' => \App\Interfaces\OptionsPermissions::ACCESS_TO_MANAGER
                 ])
                 <!--end::Item-->
                 </div>

@@ -41,7 +41,7 @@ class ManagerController extends Controller
 
     public function closingCard(Request $request)
     {
-        $card = Card::find($request->card_id);
+        $card = $request->user()->company->cards()->find($request->card_id);
         $card->state = $request->status == 'true' ? Card::CLOSE : Card::ACTIVE;
         $card->save();
 
@@ -56,6 +56,29 @@ class ManagerController extends Controller
         }
 
         return new JsonResponse(['card_id' => $request->card_id]);
+    }
+
+    public function closingCardAll(Request $request)
+    {
+        $cards = $request->user()->company->cards()->where('state', Card::PENDING)->get();
+        $cardsId = [];
+        foreach ($cards as $card) {
+            $card->state = $request->status == 'true' ? Card::CLOSE : Card::ACTIVE;
+            $card->save();
+
+            Notification::send(request()->user(), DataNotification::success());
+
+            if ($card->user()->exists()) {
+                $message = $card->state == Card::CLOSE ?
+                    DataNotification::success("Карта $card->number закрыта") :
+                    DataNotification::success("Карта $card->number не была одобрена на закрытие!");
+
+                Notification::send($card->user()->first(), $message);
+            }
+            $cardsId[] = $card->id;
+        }
+
+        return new JsonResponse(['card_id_list' => $cardsId]);
     }
 
     public function user($id)

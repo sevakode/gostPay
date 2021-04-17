@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
-use App\Models\Bank\Invoice;
+use App\Models\Bank\Account;
 use App\Models\Bank\Project;
 use App\Traits\HasProjects;
 use App\Traits\Imageable;
@@ -44,7 +44,7 @@ class Company extends Model
 
     public function invoices(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Invoice::class,);
+        return $this->hasMany(Account::class,);
     }
 
     /**

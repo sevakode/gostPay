@@ -42,6 +42,10 @@ interface OptionsPermissions
         ACCESS_TO_REMOVE_CARDS = [
         'title' => 'Доступ к удалению карт',
         'slug' => 'access-to-add-remove-cards'
+    ],
+        ACCESS_TO_CLOSE_CARDS = [
+        'title' => 'Доступ к закрытию карт',
+        'slug' => 'access-to-add-close-cards'
     ];
 
     const
@@ -130,6 +134,7 @@ interface OptionsPermissions
         self::ACCESS_TO_ADD_CARDS,
         self::ACCESS_TO_CREATE_CARDS,
         self::ACCESS_TO_REMOVE_CARDS,
+        self::ACCESS_TO_CLOSE_CARDS,
         self::ACCESS_TO_ALL_CARDS_COMPANY,
         self::ACCESS_TO_ALL_USERS_COMPANY,
 
