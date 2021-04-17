@@ -52,7 +52,7 @@
                             <div class="col-lg-8 col-md-8 col-sm-12">
                                 <div class="dropdown bootstrap-select form-control dropup">
                                     <select class="form-control selectpicker"
-                                            id="selectpicker_project"
+                                            id="selectpicker_random_project"
                                             data-size="12"
                                             data-live-search="true"
                                             tabindex="null">
