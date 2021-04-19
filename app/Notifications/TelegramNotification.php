@@ -6,6 +6,7 @@ use App\Models\Bank\Card;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification as Notify;
 
 class TelegramNotification extends Notification
@@ -47,15 +48,8 @@ class TelegramNotification extends Notification
             'chat_id' => $chatId,
             'text' => $message,
         ];
-        $ch = curl_init($website . '/sendMessage');
-        curl_setopt($ch, CURLOPT_HEADER, false);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, ($params));
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
+
+        return Http::post($website . '/sendMessage', $params)->json();
     }
 
     public static function sendMessageFacebook($chatId, $code, $tail)
@@ -63,6 +57,20 @@ class TelegramNotification extends Notification
         if (! preg_match('/(FACEBK)/', $code)) return;
 
         $message = "На привязанную вам карту **** **** **** $tail пришло сообщение.\n Код: $code";
+
+        return self::sendMessage($chatId, $message);
+    }
+
+    public static function sendMessageClosingCards($chatId, $cards)
+    {
+        $user = $cards->first()->user()->first();
+        $message = "Поступили карты на закрытие: \n";
+        foreach ($cards as $card) {
+            $message .= "$card->number \n";
+        }
+
+        $message .= "от: $user->fullName\n";
+        $message .= $user->telegram ? "@$user->telegram" : '';
 
         return self::sendMessage($chatId, $message);
     }

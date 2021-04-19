@@ -81,8 +81,10 @@
                     'status': true
                 },
                 success: function (data) {
-                    div = $('#card-'+ data.card_id);
-                    div.html('')
+                    data.card_id_list.forEach(function (id) {
+                        div = $('#card-'+ id);
+                        div.html('')
+                    })
                     sendNotification()
                 },
                 error: function () {

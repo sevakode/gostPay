@@ -19,6 +19,9 @@ class Account extends Model
 {
     use HasFactory;
 
+    const AVAIL = 'avail';
+    const CURRENT = 'current';
+
     protected $fillable = ['account_id', 'avail', 'current'];
 
     protected $table = 'bank_account';

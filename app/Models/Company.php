@@ -82,6 +82,11 @@ class Company extends Model
         return $payments;
     }
 
+    public function sumCardsInvoices($invoice = Account::AVAIL)
+    {
+        return (int) $this->invoices()->sum($invoice);
+    }
+
     public function getAvatarAttribute(): string
     {
         return $this->avatar('original');

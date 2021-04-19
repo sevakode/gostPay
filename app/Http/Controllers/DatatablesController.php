@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
+use App\Notifications\TelegramNotification;
 use App\Providers\RouteServiceProvider;
 use App\Traits\TableCards;
 use App\Traits\TableProjects;
@@ -133,14 +134,17 @@ class DatatablesController extends Controller
                 $closeCards = explode(',', $filter['query']['closeCards']);
                 $userId = $filter['id'];
                 $cardsList = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
-                $cardsList = $cardsList->where('state', Card::ACTIVE);
-                $isCardsExists = $cardsList->exists();
+                $cardsListGet = $cardsList->get();
+                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
+                $isCardsExists = $cardsListActive->exists();
 
-                $cardsList->update(['state' => Card::PENDING]);
+                $cardsListActive->update(['state' => Card::PENDING]);
                 if ($isCardsExists)
                     Notify::send(\request()->user(), DataNotification::success("Запрос на закрытие карт, отправлен!"));
                 else
                     DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
+
+                TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
             }
             if (isset($filter['query']['downloadCardsTxt'])) {
                 $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);

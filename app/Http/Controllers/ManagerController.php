@@ -73,7 +73,7 @@ class ManagerController extends Controller
                     DataNotification::success("Карта $card->number закрыта") :
                     DataNotification::success("Карта $card->number не была одобрена на закрытие!");
 
-                Notification::send($card->user()->first(), $message);
+//                Notification::send($card->user()->first(), $message);
             }
             $cardsId[] = $card->id;
         }
