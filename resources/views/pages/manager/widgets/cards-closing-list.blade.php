@@ -7,6 +7,10 @@
         <!--begin::Header-->
         <div class="card-header border-0">
             <h3 class="card-title font-weight-bolder text-dark">{{ $page_title }}</h3>
+
+            <div class="card-toolbar">
+                <button id="btn-close-all"  class="btn btn-danger mr-2">Закрыть все</button>
+            </div>
         </div>
         <!--end::Header-->
         <!--begin::Body-->
@@ -67,6 +71,27 @@
 
 @section('scripts')
     <script>
+        $('#btn-close-all').on('click', function () {
+            $.ajax({
+                type:'post',
+                url:'{{ route('cards_closing_all') }}',
+                dataType: "json",
+                data:{
+                    '_token':$('meta[name="csrf-token"]').attr('content'),
+                    'status': true
+                },
+                success: function (data) {
+                    data.card_id_list.forEach(function (id) {
+                        div = $('#card-'+ id);
+                        div.html('')
+                    })
+                    sendNotification()
+                },
+                error: function () {
+                    sendNotification()
+                }
+            });
+        });
         $('.success ').on('click', function () {
             let cardId = $(this).attr("data-card-id");
             $.ajax({

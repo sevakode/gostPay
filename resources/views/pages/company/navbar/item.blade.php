@@ -1,3 +1,19 @@
+@php
+    if(!isset($permission)) {
+        if(!\App\Modules\ConfigMenu::getPermission($route)) return;
+        $permission = ['slug' => \App\Modules\ConfigMenu::getPermission($route)];
+    }
+
+    else if($permission instanceof \App\Models\Permission) {
+        if(!\App\Modules\ConfigMenu::getPermission($route)) return;
+        $permission = ['slug' => \App\Modules\ConfigMenu::getPermission($route)];
+    }
+
+    if(!isset($title)) $title = \App\Modules\ConfigMenu::getTitle($route);
+
+    if(!isset($description)) $description = \App\Modules\ConfigMenu::getDescription($route);
+@endphp
+
 @if(isset($permission) and \Illuminate\Support\Facades\Auth::user()->hasPermission($permission['slug']))
 {{--@isset()--}}
     <div class="d-flex align-items-center pb-9">
@@ -7,7 +23,7 @@
             <span class="svg-icon svg-icon-2x svg-icon-dark-50">
                 <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Media/Equalizer.svg-->
                 {{ \App\Classes\Theme\Metronic::getSVG('media/svg/icons/'.$svg) }}
-            <!--end::Svg Icon-->
+                <!--end::Svg Icon-->
             </span>
         </span>
         </div>

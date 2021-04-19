@@ -20,6 +20,7 @@ interface OptionsRole
             Permission::ACCESS_TO_ADD_CARDS,
             Permission::ACCESS_TO_CREATE_CARDS,
             Permission::ACCESS_TO_REMOVE_CARDS,
+            Permission::ACCESS_TO_CLOSE_CARDS,
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
 
@@ -48,6 +49,7 @@ interface OptionsRole
             Permission::ACCESS_TO_ADD_CARDS,
             Permission::ACCESS_TO_CREATE_CARDS,
             Permission::ACCESS_TO_REMOVE_CARDS,
+            Permission::ACCESS_TO_CLOSE_CARDS,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
 

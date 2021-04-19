@@ -6,7 +6,7 @@ use App\Classes\TochkaBank\BankAPI;
 use App\Http\Controllers\Controller;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\BankToken;
-use App\Models\Bank\Invoice;
+use App\Models\Bank\Account;
 use App\Models\Company;
 use App\Models\User;
 use App\Notifications\DataNotification;
@@ -113,11 +113,11 @@ class CompanyController extends Controller
         }
         if($accounts[0] != null) {
             if($request->user()->hasPermission(OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])) {
-                Invoice::where('company_id', $company->id)
+                Account::where('company_id', $company->id)
                     ->whereNotIn('account_id', array_column($accounts, 'account_id'))
                     ->delete();
 
-                Invoice::upsert(
+                Account::upsert(
                     $accounts,
                     ['account_id', 'company_id'],
                     ['account_id', 'company_id']

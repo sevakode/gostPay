@@ -64,8 +64,10 @@ return [
                     ],
                     [
                         'title' => 'Карты на закрытие',
+                        'description' => 'Список карт в ожидании на закрытие',
                         'page' => 'manager/cards/closing_list',
                         'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
+                        'permission' => OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']
                     ],
                 ]
             ],
@@ -109,6 +111,7 @@ return [
                 'items' => [
                     [
                         'title' => 'Проекты',
+                        'description' => 'Список проектов',
                         'page' => 'projects',
                         'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
                     ],

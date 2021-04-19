@@ -140,6 +140,9 @@ Route::middleware('auth')->group(function () {
 
             Route::post('/cards/closing', [ManagerController::class, 'closingCard'])->name('cards_closing')
                 ->middleware('auth.demo');
+
+            Route::post('/cards/closing-all', [ManagerController::class, 'closingCardAll'])->name('cards_closing_all')
+                ->middleware('auth.demo');
         });
 
 
