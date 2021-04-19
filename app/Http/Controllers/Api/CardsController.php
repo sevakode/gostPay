@@ -26,6 +26,7 @@ class CardsController extends Controller
 
         if ($status == Card::ACTIVE) $cards = $cards->whereActive();
         else if ($status == Card::CLOSE) $cards = $cards->whereClose();
+        else if ($status == Card::PENDING) $cards = $cards->wherePending();
 
         $cardsAr = $cards->get()->toArray();
 
