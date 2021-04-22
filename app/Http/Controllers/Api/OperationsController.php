@@ -5,75 +5,158 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
-use App\Notifications\TelegramNotification;
-use Illuminate\Database\Eloquent\Builder;
+use App\Models\Bank\Payment;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
 
 class OperationsController extends Controller
 {
     const TOKEN = '7YfynDjKtyVIKe3xczm0r8UOSDfutdDl';
     const TOCHKABANK = 'tochkabank';
 
-    public function notifyOperations($bank, $token)
+    public function notifyOperations(Request $request, $bank, $token)
     {
-//        Account::getCollectApi();
-        $local = '{"json":"{\"message_v1\": {\"@time\": \"2021-04-14T20:28:07.550+05:00\", \"@type\": \"response\", \"data\": {\"@trn_code\": \"mirror_account_detailed_balance_query\", \"multi_account_list_detailed\": {\"accounts\": [{\"account_id\": \"40802810906500006235\", \"main\": {\"id\": 200423188805548, \"accountId\": \"40802810906500006235\", \"avail\": 75565.52, \"current\": 110072.04, \"plan\": 0.0, \"block\": 0.0, \"registry\": 0.0, \"avail_over_limit\": 0.0, \"cms_avail\": 75565.52, \"cms_avail_credit\": 0.0, \"cms_hold\": -34506.52, \"unprocessed\": 0.0, \"plan_with_unprocessed\": 0.0, \"over\": 0.0, \"tech_over\": 0.0, \"service_bank\": \"OPEN\"}}, {\"account_id\": \"40802810301500157556\", \"main\": {\"id\": 210329771705674, \"accountId\": \"40802810301500157556\", \"avail\": 3205.53, \"current\": 14021.44, \"plan\": 0.0, \"block\": 0.0, \"registry\": 0.0, \"avail_over_limit\": 0.0, \"cms_avail\": 3205.53, \"cms_avail_credit\": 0.0, \"cms_hold\": -10815.91, \"unprocessed\": 0.0, \"plan_with_unprocessed\": 0.0, \"over\": 0.0, \"tech_over\": 0.0, \"service_bank\": \"OPEN\"}}, {\"account_id\": \"40802978801500006492\", \"main\": {\"id\": 200622536766609, \"accountId\": \"40802978801500006492\", \"avail\": 0.0, \"current\": 0.0, \"plan\": 0.0, \"block\": 0.0, \"registry\": 0.0, \"avail_over_limit\": 0.0, \"cms_avail\": 0.0, \"cms_avail_credit\": 0.0, \"cms_hold\": 0.0, \"unprocessed\": 0.0, \"plan_with_unprocessed\": 0.0, \"over\": 0.0, \"tech_over\": 0.0, \"service_bank\": \"OPEN\"}}, {\"account_id\": \"40802840401500011627\", \"main\": {\"id\": 200709013512547, \"accountId\": \"40802840401500011627\", \"avail\": 0.0, \"current\": 0.0, \"plan\": 0.0, \"block\": 0.0, \"registry\": 0.0, \"avail_over_limit\": 0.0, \"cms_avail\": 0.0, \"cms_avail_credit\": 0.0, \"cms_hold\": 0.0, \"unprocessed\": 0.0, \"plan_with_unprocessed\": 0.0, \"over\": 0.0, \"tech_over\": 0.0, \"service_bank\": \"OPEN\"}}, {\"account_id\": \"40802978501500006491\", \"main\": {\"id\": 200622536766610, \"accountId\": \"40802978501500006491\", \"avail\": 0.0, \"current\": 0.0, \"plan\": 0.0, \"block\": 0.0, \"registry\": 0.0, \"avail_over_limit\": 0.0, \"cms_avail\": 0.0, \"cms_avail_credit\": 0.0, \"cms_hold\": 0.0, \"unprocessed\": 0.0, \"plan_with_unprocessed\": 0.0, \"over\": 0.0, \"tech_over\": 0.0, \"service_bank\": \"OPEN\"}}, {\"account_id\": \"40802840101500011626\", \"main\": {\"id\": 200709013512548, \"accountId\": \"40802840101500011626\", \"avail\": 4241.56, \"current\": 4837.89, \"plan\": 0.0, \"block\": 0.0, \"registry\": 0.0, \"avail_over_limit\": 0.0, \"cms_avail\": 4241.56, \"cms_avail_credit\": 0.0, \"cms_hold\": -596.33, \"unprocessed\": 0.0, \"plan_with_unprocessed\": 0.0, \"over\": 0.0, \"tech_over\": 0.0, \"service_bank\": \"OPEN\"}}]}}, \"state_info\": {\"@state\": \"processed\"}}}"}';
+        if ($token !== self::TOKEN) return new JsonResponse(['error' => 'Неверный токен!'], 405);
+        if ($bank !== self::TOCHKABANK) return new JsonResponse(['error' => 'Неверный банк!'], 405);
 
-        if ($token !== self::TOKEN)
-            return new JsonResponse(['error' => 'Неверный токен'], 405);
-
-        if ($bank == self::TOCHKABANK) {
-            //(array)$js = json_decode($request->input('json'), true)['message_v1'];
-            (array)$js = json_decode($local, true);
-            $js = json_decode($js['json'], true)['message_v1'];
-
-            foreach ($js['data']['multi_account_list_detailed'] as $multi_account_list_detailed) {
-                foreach ($multi_account_list_detailed as $account) {
-                    $main = $account['main'];
-                    $invoice = Account::where('account_id', $account['account_id'])->first();
-                    if($invoice) {
-                        $invoice->avail = $main['avail'];
-                        $invoice->current = $main['current'];
-                        $invoice->save();
-                    }
-                }
-            }
-            dd(Account::all());
-
-//            foreach ($request->all() as $operation) {
-//                preg_match_all('/В процессе\Wn(FACEBK .{3,20}) .*?[^W]([0-9]{4}|^0-9{4})/', $operation, $operationAr);
-//                $operationAr = $operationAr[0] ? array_column($operationAr, 0) : $operationAr;
-//                //Телеграм логер
-//                Http::post('https://api.telegram.org/bot1642701852:AAFGin0id2ulxImyv05QLtkLThbymmCZZJ4/sendMessage',
-//                    array(
-//                        'chat_id' => '689839038',
-//                        'text' => $operation
-//                    )
-//                );
-//                //Телеграм логер
-//                $isCopy = Card::select('id')
-//                    ->unreadNotifications()
-//                    ->where('data', 'LIKE', '%' . $operationAr[1] . '%')
-//                    ->exists();
-//                if ($isCopy) continue;
-//
-//                $cards = Card::where('tail', $operationAr[2]);
-////                    ->whereHas('user', function (Builder $query) {
-////                        $query->whereNotNull('telegram_chat');
-////                    });
-//
-//                if ($cards->exists()) $cards->each(function (Card $card) use ($operationAr) {
-//                    TelegramNotification::sendOperations($card, $card->user, [$operationAr[1]]);
-//                });
-//            }
-        }
+        (array)$js = json_decode($request->input('json'), true);
+        self::paymentsParse($js);
+        self::invoicesParse($js);
 
         return new JsonResponse(true, 200);
     }
 
-    private function
+    private static function cardsParse(array $json)
+    {
+        if (isset($json) and
+            isset($json['message_v1']) and
+            isset($json['message_v1']['data']) and
+            isset($json['message_v1']['data']['card_list']) and
+            isset($json['message_v1']['data']['card_list']['cards']))
+            (object) $card_list = $json['message_v1']['data']['card_list']['cards'];
+        else return false;
+
+        $cards = Card::getCollectParse($card_list);
+
+        Card::update(
+            $cards->toArray(),
+            [
+                'number',
+                'card_description',
+                'head',
+                'tail',
+                'card_type',
+                'expiredAt',
+                'state',
+                'card_type'
+            ]
+        );
+
+        return true;
+    }
+
+    private static function paymentsParse(array $json)
+    {
+        if (isset($json) and
+            isset($json['result']) and
+            isset($json['result']['time_line_list']))
+            (object) $payment_list = $json['result']['time_line_list'];
+        else return false;
+
+        $payments = [];
+        foreach ($payment_list as $payment) {
+            $payment = $payment['data'];
+
+            if (isset($payment['cardPan'])) {
+                preg_match("/(\d{4})\**(\d{4})/", $payment['cardPan'], $cards);
+                $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
+                    Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
+                    null;
+            } else $cardId = null;
+
+            if (isset($payment['stateInfo'])) {
+                switch ($payment['stateInfo']) {
+                    case 'A' :
+                    case 'P' :
+                        $status = Payment::PENDING;
+                        break;
+                    case 'C' :
+                    case 'T' :
+                    case 'E' :
+                        $status = Payment::CANCELED;
+                        break;
+                    case 'S':
+                        $status = Payment::BOOKED;
+                        break;
+                    default:
+                        return [$payment['stateInfo'], $payment];
+                }
+            } else {
+                $status = Payment::BOOKED;
+            }
+
+            if (isset($payment['cardOperationType']))
+                $type = $payment['cardOperationType'] == 'purchase' ?
+                    Payment::EXPENDITURE :
+                    Payment::REVENUE;
+            else $type = $payment['type'] == 'PaymentIncome' ?
+                    Payment::REVENUE :
+                    Payment::EXPENDITURE;
+
+            try {
+                $payments[] = [
+                    'transaction_id' => $payment['cardTrnInfo']['trnId'] ?? $payment['corebankingId'],
+                    'description' => $payment['title'] . ' ' . $payment['purpose'],
+                    'account_id' => $payment['payerAccountId'],
+                    'card_id' => $cardId,
+                    'type' => $type,
+                    'status' => $status,
+                    'amount' => (float)$payment['sum'],
+                    'currency' => $payment['sumCurrency'],
+                    'operationAt' => Carbon::createFromFormat('Y-m-d H', $payment['shortItemDate'] . ' 00'),
+                ];
+            } catch (\Exception $e) {
+
+            }
+        }
+
+        Payment::upsert(
+            $payments,
+            [
+                'transaction_id',
+                'description',
+                'account_id',
+                'card_id',
+                'status',
+                'amount',
+                'currency',
+                'operationAt',
+            ]
+        );
+        return true;
+    }
+
+    private static function invoicesParse(array $json)
+    {
+        if (isset($json) and
+            isset($json['message_v1']) and
+            isset($json['message_v1']['data']) and
+            isset($json['message_v1']['data']['multi_account_list_detailed']))
+            $account_list = $json['message_v1']['data']['multi_account_list_detailed'];
+        else return false;
+
+        foreach ($account_list as $multi_account_list_detailed) {
+            foreach ($multi_account_list_detailed as $account) {
+                $main = $account['main'];
+                $invoice = Account::where('account_id', $account['account_id'])->first();
+                if($invoice) {
+                    $invoice->avail = $main['avail'];
+                    $invoice->current = $main['current'];
+                    $invoice->save();
+                }
+            }
+        }
+    }
 }
 

@@ -61,7 +61,6 @@
 </div>
 @section('scripts_next')
 <script>
-    console.log('dsaasd')
     window.addEventListener('load', function () {
         var datatable = $('#add_cards_datatable').KTDatatable({
             data: {

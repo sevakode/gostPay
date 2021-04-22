@@ -21,6 +21,10 @@ class Payment extends Model
     const EXPENDITURE='expenditure';
     const REVENUE='revenue';
 
+    const BOOKED = 'booked';
+    const PENDING = 'pending';
+    const CANCELED = 'canceled';
+
     protected $dates = ['operationAt', 'updated_at'];
 
     public static function getCollectApi(): \Illuminate\Support\Collection
@@ -47,7 +51,7 @@ class Payment extends Model
                         'status' => $payment->status,
                         'amount' => $payment->Amount->amount,
                         'currency' => $payment->Amount->currency,
-                        'operationAt' => Carbon::createFromFormat('d#m#Y', $data[1]),
+                        'operationAt' => Carbon::createFromFormat('d#m#Y H', $data[1] . ' 00'),
                     ];
                 }
             }

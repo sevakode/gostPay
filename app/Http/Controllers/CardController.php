@@ -123,7 +123,7 @@ class CardController extends Controller
 
     public function download(Request $request)
     {
-        $cardsChecked = $request->user()->cards()->where('user_id', $request->id);
+        $cardsChecked = $request->user()->company->cards()->where('user_id', $request->id);
 
         if(!$cardsChecked->exists()) {
             DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());

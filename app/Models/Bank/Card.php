@@ -157,15 +157,42 @@ class Card extends Model
     {
         $listCards = array();
         foreach ($XLSX as $text){
-            preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $text[0], $cardsAr);
+            if(isset($text[1]) and isset($text[2])) {
+                if (iconv_strlen($text[1]) == 3) {
+                    $cardsTxt = "$text[0] $text[1] $text[2]";
 
-            $number = self::getNumberSplit($cardsAr[1]);
-            $cardsTxt = [$cardsAr[0]];
+                    preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $cardsTxt, $cardsAr);
+                    unset($cardsAr[0]);
+                    unset($cardsAr[1]);
 
-            unset($cardsAr[0]);
-            unset($cardsAr[1]);
+                    $number = self::getNumberSplit($text[0]);
 
-            $cardAr = array_merge($cardsTxt, $number, $cardsAr);
+                    $cardAr = array_merge([$cardsTxt], $number, $cardsAr);
+                }
+                else if (iconv_strlen($text[2]) == 3) {
+                    $cardsTxt = "$text[0] $text[2] $text[1]";
+
+                    preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $cardsTxt, $cardsAr);
+                    unset($cardsAr[0]);
+                    unset($cardsAr[1]);
+
+                    $number = self::getNumberSplit($text[0]);
+
+                    $cardAr = array_merge([$cardsTxt], $number, $cardsAr);
+                }
+            }
+            else if(isset($text[0]) and $text[0] != null){
+                preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $text[0], $cardsAr);
+
+                $number = self::getNumberSplit($cardsAr[1]);
+                $cardsTxt = [$cardsAr[0]];
+
+                unset($cardsAr[0]);
+                unset($cardsAr[1]);
+
+                $cardAr = array_merge($cardsTxt, $number, $cardsAr);
+            }
+
             $listCards[] = $cardAr;
         }
         self::parsing($listCards);
@@ -229,23 +256,38 @@ class Card extends Model
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
         $cardsApi = (new BankAPI(BankToken::first()))->getCards();
-
         if(!isset($cardsApi->Data)) {
             dd($cardsApi);
         }
+
+        return self::getCollectParse($cardsApi->Data->cards);
+    }
+
+    public static function getCollectParse($cardsData): \Illuminate\Support\Collection
+    {
         $cards =[];
-        foreach ($cardsApi->Data->cards as $card) {
-            $matches = self::getNumberSplit($card->maskedPan);
+        foreach ($cardsData as $card) {
+            $account_code = $card->accountCode ?? $card['accountId'] ?? '';
+            $bank_code = $card->bankCode ?? '';
+            $number = $card->maskedPan ?? $card['hashedPan'];
+            $card_description = $card->cardDescription ?? $card['cardDescription'];
+            $card_type = $card->cardProductType ?? $card['cardType'];
+            $expiredAt = isset($card->expirationDate) ?
+                Carbon::createFromFormat('m#y#d H', $card->expirationDate. '-1 00') :
+                Carbon::createFromFormat('m/Y/d H', $card['expirationDate']. '/1 00');
+            $state = $card->previewState ?? $card['state'] == 'Active';
+
+            $matches = self::getNumberSplit($number);
             $cards[] = collect([
-                'account_code' => $card->accountCode,
-                'bank_code' => $card->bankCode,
-                'number' => $card->maskedPan,
+                'account_code' => $account_code,
+                'bank_code' => $bank_code,
+                'number' => $number,
                 'head' => $matches[0],
                 'tail' => $matches[3],
-                'card_description' => $card->cardDescription,
-                'card_type' => $card->cardProductType,
-                'expiredAt' => Carbon::createFromFormat('m#y#d H', $card->expirationDate. '-1 00'),
-                'state' => $card->previewState == 'Active'
+                'card_description' => $card_description,
+                'card_type' => $card_type,
+                'expiredAt' => $expiredAt,
+                'state' => $state
             ]);
         }
 
@@ -254,21 +296,21 @@ class Card extends Model
 
     public static function refreshApi()
     {
-        $cards = self::getCollectApi();
+            $cards = self::getCollectApi();
 
-        self::upsert(
-            $cards->toArray(),
-            [
-                'number',
-                'card_description',
-                'head',
-                'tail',
-                'card_type',
-                'expiredAt',
-                'state',
-                'card_type'
-            ]
-        );
+            self::upsert(
+                $cards->toArray(),
+                [
+                    'number',
+                    'card_description',
+                    'head',
+                    'tail',
+                    'card_type',
+                    'expiredAt',
+                    'state',
+                    'card_type'
+                ]
+            );
     }
 
     public function getAccountIdAttribute()
