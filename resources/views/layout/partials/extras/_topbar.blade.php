@@ -103,7 +103,7 @@
     @if (config('layout.extras.quick-panel.display'))
         <div class="topbar-item">
             <div class="btn btn-icon btn-clean btn-lg mr-1" id="kt_quick_panel_toggle">
-                {{ Metronic::getSVG("media/svg/icons/Layout/Layout-4-blocks.svg", "svg-icon-xl svg-icon-primary") }}
+                {{ Metronic::getSVG("media/svg/icons/General/Notifications1.svg", "svg-icon-xl svg-icon-primary") }}
             </div>
         </div>
     @endif
