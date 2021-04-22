@@ -26,55 +26,20 @@ class Account extends Model
 
     protected $table = 'bank_account';
 
-    public static function getCollectApi(): \Illuminate\Support\Collection
+    public function payment()
     {
-////        dd(BankToken::first());
-//        dd((new BankAPI(BankToken::first()))->getBalancesList());
-//        $payments = array();
-//        foreach (Statement::all() as $statement) {
-//            $statement = (new BankAPI(BankToken::first()))->getStatement($statement->accountId, $statement->statementId);
-//            foreach ($statement->Data->Statement[0]->Transaction as $payment)
-//            {
-//                preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
-//                preg_match("/дата операции:([^q]{10})/", $payment->description, $data);
-//
-//                if(isset($cards[1], $cards[2])) {
-//                    $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
-//                        Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
-//                        null;
-//
-//                    $payments[] = [
-//                        'transaction_id' => $payment->transactionId,
-//                        'description' => $payment->description,
-//                        'account_id' => $statement->Data->Statement[0]->accountId,
-//                        'card_id' => $cardId,
-//                        'type' => $payment->creditDebitIndicator == 'Credit' ? self::REVENUE : self::EXPENDITURE,
-//                        'status' => $payment->status,
-//                        'amount' => $payment->Amount->amount,
-//                        'currency' => $payment->Amount->currency,
-//                        'operationAt' => Carbon::createFromFormat('d#m#Y', $data[1]),
-//                    ];
-//                }
-//            }
-//        }
-//        return collect($payments);
+        return Payment::where('account_id', $this->account_id);
     }
 
-    public static function refreshApi()
+    public function scopePayments($query)
     {
-//        $payments = self::getCollectApi();
-//        self::upsert(
-//            $payments->toArray(),
-//            [
-//                'transaction_id',
-//                'description',
-//                'account_id',
-//                'card_id',
-//                'status',
-//                'amount',
-//                'currency',
-//                'operationAt',
-//            ]
-//        );
+        $accounts = $query->select('account_id')->get()->pluck('account_id');
+        $whereInLike = function ($query) use($accounts) {
+            foreach ($accounts as $account){
+                $query->orwhere('account_id', 'like', $account .'%');
+            }
+        };
+
+        return Payment::where($whereInLike);
     }
 }

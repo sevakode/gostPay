@@ -1,3 +1,4 @@
+{{--@dd(request()->user()->company->invoices()->paymentsNotCards()->get())--}}
 <div class="card card-custom bg-light-white card-stretch gutter-b">
     <!--begin::Body-->
     <div class="card-body">

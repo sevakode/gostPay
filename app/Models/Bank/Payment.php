@@ -86,4 +86,37 @@ class Payment extends Model
     {
         return $query->where('type', Payment::REVENUE);
     }
+
+    public function scopeGetNotCards($query)
+    {
+        $whereInNumber = function ($payment) {
+            preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
+
+            if (isset($cards[2])) return false;
+            return true;
+        };
+
+        return $query->where('card_id', '=', null)->get()->filter($whereInNumber);
+    }
+
+    public function scopeGetCards($query)
+    {
+        $whereInNumber = function ($payment) {
+            preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
+            if (!isset($cards[2])) return false;
+
+            $isCard = request()->user()->cards()->where('head', $cards[1])->where('tail', $cards[2])->exists();
+
+            if (!$isCard) return false;
+
+            return true;
+        };
+
+        return $query->where('card_id', '=', null)->get()->filter($whereInNumber);
+    }
+
+    public function scopeNowDay($query)
+    {
+        return $query->where("created_at", ">=", date("Y-m-d H:i:s", strtotime('-24 hours', time())));
+    }
 }

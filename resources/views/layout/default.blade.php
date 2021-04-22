@@ -28,6 +28,7 @@
         @foreach (Metronic::initScripts() as $script) <script src="{{asset($script)}}"></script> @endforeach
 
         {{-- Includable JS --}}
+
         @yield('scripts')
         @stack('scripts')
 

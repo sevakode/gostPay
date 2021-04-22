@@ -69,7 +69,7 @@
                     padding-left: 0px;
                     padding-right: 0px;
                 ">
-                    @if($company->invoices()->exists())
+                    @if(isset($company) and $company->invoices()->exists())
                         @foreach($company->invoices()->get() as $invoice)
                             <div data-repeater-item class="mb-2">
                                 <div class="input-group">
