@@ -77,6 +77,13 @@ class Payment extends Model
         );
     }
 
+    public function number()
+    {
+        preg_match("/(\d{4})\**(\d{4})/", $this->description, $cards);
+
+        return $cards[0];
+    }
+
     public function scopeExpenditure($query)
     {
         return $query->where('type', Payment::EXPENDITURE);
@@ -90,7 +97,7 @@ class Payment extends Model
     public function scopeGetNotCards($query)
     {
         $whereInNumber = function ($payment) {
-            preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
+            preg_match("/(\d{4})\**(\d{4})/", $payment->description, $cards);
 
             if (isset($cards[2])) return false;
             return true;
@@ -102,7 +109,7 @@ class Payment extends Model
     public function scopeGetCards($query)
     {
         $whereInNumber = function ($payment) {
-            preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
+            preg_match("/(\d{4})\**(\d{4})/", $payment->description, $cards);
             if (!isset($cards[2])) return false;
 
             $isCard = request()->user()->cards()->where('head', $cards[1])->where('tail', $cards[2])->exists();

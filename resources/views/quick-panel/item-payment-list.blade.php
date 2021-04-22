@@ -12,7 +12,7 @@
             </div>
             <div class="d-flex flex-column flex-grow-1 mr-2">
                 <a href="#" class="font-weight-bolder text-dark-75 text-hover-primary font-size-lg mb-1">
-                    {{ $title ?? ''}}
+                    {{ $title ?? $payment->number() ?? ''}}
                 </a>
                 <span class="text-muted font-weight-bold">{{ $payment->description }}</span>
             </div>

@@ -8,11 +8,11 @@
         <ul class="nav nav-bold nav-tabs nav-tabs-line nav-tabs-line-3x nav-tabs-primary flex-grow-1 px-10"
             role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" data-toggle="tab" href="#quick_panel_all_payments">Сообщение от банка</a>
+                <a class="nav-link active" data-toggle="tab" href="#kt_quick_panel_logs">Сообщение от банка</a>
             </li>
 
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#quick_panel_user_cards_payments">Сообщение от карт</a>
+                <a class="nav-link" data-toggle="tab" href="#kt_quick_panel_notifications">Сообщение от карт</a>
             </li>
         </ul>
         <div class="offcanvas-close mt-n1 pr-5">
@@ -27,17 +27,17 @@
         <div class="tab-content">
             {{-- Tabpane --}}
             @include('quick-panel.item-payment-list', [
-                'id' => 'quick_panel_all_payments',
+                'id' => 'kt_quick_panel_logs',
                 'payments' => request()->user()->company->invoices()->payments()->nowDay()->getNotCards(),
                 'image' => request()->user()->company->avatar('small') ?? asset('media/svg/avatars/009-boy-4.svg'),
                 'title' => request()->user()->company->name,
                 ])
 
             @include('quick-panel.item-payment-list', [
-                'id' => 'quick_panel_user_cards_payments',
+                'id' => 'kt_quick_panel_notifications',
                 'payments' => request()->user()->company->invoices()->payments()->nowDay()->getCards(),
-                'image' => request()->user()->company->avatar('small') ?? asset('media/svg/avatars/009-boy-4.svg'),
-                'title' => request()->user()->company->name,
+                'image' => asset('media\svg\icons\Shopping\Credit-card.svg'),
+                'title' => '',
                 ])
         </div>
     </div>
