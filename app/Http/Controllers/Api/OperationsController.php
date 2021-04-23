@@ -26,7 +26,7 @@ class OperationsController extends Controller
 
         (array)$js = json_decode($request->input('json'), true);
 
-        self::paymentsParse($js);
+        return new JsonResponse(self::paymentsParse($js), 200);
         self::invoicesParse($js);
 
         return new JsonResponse(true, 200);
@@ -121,18 +121,22 @@ class OperationsController extends Controller
                 $msg = "Пришло сообщение на карту \n";
                 $msg .= $card->number;
 
-                $notifyCompany[]['msg'] = $msg;
-                $notifyCompany[]['users'][] = $card->user()->first();
+                $notifyCompany[] = [
+                    'msg' => $msg,
+                    'users' => [$card->user()->first()->id]
+                ];
             }
             else if (Company::whereAccounts([$payment['payerAccountId']])->exists()) {
                 $msg = "Пришло сообщение от банка \n";
-                $msg .= $card->number;
+                $msg .= $payment['title'];
 
                 $company = Company::whereAccounts([$payment['payerAccountId']])->first();
                 $users = $company->users()->pluck('id');
 
-                $notifyCompany[]['msg'] = $msg;
-                $notifyCompany[]['users'] = $users;
+                $notifyCompany[] = [
+                    'msg' => $msg,
+                    'users' => $users
+                ];
             }
 
             $payments[] = [
@@ -163,8 +167,13 @@ class OperationsController extends Controller
         );
 
         foreach ($notifyCompany as $notify) {
-            foreach ($notify['users'] as $user) {
-                Notify::send(User::find($user), DataNotification::success($notify['msg']));
+            try {
+                foreach ($notify['users'] as $user) {
+                    Notify::send(User::find($user), DataNotification::success($notify['msg']));
+                }
+            }
+            catch (\Exception $e) {
+                return [$notifyCompany, $notify];
             }
         }
 
