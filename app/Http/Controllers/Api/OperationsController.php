@@ -26,7 +26,7 @@ class OperationsController extends Controller
 
         (array)$js = json_decode($request->input('json'), true);
 
-        return new JsonResponse(self::paymentsParse($js), 200);
+        self::paymentsParse($js);
         self::invoicesParse($js);
 
         return new JsonResponse(true, 200);
@@ -122,6 +122,7 @@ class OperationsController extends Controller
                 $msg .= $card->number;
 
                 $notifyCompany[] = [
+                    'id' => $payment['cardTrnInfo']['trnId'] ?? $payment['corebankingId'],
                     'msg' => $msg,
                     'users' => [$card->user()->first()->id]
                 ];
@@ -134,6 +135,7 @@ class OperationsController extends Controller
                 $users = $company->users()->pluck('id');
 
                 $notifyCompany[] = [
+                    'id' => $payment['cardTrnInfo']['trnId'] ?? $payment['corebankingId'],
                     'msg' => $msg,
                     'users' => $users
                 ];
@@ -167,13 +169,11 @@ class OperationsController extends Controller
         );
 
         foreach ($notifyCompany as $notify) {
-            try {
-                foreach ($notify['users'] as $user) {
-                    Notify::send(User::find($user), DataNotification::success($notify['msg']));
-                }
-            }
-            catch (\Exception $e) {
-                return [$notifyCompany, $notify];
+            if(Payment::where('transaction_id', $notify['id'])->exists())
+                continue;
+
+            foreach ($notify['users'] as $user) {
+                Notify::send(User::find($user), DataNotification::success($notify['msg']));
             }
         }
 

@@ -16,7 +16,7 @@ class CardSeeder extends Seeder
      */
     public function run()
     {
-        Card::refreshApi();
+//        Card::refreshApi();
 
         foreach (Card::all() as $card) {
             $card->company_id = Company::first()->id;

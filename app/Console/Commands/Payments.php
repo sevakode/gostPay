@@ -39,8 +39,8 @@ class Payments extends Command
      */
     public function handle()
     {
-        Statement::refreshApi();
-        Payment::refreshApi();
+//        Statement::refreshApi();
+//        Payment::refreshApi();
 
         $this->info("Данные с банка обновлены");
         return 0;

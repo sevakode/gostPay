@@ -15,6 +15,6 @@ class StatementSeeder extends Seeder
      */
     public function run()
     {
-        Statement::refreshApi();
+//        Statement::refreshApi();
     }
 }

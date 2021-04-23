@@ -17,6 +17,6 @@ class PaymentSeeder extends Seeder
      */
     public function run()
     {
-        Payment::refreshApi();
+//        Payment::refreshApi();
     }
 }

@@ -249,8 +249,8 @@ class Card extends Model
                 'company_id',
             ]
         );
-        Statement::refreshApi();
-        Payment::refreshApi();
+//        Statement::refreshApi();
+//        Payment::refreshApi();
     }
 
     public static function getCollectApi(): \Illuminate\Support\Collection
