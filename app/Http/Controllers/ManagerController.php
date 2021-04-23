@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bank\Card;
+use App\Models\Permission;
 use App\Notifications\DataNotification;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\JsonResponse;
@@ -99,6 +100,25 @@ class ManagerController extends Controller
 
         return $request->wantsJson()
             ? new JsonResponse([], 201)
+            : redirect($this->redirectPath());
+    }
+
+    public function deleteUser(Request $request)
+    {
+        $user = $request->user()->companyUsers()->find($request->user_id);
+        if(!request()->user()->hasPermission(Permission::ACCESS_TO_REMOVE_USERS['slug']) or !$user)
+            return DataNotification::sendErrors(['У вас недостаточно прав']);
+
+        $user->delete();
+
+        $data = [
+            'user_id' => $request->user_id,
+        ];
+
+        Notification::send($request->user(), DataNotification::success());
+
+        return $request->wantsJson()
+            ? new JsonResponse($data, 201)
             : redirect($this->redirectPath());
     }
 

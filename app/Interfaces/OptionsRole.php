@@ -24,6 +24,8 @@ interface OptionsRole
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
 
+            Permission::ACCESS_TO_REMOVE_USERS,
+
             Permission::ACCESS_TO_SHOW_PROJECTS_COMPANY,
             Permission::ACCESS_TO_CREATE_PROJECTS_COMPANY,
             Permission::ACCESS_TO_UPDATE_PROJECTS_COMPANY,
@@ -39,8 +41,8 @@ interface OptionsRole
             Permission::ACCESS_TO_INSERT_COMPANY,
         ]
     ],
-        ADMIN = [
-        'title' => 'Админ',
+        MANAGER = [
+        'title' => 'Менеджер',
         'permissions' => [
             Permission::ADMIN_ROLE_SET,
             Permission::MANAGER_ROLE_SET,
@@ -53,6 +55,8 @@ interface OptionsRole
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
 
+            Permission::ACCESS_TO_REMOVE_USERS,
+
             Permission::ACCESS_TO_UPDATE_COMPANY,
             Permission::ACCESS_TO_SHOW_COMPANY,
             Permission::ACCESS_TO_INSERT_COMPANY,
@@ -63,7 +67,23 @@ interface OptionsRole
             Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
             Permission::ACCESS_TO_ADD_PROJECTS_COMPANY,
         ]
+    ],
+        ADMIN = [
+        'title' => 'Админ',
+        'permissions' => [
+            Permission::MANAGER_ROLE_SET,
+            Permission::ACCESS_TO_PROFILE,
+            Permission::ACCESS_TO_MANAGER,
+            Permission::ACCESS_TO_ADD_CARDS,
+            Permission::ACCESS_TO_REMOVE_CARDS,
+            Permission::ACCESS_TO_ALL_USERS_COMPANY,
+            Permission::ACCESS_TO_ALL_CARDS_COMPANY,
 
+            Permission::ACCESS_TO_SHOW_PROJECTS_COMPANY,
+            Permission::ACCESS_TO_CREATE_PROJECTS_COMPANY,
+            Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
+            Permission::ACCESS_TO_ADD_PROJECTS_COMPANY,
+        ]
     ],
         DEMO = [
         'title' => 'Демо',
@@ -79,23 +99,6 @@ interface OptionsRole
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
         ]
 
-    ],
-        MANAGER = [
-        'title' => 'Менеджер',
-        'permissions' => [
-            Permission::MANAGER_ROLE_SET,
-            Permission::ACCESS_TO_PROFILE,
-            Permission::ACCESS_TO_MANAGER,
-            Permission::ACCESS_TO_ADD_CARDS,
-            Permission::ACCESS_TO_REMOVE_CARDS,
-            Permission::ACCESS_TO_ALL_USERS_COMPANY,
-            Permission::ACCESS_TO_ALL_CARDS_COMPANY,
-
-            Permission::ACCESS_TO_SHOW_PROJECTS_COMPANY,
-            Permission::ACCESS_TO_CREATE_PROJECTS_COMPANY,
-            Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
-            Permission::ACCESS_TO_ADD_PROJECTS_COMPANY,
-        ]
     ],
         MAIN_USER = [
         'title' => 'Пользователь+',

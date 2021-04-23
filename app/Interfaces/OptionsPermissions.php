@@ -9,8 +9,8 @@ interface OptionsPermissions
         'title' => 'Owner',
         'slug' => 'owner',
         'roles' => [
-            Role::ADMIN,
             Role::MANAGER,
+            Role::ADMIN,
             Role::MAIN_USER,
             Role::USER
         ]
@@ -109,7 +109,7 @@ interface OptionsPermissions
         'title' => 'Набор выдачи прав (Админ)',
         'slug' => 'admin-role-set',
         'roles' => [
-            Role::MANAGER,
+            Role::ADMIN,
             Role::MAIN_USER,
             Role::USER,
         ]
@@ -122,6 +122,12 @@ interface OptionsPermissions
             Role::USER
         ]
     ];
+
+
+    const ACCESS_TO_REMOVE_USERS = [
+        'title' => 'Доступ к удалению пользователей',
+        'slug' => 'access_to_remove_users',
+        ];
 
     const ALL = [
         self::OWNER,
@@ -141,6 +147,8 @@ interface OptionsPermissions
         self::ACCESS_TO_CREATE_COMPANY,
         self::ACCESS_TO_LOGOUT_COMPANY,
         self::ACCESS_TO_ALL_COMPANY,
+
+        self::ACCESS_TO_REMOVE_USERS,
 
         self::ACCESS_TO_UPDATE_COMPANY,
         self::ACCESS_TO_SHOW_COMPANY,

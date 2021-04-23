@@ -16,7 +16,7 @@
         <div class="card-body pt-2">
         @foreach(Auth::user()->companyUsers()->withPermissionInvisible()->get() as $user)
             <!--begin::Item-->
-                <div class="d-flex align-items-center mb-10">
+                <div class="d-flex align-items-center mb-10" id="user-id-{{ $user->id }}">
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40 symbol-light-success mr-5">
                         <span class="symbol-label">
@@ -45,8 +45,9 @@
                             color: #00b300;
                         }
                     </style>
+
                     <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" data-html="true" data-placement="left"
-                         data-original-title="">
+                        data-original-title="">
                         <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="ki ki-bold-more-hor"></i>
                         </a>
@@ -87,6 +88,15 @@
                             <!--end::Navigation-->
                         </div>
                     </div>
+
+                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" data-html="true" data-placement="left"
+                         data-original-title="">
+                        <a href="#" class="btn btn-hover-light-danger btn-sm btn-icon btn-delete-ajax"
+                           aria-haspopup="true" aria-expanded="false"
+                           data-user-id="{{ $user->id }}">
+                            <i class="fas fa-trash text-danger"></i>
+                        </a>
+                    </div>
                     <!--end::Dropdown-->
                 </div>
                 <!--end::Item-->
@@ -98,6 +108,29 @@
 
 @section('scripts')
     <script>
+        $('.btn-delete-ajax').on('click', function () {
+            let userId = $(this).attr("data-user-id");
+            console.log(userId);
+            $.ajax({
+                type:'post',
+                url:'{{ route('user_delete') }}',
+                dataType: "json",
+                data:{
+                    '_token':$('meta[name="csrf-token"]').attr('content'),
+                    'user_id': userId,
+                },
+                success: function (data) {
+                    console.log(data);
+                    div = $('#user-id-'+ data.user_id);
+                    div.html('')
+                    sendNotification()
+                },
+                error: function () {
+                    sendNotification()
+                }
+            });
+            // let roleId = $(this).attr("data-role-id");
+        });
         $('.roleEvent').on('click', function () {
             let userId = $(this).attr("data-user-id");
             let roleId = $(this).attr("data-role-id");

@@ -142,6 +142,9 @@ Route::middleware('auth')->group(function () {
             Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update')
                 ->middleware('auth.demo');
 
+            Route::post('/user_delete', [ManagerController::class, 'deleteUser'])->name('user_delete')
+                ->middleware('auth.demo');
+
             Route::post('/cards/closing', [ManagerController::class, 'closingCard'])->name('cards_closing')
                 ->middleware('auth.demo');
 
