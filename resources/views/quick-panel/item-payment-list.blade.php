@@ -13,7 +13,7 @@
                     {{ $title ?? $payment->number() ?? ''}}
                 </a>
                 <span class="text-muted font-weight-bold">{{ $payment->description ?: 'Нет данных' }}</span>
-                <span class="text-muted">{{ $payment->operationAt }}</span>
+                <span class="text-muted">{{ $payment->operationAt->format('M d, Y') }}</span>
             </div>
             <span class="btn btn-sm btn-light font-weight-bolder py-1 my-lg-0 my-2 text-dark-50">
                 {{ $payment->type == \App\Models\Bank\Payment::EXPENDITURE ? '-' : '+' }}

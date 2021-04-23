@@ -57,6 +57,17 @@ class Company extends Model
         $this->attributes['slug'] = Str::slug($value);
     }
 
+    public function scopeWhereAccounts($query, array $accounts)
+    {
+        $query->hasWhere('invoices', function (Builder $query) use($accounts){
+            foreach ($accounts as $account) {
+                $query->orwhere('account_id', 'like', $account .'%');
+            }
+        });
+
+        return $query;
+    }
+
     public function cards()
     {
         return Card::where('company_id', $this->id);

@@ -6,9 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
 use App\Models\Bank\Payment;
+use App\Models\Company;
+use App\Models\User;
+use App\Notifications\DataNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Notification as Notify;
 
 class OperationsController extends Controller
 {
@@ -21,6 +25,7 @@ class OperationsController extends Controller
         if ($bank !== self::TOCHKABANK) return new JsonResponse(['error' => 'Неверный банк!'], 405);
 
         (array)$js = json_decode($request->input('json'), true);
+
         self::paymentsParse($js);
         self::invoicesParse($js);
 
@@ -65,16 +70,21 @@ class OperationsController extends Controller
         else return false;
 
         $payments = [];
+        $notifyCompany = [];
         foreach ($payment_list as $payment) {
             $payment = $payment['data'];
 
+            // CARD
             if (isset($payment['cardPan'])) {
                 preg_match("/(\d{4})\**(\d{4})/", $payment['cardPan'], $cards);
-                $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
-                    Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
+                $card = Card::where('head', $cards[1])->where('tail', $cards[2]);
+                $cardId = $card->exists() ?
+                    $card->first()->id :
                     null;
-            } else $cardId = null;
+            }
+            else $cardId = null;
 
+            // STATUS
             if (isset($payment['stateInfo'])) {
                 switch ($payment['stateInfo']) {
                     case 'A' :
@@ -87,6 +97,7 @@ class OperationsController extends Controller
                         $status = Payment::CANCELED;
                         break;
                     case 'S':
+                    case 'F':
                         $status = Payment::BOOKED;
                         break;
                     default:
@@ -96,6 +107,7 @@ class OperationsController extends Controller
                 $status = Payment::BOOKED;
             }
 
+            // TYPE
             if (isset($payment['cardOperationType']))
                 $type = $payment['cardOperationType'] == 'purchase' ?
                     Payment::EXPENDITURE :
@@ -104,21 +116,36 @@ class OperationsController extends Controller
                     Payment::REVENUE :
                     Payment::EXPENDITURE;
 
-            try {
-                $payments[] = [
-                    'transaction_id' => $payment['cardTrnInfo']['trnId'] ?? $payment['corebankingId'],
-                    'description' => $payment['title'] . ' ' . $payment['purpose'],
-                    'account_id' => $payment['payerAccountId'],
-                    'card_id' => $cardId,
-                    'type' => $type,
-                    'status' => $status,
-                    'amount' => (float)$payment['sum'],
-                    'currency' => $payment['sumCurrency'],
-                    'operationAt' => Carbon::createFromFormat('Y-m-d H', $payment['shortItemDate'] . ' 00'),
-                ];
-            } catch (\Exception $e) {
+            // NOTIFY
+            if ($cardId) {
+                $msg = "Пришло сообщение на карту \n";
+                $msg .= $card->number;
 
+                $notifyCompany[]['msg'] = $msg;
+                $notifyCompany[]['users'][] = $card->user()->first();
             }
+            else if (Company::whereAccounts([$payment['payerAccountId']])->exists()) {
+                $msg = "Пришло сообщение от банка \n";
+                $msg .= $card->number;
+
+                $company = Company::whereAccounts([$payment['payerAccountId']])->first();
+                $users = $company->users()->pluck('id');
+
+                $notifyCompany[]['msg'] = $msg;
+                $notifyCompany[]['users'] = $users;
+            }
+
+            $payments[] = [
+                'transaction_id' => $payment['cardTrnInfo']['trnId'] ?? $payment['corebankingId'],
+                'description' => $payment['title'] . ' | ' . $payment['purpose'],
+                'account_id' => $payment['payerAccountId'],
+                'card_id' => $cardId,
+                'type' => $type,
+                'status' => $status,
+                'amount' => (float)$payment['sum'],
+                'currency' => $payment['sumCurrency'],
+                'operationAt' => Carbon::createFromFormat('Y-m-d H', $payment['shortItemDate'] . ' 00'),
+            ];
         }
 
         Payment::upsert(
@@ -134,7 +161,14 @@ class OperationsController extends Controller
                 'operationAt',
             ]
         );
-        return true;
+
+        foreach ($notifyCompany as $notify) {
+            foreach ($notify['users'] as $user) {
+                Notify::send(User::find($user), DataNotification::success($notify['msg']));
+            }
+        }
+
+        return True;
     }
 
     private static function invoicesParse(array $json)
