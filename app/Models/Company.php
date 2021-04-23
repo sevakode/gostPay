@@ -59,7 +59,7 @@ class Company extends Model
 
     public function scopeWhereAccounts($query, array $accounts)
     {
-        $query->hasWhere('invoices', function (Builder $query) use($accounts){
+        $query->whereHas('invoices', function (Builder $query) use($accounts){
             foreach ($accounts as $account) {
                 $query->orwhere('account_id', 'like', $account .'%');
             }
