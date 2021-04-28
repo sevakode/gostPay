@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
             Route::post('all-payment-list', [\App\Http\Controllers\QuickPanelController::class, 'userCards']);
         });
 
-            Route::get('/', 'PagesController@index')->name('home');
+    Route::get('/', 'PagesController@index')->name('home');
 
     Route::prefix(RouteServiceProvider::PROFILE)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['slug'])

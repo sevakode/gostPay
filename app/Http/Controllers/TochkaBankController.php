@@ -26,9 +26,9 @@ class TochkaBankController extends Controller
 //        $token->authCode = $_GET['code'];
 //        $token->authCodeDate = now();
 //        $_GET['state'];
-        if(request()->user()->company->bank->whereKey($company_key)->exists())
-            Notification::send(Auth::user(), DataNotification::success());
-
-        return redirect()->back();
+//        if(request()->user()->company->bank->whereKey($company_key)->exists())
+//            Notification::send(Auth::user(), DataNotification::success());
+//
+//        return redirect()->back();
     }
 }
