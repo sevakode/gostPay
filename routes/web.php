@@ -4,10 +4,10 @@ use App\Classes\TochkaBank\TochkaBank;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TochkaBankController;
 use App\Interfaces\OptionsPermissions;
-use App\Interfaces\OptionsRole;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
             Route::post('all-payment-list', [\App\Http\Controllers\QuickPanelController::class, 'userCards']);
         });
 
-    Route::get('/', 'PagesController@index')->name('home');
+    Route::get('/', [PagesController::class, 'index'])->name('home');
 
     Route::prefix(RouteServiceProvider::PROFILE)
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['slug'])

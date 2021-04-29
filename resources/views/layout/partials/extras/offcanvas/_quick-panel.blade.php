@@ -35,9 +35,10 @@
 
             @include('quick-panel.item-payment-list', [
                 'id' => 'kt_quick_panel_notifications',
+                'title' => '',
                 'payments' => request()->user()->company->invoices()->payments()->nowDay()->getCards(),
                 'image' => asset('media\svg\icons\Shopping\Credit-card.svg'),
-                'title' => '',
+                'imaps' => request()->user()->cards()->messages()->nowDay()->get(),
                 ])
         </div>
     </div>

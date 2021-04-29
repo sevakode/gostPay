@@ -119,7 +119,9 @@ class Payment extends Model
             return true;
         };
 
-        return $query->where('card_id', '=', null)->get()->filter($whereInNumber);
+        return $query->where('card_id', '!=', null)
+            ->select(['type', 'amount', 'currency', 'description'])
+            ->get()->filter($whereInNumber);
     }
 
     public function scopeNowDay($query)

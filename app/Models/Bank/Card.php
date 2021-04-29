@@ -3,6 +3,7 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Models\IMAP;
 use App\Models\User;
 use App\Notifications\DataNotification;
 use App\Traits\ScopeNotifiable;
@@ -38,14 +39,26 @@ class Card extends Model
 
     protected $dates = ['expiredAt', 'updated_at', 'issue_at'];
 
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function payments()
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Payment::class, 'card_id');
+    }
+
+    public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(IMAP::class, 'card_id');
+    }
+
+    public function scopeMessages($query)
+    {
+        $cardsId = $query->pluck('id')->all();
+
+        return IMAP::whereIn('card_id', $cardsId);
     }
 
     public function scopeFree($query)
@@ -90,7 +103,6 @@ class Card extends Model
 
         return $query;
     }
-
 
     public function exit()
     {
@@ -313,7 +325,7 @@ class Card extends Model
             );
     }
 
-    public function getAccountIdAttribute()
+    public function getAccountIdAttribute(): string
     {
         return $this->account_code .'/'. $this->bank_code;
     }
@@ -323,7 +335,7 @@ class Card extends Model
         return $this->user()->first();
     }
 
-    public function getStateRuAttribute()
+    public function getStateRuAttribute(): string
     {
         if ($this->attributes['state'] == self::ACTIVE) $state = 'Активная';
         elseif ($this->attributes['state'] == self::CLOSE) $state = 'Закрытая';
@@ -361,7 +373,7 @@ class Card extends Model
         return $result;
     }
 
-    public function getPayments()
+    public function getPayments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->payments()->where('amount', '>', 0);
     }

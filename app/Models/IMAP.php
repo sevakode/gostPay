@@ -12,6 +12,8 @@ class IMAP extends Model
 {
     use HasFactory;
 
+    protected $dates = ['updated_at'];
+
     public function __construct(array $attributes = [])
     {
         parent::__construct($attributes);
@@ -58,5 +60,10 @@ class IMAP extends Model
                 'card_id',
             ]
         );
+    }
+
+    public function scopeNowDay($query)
+    {
+        return $query->where("updated_at", ">=", date("Y-m-d H:i:s", strtotime('-24 hours', time())));
     }
 }

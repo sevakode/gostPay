@@ -28,8 +28,6 @@ class CreateUsersTable extends Migration
             $table->integer('role_id');
             $table->integer('company_id')->nullable();
 
-            $table->integer('number_of_attempts');
-
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

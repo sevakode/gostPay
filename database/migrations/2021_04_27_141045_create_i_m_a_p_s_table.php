@@ -16,7 +16,7 @@ class CreateIMAPSTable extends Migration
         Schema::create('i_m_a_p_s', function (Blueprint $table) {
             $table->id();
             $table->integer('uid');
-            $table->string('id_card')->nullable();
+            $table->string('card_id')->nullable();
             $table->string('message');
             $table->timestamps();
         });
