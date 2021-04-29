@@ -7864,6 +7864,137 @@
         ]
     },
     {
+        "name": "webklex/laravel-imap",
+        "version": "2.4.0",
+        "version_normalized": "2.4.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Webklex/laravel-imap.git",
+            "reference": "97c480cc2dd6b76859c5e21ccb4fa6659b7ad6de"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Webklex/laravel-imap/zipball/97c480cc2dd6b76859c5e21ccb4fa6659b7ad6de",
+            "reference": "97c480cc2dd6b76859c5e21ccb4fa6659b7ad6de",
+            "shasum": ""
+        },
+        "require": {
+            "ext-fileinfo": "*",
+            "ext-iconv": "*",
+            "ext-mbstring": "*",
+            "laravel/framework": ">=5.0.0",
+            "php": ">=5.5.9",
+            "webklex/php-imap": "^2.4"
+        },
+        "time": "2021-01-09T19:46:21+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            },
+            "laravel": {
+                "providers": [
+                    "Webklex\\IMAP\\Providers\\LaravelServiceProvider"
+                ],
+                "aliases": {
+                    "Client": "Webklex\\IMAP\\Facades\\Client"
+                }
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Webklex\\IMAP\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Malte Goldenbaum",
+                "email": "github@webklex.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "Laravel IMAP client",
+        "homepage": "https://github.com/webklex/laravel-imap",
+        "keywords": [
+            "idle",
+            "imap",
+            "laravel",
+            "laravel-imap",
+            "mail",
+            "oauth",
+            "pop3",
+            "webklex"
+        ]
+    },
+    {
+        "name": "webklex/php-imap",
+        "version": "2.5.0",
+        "version_normalized": "2.5.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Webklex/php-imap.git",
+            "reference": "461fbc39aa28507470e95925d070a55f07a7b964"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Webklex/php-imap/zipball/461fbc39aa28507470e95925d070a55f07a7b964",
+            "reference": "461fbc39aa28507470e95925d070a55f07a7b964",
+            "shasum": ""
+        },
+        "require": {
+            "ext-fileinfo": "*",
+            "ext-iconv": "*",
+            "ext-json": "*",
+            "ext-mbstring": "*",
+            "ext-openssl": "*",
+            "illuminate/pagination": ">=5.0.0",
+            "nesbot/carbon": ">=1.0",
+            "php": ">=5.5.9",
+            "symfony/http-foundation": ">=2.8.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2021-02-01T09:54:18+00:00",
+        "type": "library",
+        "extra": {
+            "branch-alias": {
+                "dev-master": "1.0-dev"
+            }
+        },
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Webklex\\PHPIMAP\\": "src"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Malte Goldenbaum",
+                "email": "github@webklex.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "PHP IMAP client",
+        "homepage": "https://github.com/webklex/php-imap",
+        "keywords": [
+            "imap",
+            "mail",
+            "php-imap",
+            "pop3",
+            "webklex"
+        ]
+    },
+    {
         "name": "webmozart/assert",
         "version": "1.9.1",
         "version_normalized": "1.9.1.0",
