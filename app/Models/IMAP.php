@@ -35,7 +35,7 @@ class IMAP extends Model
                 $tail = $tail[1] ?? null;
                 $cards = Card::select('tail', 'id')->where('tail', $tail);
 
-                if(isset($htmlBody)) {
+                if(isset($htmlBody) and !IMAP::where('uid', $message->get('uid'))->exists()) {
                     foreach ($cards->get() as $card) {
                         $list[] = [
                             'uid' => $message->get('uid'),
@@ -52,14 +52,17 @@ class IMAP extends Model
 
     public function refreshMessages()
     {
+        $list = $this->getCollectMessage();
         self::upsert(
-            $this->getCollectMessage()->toArray(),
+            $list->toArray(),
             [
                 'uid',
                 'message',
                 'card_id',
             ]
         );
+
+        return $list;
     }
 
     public function scopeNowDay($query)

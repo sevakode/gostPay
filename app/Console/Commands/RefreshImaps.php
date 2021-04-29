@@ -2,8 +2,12 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Bank\Card;
 use App\Models\IMAP;
+use App\Models\User;
+use App\Notifications\DataNotification;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Notification as Notify;
 
 class RefreshImaps extends Command
 {
@@ -38,7 +42,13 @@ class RefreshImaps extends Command
      */
     public function handle()
     {
-        (new IMAP())->refreshMessages();
+        $list = (new IMAP())->refreshMessages();
+
+        foreach ($list as $message) {
+            $card = Card::find($message['card_id']);
+            $user = $card->user()->select('id');
+            Notify::send($user::first(), DataNotification::success('Пришло письмо от почты на карту *'.$card->tail));
+        }
 
         return 0;
     }

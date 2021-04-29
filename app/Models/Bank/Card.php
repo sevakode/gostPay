@@ -61,6 +61,13 @@ class Card extends Model
         return IMAP::whereIn('card_id', $cardsId);
     }
 
+    public function scopeUsers($query)
+    {
+        $usersId = $query->pluck('user_id')->all();
+
+        return User::whereIn('id', $usersId);
+    }
+
     public function scopeFree($query)
     {
         return $query
