@@ -54,8 +54,18 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column flex-root">
+                        <span class="font-weight-bolder mb-2">Счет</span>
+                        @if($card->invoice)
+                            <a href="{{ route('invoice.show', $card->invoice->account_id) }}" class="">
+                                <span class="opacity-70 text-dark">{{ $card->invoice->account_id }}</span>
+                            </a>
+                        @else
+                            <span class="opacity-70">{{ 'none' }}</span>
+                        @endif
+                    </div>
+                    <div class="d-flex flex-column flex-root">
                         <span class="font-weight-bolder mb-2">Геолокация</span>
-                        <span class="opacity-70">{{ $code->geo ?? 'Россия' }}</span>
+                        <span class="opacity-70">{{ $card->geo ?? 'Россия' }}</span>
                     </div>
                 </div>
             </div>

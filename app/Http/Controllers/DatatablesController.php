@@ -71,6 +71,45 @@ class DatatablesController extends Controller
         return new JsonResponse($data);
     }
 
+    public function invoiceCards(Request $request): JsonResponse
+    {
+        $data = array();
+        mb_parse_str(urldecode($request->getContent()), $filter);
+        $invoices = $request->user()->company->invoices()->where('account_id', $filter['account_id']);
+        $cards = $invoices->cards();
+
+        if (isset($filter['sort']) and count($filter['sort']) == 2) {
+            $this->sortNumber($cards, $filter);
+            $this->sortUpdateAt($cards, $filter);
+        }
+        if (isset($filter['query'])) {
+            $this->filterSearch($cards, $filter);
+            $this->filterStatus($cards, $filter);
+            $this->filterUsers($cards, $filter);
+        }
+
+        $cards = $cards->get()->where('company_id', $request->user()->company()->select('id')->first()->id);
+        foreach ($cards as $card) {
+            $updateAtPayments = $card->payments()->latest('updated_at')->first();
+            $data['data'][] = [
+                'number' => $card->number,
+                'numberLink' => route('card', $card->id),
+                'user' => isset($card->user) ? $card->user->fullname : 'none',
+                'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
+                'type' => $card->card_type,
+                'state' => $card->state,
+                'project' => $card->project->name ?? 'none',
+                'expiredAt' => $card->expiredAt->format('M d, Y'),
+                'amount' => $card->amount() . '₽',
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
+            ];
+        }
+
+        $data['data'] = $this->getSort(collect($data['data']), $filter);
+
+        return new JsonResponse($data);
+    }
+
     public function userCards(Request $request)
     {
         $data = array();

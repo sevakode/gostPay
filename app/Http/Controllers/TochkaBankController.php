@@ -19,8 +19,9 @@ class TochkaBankController extends Controller
         $bank->getAccountsList();
     }
 
-    public function tokenAuth($company_key)
+    public function tokenAuth($request, $key)
     {
+        dd($_GET);
 //        $token = BankToken::all()->first();
 //
 //        $token->authCode = $_GET['code'];

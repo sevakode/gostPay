@@ -40,6 +40,9 @@ Route::middleware('auth')->group(function () {
             Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])
                 ->name('datatables.company-cards');
 
+            Route::post('invoice-cards', [\App\Http\Controllers\DatatablesController::class, 'invoiceCards'])
+                ->name('datatables.invoice-cards');
+
             Route::post('company-projects', [\App\Http\Controllers\DatatablesController::class, 'companyProjects'])
                 ->name('datatables.company-projects');
 
@@ -120,6 +123,14 @@ Route::middleware('auth')->group(function () {
                 Route::get('report/users/xls', [CompanyController::class, 'downloadReportUsersXls'])
                     ->name('company.download.report.users.xls')
                     ->middleware('auth.permission:'.OptionsPermissions::ADMIN_ROLE_SET['slug']);
+            });
+
+
+            Route::prefix('/invoices')->group(function () {
+                Route::get('/', [\App\Http\Controllers\InvoiceController::class, 'index'])
+                    ->name('invoices');
+                Route::get('/{account_id}', [\App\Http\Controllers\InvoiceController::class, 'show'])
+                    ->name('invoice.show');
             });
         });
 
@@ -209,7 +220,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('api')->group(function () {
 //        Route::get('register', [TochkaBankController::class, 'register']);
-        Route::get('tauth/{company}', [TochkaBankController::class, 'tokenAuth'])->name('api.tauth');
+        Route::get('tauth/{key}', [TochkaBankController::class, 'tokenAuth'])->name('api.tauth');
     });
 
     Route::get('/quick-search', 'PagesController@quickSearch')->name('quick-search');

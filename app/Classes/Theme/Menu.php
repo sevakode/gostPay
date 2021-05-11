@@ -461,7 +461,7 @@ class Menu
     // Check for active Horizontal Menu item
     public static function isActiveHorMenuItem($item, $page, $rec = 0)
     {
-        if (@$item['redirect'] === true) {
+        if (isset($item['redirect']) and @$item['redirect'] === true) {
             return false;
         }
 

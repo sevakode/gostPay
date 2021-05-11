@@ -26,7 +26,16 @@ class ManagerController extends Controller
         $page_title = 'Управление пользователями';
         $page_description = $page_title;
 
-        return view('pages.manager.widgets.dashboard', compact('page_title', 'page_description'));
+        $invoices = \request()->user()->company->invoices();
+
+        return view(
+            'pages.manager.widgets.dashboard',
+            compact(
+                'page_title',
+                'page_description',
+                'invoices'
+            )
+        );
     }
 
     public function closingList()

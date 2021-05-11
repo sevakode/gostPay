@@ -3,6 +3,7 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Models\Company;
 use App\Models\IMAP;
 use App\Models\User;
 use App\Notifications\DataNotification;
@@ -348,6 +349,34 @@ class Card extends Model
         elseif ($this->attributes['state'] == self::CLOSE) $state = 'Закрытая';
         else $state = 'В процессе закрытия';
         return $state;
+    }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
+    }
+
+    public function getCompanyAttribute()
+    {
+        return $this->company()->first();
+    }
+
+    public function getInvoiceAttribute()
+    {
+        $payment = $this->payments()
+            ->where('account_id', '!=', null)
+            ->select('account_id');
+
+        if ($this->account_code) {
+            preg_match('/(\d*)/', $this->account_code, $account_id);
+            $account = Account::where('account_id', $account_id[1]);
+        }
+        else if ($payment->exists()) {
+            preg_match('/(\d*)/', $payment->first()->account_id, $account_id);
+            $account = Account::where('account_id', $account_id[1]);
+        }
+
+        return $account->first() ?? null;
     }
 
     public function getNumberAttribute($val): string
