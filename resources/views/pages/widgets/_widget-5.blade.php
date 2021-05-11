@@ -11,7 +11,7 @@
             </svg><!--end::Svg Icon-->
         </span>
         <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block">
-                ₽{{ request()->user()->company->sumCardsInvoices() }}
+                {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsInvoices() }}
             </span>
         <span class="font-weight-bold text-muted font-size-sm">Баланс</span>
     </div>

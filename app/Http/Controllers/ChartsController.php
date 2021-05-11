@@ -53,7 +53,7 @@ class ChartsController extends Controller
 
             $data['count'] = $cards->count();
         }
-        $data['amounts'] = '₽' . $data['amounts'];
+        $data['amounts'] = $company->getCurrencySign() . $data['amounts'];
 
         $data['colors'][] = '#1BC5BD';
         $data['colors'][] = '#C9F7F5';

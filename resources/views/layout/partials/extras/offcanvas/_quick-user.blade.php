@@ -244,7 +244,7 @@
 {{--                    <span class="text-muted font-size-sm">Due in 2 Days</span>--}}
                 </div>
                 <span class="font-weight-bolder text-warning py-1 font-size-lg">
-                    ₽{{ request()->user()->company->sumCardsInvoices() }}
+                    {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsInvoices() }}
                 </span>
             </div>
             <!--end::Item-->
@@ -270,10 +270,10 @@
                     <a href="{{ route('home') }}" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
                         Расход
                     </a>
-{{--                    <span class="text-muted font-size-sm">Due in 2 Days</span>--}}
+                    <span class="text-muted font-size-sm">Всего расходов компании</span>
                 </div>
                 <span class="font-weight-bolder text-info py-1 font-size-lg">
-                    ₽{{ request()->user()->company->sumCardsPayments() }}
+                    {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsPayments() }}
                 </span>
             </div>
             <!--end::Item-->

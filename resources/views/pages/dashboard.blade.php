@@ -145,7 +145,7 @@
                     },
                     y: {
                         formatter: function (val) {
-                            return "₽" + val;
+                            return {{ request()->user()->company->getCurrencySign() }} + val;
                         }
                     }
                 },

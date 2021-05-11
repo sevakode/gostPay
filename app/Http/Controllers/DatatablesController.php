@@ -61,7 +61,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $request->user()->company->getCurrencySign(),
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
@@ -100,7 +100,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $request->user()->company->getCurrencySign(),
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
@@ -250,7 +250,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $request->user()->company->getCurrencySign(),
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
@@ -258,7 +258,7 @@ class DatatablesController extends Controller
         if (isset($data['data']))
             $data['data'] = $this->getSort(collect($data['data']), $filter);
 
-        $data['amountAll'] .= '₽';
+        $data['amountAll'] .= $request->user()->company->getCurrencySign();
 
         return new JsonResponse($data);
     }
@@ -358,14 +358,14 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $request->user()->company->getCurrencySign(),
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
 
         $data['data'] = $this->getSort(collect($data['data']), $filter);
 
-        $data['amountAll'] .= '₽';
+        $data['amountAll'] .= $request->user()->company->getCurrencySign();
 
         return new JsonResponse($data);
     }

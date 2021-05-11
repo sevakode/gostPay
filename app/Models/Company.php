@@ -98,6 +98,26 @@ class Company extends Model
         return (int) $this->invoices()->sum($invoice);
     }
 
+    public function getCurrency()
+    {
+        if($this->invoices()->where('currency', 'RUB')->exists())
+            $currency = 'RUB';
+        else $currency = 'USD';
+        return $currency;
+    }
+
+    public function getCurrencySign()
+    {
+        switch ($this->getCurrency()) {
+            case 'RUB' : $sign = '₽';
+                break;
+            case 'USD' : $sign = '$';
+                break;
+        }
+
+        return $sign;
+    }
+
     public function getAvatarAttribute(): string
     {
         return $this->avatar('original');

@@ -18,7 +18,7 @@
             </span>
             <span class="card-title font-weight-bolder text-dark-75 font-size-h2 mb-0 mt-6 d-block"
                 id="sum-cards">
-                ₽{{ request()->user()->company->sumCardsPayments() }}
+    {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsPayments() }}
             </span>
             <span class="font-weight-bold text-muted font-size-sm">Всего расходов компании</span>
         </div>
