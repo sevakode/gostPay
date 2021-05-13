@@ -1,6 +1,6 @@
 
 
-    <div class="card card-custom bg-light-info card-stretch gutter-b">
+    <div class="card card-custom {{ @$class }}">
         <!--begin::Body-->
         <div class="card-body">
             <span class="svg-icon svg-icon-2x svg-icon-info">

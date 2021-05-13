@@ -1,6 +1,6 @@
 <div class="card card-custom gutter-b">
         <div class="card-body row">
-            <div class=" col-lg-4 col-md-9 col-sm-12">
+            <div class=" col-lg-4 col-xxl-8 col-sm-12">
                 <div class="input-daterange input-group" id="datepicker_chart">
                     <input type="text" class="form-control" id="date-start" name="date_start">
                     <div class="input-group-append">
@@ -10,6 +10,10 @@
                 </div>
                 <span class="form-text text-muted">Фильтр по дате</span>
             </div>
+
+            <div class="col-lg-2 col-xxl-1"></div>
+            <div class="col-lg-2 col-xxl-1"></div>
+            <div class="col-lg-3 col-xxl-1"></div>
 
             <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
                 <div id="checkbox-parameter" class="dropdown dropdown-inline">
@@ -26,7 +30,7 @@
                         </svg>
                     </span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-left">
+                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
                         <ul class="navi flex-column navi-hover ">
                             <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-3">
                                 Выберите действие:

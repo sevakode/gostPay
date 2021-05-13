@@ -12,7 +12,13 @@
             <div class="row justify-content-center py-8 px-8 py-md-27 px-md-0">
                 <div class="col-md-10">
                     <div class="d-flex justify-content-between pb-10 pb-md-20 flex-column flex-md-row">
-                        <h1 class="display-4 font-weight-boldest mb-10">ИНФОРМАЦИЯ СЧЁТА</h1>
+
+                        <h1 class="display-4 font-weight-boldest mb-10">
+                            <span class="svg-icon svg-icon-3x">
+                                {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                            </span>
+                            {{ $invoice->bank->title }}
+                        </h1>
                         <div class="d-flex flex-column align-items-md-end px-0">
                             <!--begin::Logo-->
                             <a href="#" class="mb-5">
@@ -102,20 +108,21 @@
     </div>
     @section('scripts_next')
         <script>
+            console.log("{{ $invoice->account_id }}")
             window.addEventListener('load', function () {
                 var datatable = $('#add_cards_datatable').KTDatatable({
                     data: {
                         type: 'remote',
+                        saveState: true,
                         source: {
                             read: {
                                 url: '{{ route('datatables.invoice-cards') }}',
                                 method: 'POST',
-                                contentType: 'application/json',
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
                                 },
                                 params: {
-                                    account_id: {{ $invoice->account_id }}
+                                    account_id: "{{ $invoice->account_id }}",
                                 },
                                 timeout: 60000,
                                 map: function map(raw) {
@@ -123,7 +130,7 @@
                                     if (typeof raw.data !== 'undefined') {
                                         dataSet = raw.data;
                                     }
-
+                                    console.log(dataSet, 'dafasf');
                                     return dataSet;
                                 }
                             }

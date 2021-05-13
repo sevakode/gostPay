@@ -3,10 +3,10 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Interfaces\ListBank;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Matrix\Exception;
 
 /**
  * Class Account
@@ -46,12 +46,20 @@ class Account extends Model
         return Payment::where($whereInLike);
     }
 
+    public function cards()
+    {
+        $cards = Card::where('account_code', 'like', $this->account_id .'%');
+
+        return $cards;
+    }
+
     public function scopeCards($query)
     {
         $accounts = $query->select('account_id')->get()->pluck('account_id');
+
         $whereInLike = function ($query) use($accounts) {
-            foreach ($accounts as $account){
-                $query->orwhere('account_code', 'like', $account .'%');
+            foreach ($accounts as $account) {
+                $query->orWhere('account_code', 'like', $account .'%');
             }
         };
 
@@ -61,6 +69,39 @@ class Account extends Model
     public function getCompanyAttribute()
     {
         return Company::find($this->company_id);
+    }
+
+    public function getBankAttribute()
+    {
+        $bankAr = collect(config('bank_list.info'))->where('bin', $this->bin)->first();
+        if(is_null($bankAr)) {
+            $bankAr = [
+                'title' => '',
+                'icon' => '',
+                'bin' => ''
+            ];
+        }
+
+        return (object) $bankAr;
+    }
+
+    public function getBinAttribute()
+    {
+        $number = $this->cards()->select('number')->first()->numberFull ?? null;
+
+        return substr($number, 0, 6);
+    }
+
+    public function getCurrencySignAttribute()
+    {
+        switch ($this->currency) {
+            case 'RUB' : $sign = '₽';
+                break;
+            case 'USD' : $sign = '$';
+                break;
+        }
+
+        return $sign;
     }
 
     public static function getCollectApi(BankAPI $api): \Illuminate\Support\Collection

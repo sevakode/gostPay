@@ -1,5 +1,5 @@
 {{--@dd(request()->user()->company->invoices()->paymentsNotCards()->get())--}}
-<div class="card card-custom bg-light-white card-stretch gutter-b">
+<div class="card card-custom {{ @$class }}">
     <!--begin::Body-->
     <div class="card-body">
         <span class="svg-icon svg-icon-warning svg-icon-2x"><!--begin::Svg Icon | path:/var/www/preview.keenthemes.com/metronic/releases/2021-04-09-093151/theme/html/demo1/dist/../src/media/svg/icons/Design/Circle.svg--><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">

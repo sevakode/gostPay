@@ -20,9 +20,16 @@
                     <!--begin::Text-->
                     <div class="d-flex flex-column flex-grow-1 font-weight-bold">
                         <a href="{{ route('invoice.show', $invoice->account_id) }}" class="text-dark text-hover-primary mb-1 font-size-lg">
+                        <span class="svg-icon svg-icon-2x">
+                            {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                             {{ $invoice->bank->title }}
+                        </span>
+                        </a>
+                    </div>
+                    <div class="d-flex flex-column flex-grow-1 font-weight-bold">
+                        <a href="{{ route('invoice.show', $invoice->account_id) }}" class="text-dark text-hover-primary mb-1 font-size-lg">
                             {{ $invoice->account_id }}
                         </a>
-{{--                        <span class="text-muted" id="user-role-id-{{ $invoice->id }}">{{ $invoice->account_id }}</span>--}}
                     </div>
                     <!--end::Text-->
                     <!--begin::Dropdown-->

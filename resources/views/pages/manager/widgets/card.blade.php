@@ -57,10 +57,12 @@
                         <span class="font-weight-bolder mb-2">Счет</span>
                         @if($card->invoice)
                             <a href="{{ route('invoice.show', $card->invoice->account_id) }}" class="">
-                                <span class="opacity-70 text-dark">{{ $card->invoice->account_id }}</span>
+                                <span class="opacity-70 text-dark">
+                                    {{ $card->invoice->currencySign }}{{ $card->invoice->avail }}
+                                </span>
                             </a>
                         @else
-                            <span class="opacity-70">{{ 'none' }}</span>
+                            <span class="opacity-70">Счет неизвестен</span>
                         @endif
                     </div>
                     <div class="d-flex flex-column flex-root">

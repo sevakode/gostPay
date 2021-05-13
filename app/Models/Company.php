@@ -44,7 +44,7 @@ class Company extends Model
 
     public function invoices(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Account::class,);
+        return $this->hasMany(Account::class);
     }
 
     /**

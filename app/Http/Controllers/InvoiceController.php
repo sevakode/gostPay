@@ -25,7 +25,6 @@ class InvoiceController extends Controller
 
     public function show($account_id)
     {
-
         $page_title = 'Список счетов компании';
         $page_description = $page_title;
 

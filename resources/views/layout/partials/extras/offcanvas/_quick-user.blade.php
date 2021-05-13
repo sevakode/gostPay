@@ -220,62 +220,60 @@
 
         <div>
             <!--begin:Heading-->
-{{--            <h5 class="mb-5">Recent Notifications</h5>--}}
+            <h5 class="mb-5">Счета:</h5>
             <!--end:Heading-->
             <!--begin::Item-->
-            <div class="d-flex align-items-center bg-light-warning rounded p-5 gutter-b">
-						<span class="svg-icon svg-icon-warning mr-5">
-							<span class="svg-icon svg-icon-lg">
-								<!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
-								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <rect x="0" y="0" width="24" height="24"></rect>
-                                        <rect fill="#000000" opacity="0.3" x="2" y="2" width="10" height="12" rx="2"></rect>
-                                        <path d="M4,6 L20,6 C21.1045695,6 22,6.8954305 22,8 L22,20 C22,21.1045695 21.1045695,22 20,22 L4,22 C2.8954305,22 2,21.1045695 2,20 L2,8 C2,6.8954305 2.8954305,6 4,6 Z M18,16 C19.1045695,16 20,15.1045695 20,14 C20,12.8954305 19.1045695,12 18,12 C16.8954305,12 16,12.8954305 16,14 C16,15.1045695 16.8954305,16 18,16 Z" fill="#000000"></path>
-                                    </g>
-                                </svg>
-                                <!--end::Svg Icon-->
-							</span>
-						</span>
-                <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <a href="{{ route('invoices') }}" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
-                        Баланс
-                    </a>
-{{--                    <span class="text-muted font-size-sm">Due in 2 Days</span>--}}
+            @foreach(request()->user()->company->invoices()->get() as $invoice)
+                <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
+                            <span class="svg-icon svg-icon-warning mr-5">
+                                <span class="svg-icon svg-icon-lg">
+                                    <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+                                    {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                                    <!--end::Svg Icon-->
+                                </span>
+                            </span>
+                    <div class="d-flex flex-column flex-grow-1 mr-2">
+                        <a href="{{ route('invoice.show', $invoice->account_id) }}"
+                           class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
+                            {{ $invoice->bank->title }}
+
+                            <span class="text-muted font-size-sm">{{ $invoice->account_id }}</span>
+                        </a>
+                    </div>
+                    <span class="font-weight-bolder py-1 font-size-lg">
+                        {{ $invoice->currencySign }}{{ (int) $invoice->avail }}
+                    </span>
                 </div>
-                <span class="font-weight-bolder text-warning py-1 font-size-lg">
-                    {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsInvoices() }}
-                </span>
-            </div>
+            @endforeach
             <!--end::Item-->
 
             <!--begin::Item-->
-            <div class="d-flex align-items-center bg-light-info rounded p-5 gutter-b">
-						<span class="svg-icon svg-icon-info mr-5">
-							<span class="svg-icon svg-icon-lg">
-								<!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
-								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
-                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                        <rect x="0" y="0" width="24" height="24"></rect>
-                                        <rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>
-                                        <rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>
-                                        <rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>
-                                        <rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>
-                                    </g>
-                                </svg>
-                                <!--end::Svg Icon-->
-							</span>
-						</span>
-                <div class="d-flex flex-column flex-grow-1 mr-2">
-                    <a href="{{ route('home') }}" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
-                        Расход
-                    </a>
-                    <span class="text-muted font-size-sm">Всего расходов компании</span>
-                </div>
-                <span class="font-weight-bolder text-info py-1 font-size-lg">
-                    {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsPayments() }}
-                </span>
-            </div>
+{{--            <div class="d-flex align-items-center bg-light-info rounded p-5 gutter-b">--}}
+{{--						<span class="svg-icon svg-icon-info mr-5">--}}
+{{--							<span class="svg-icon svg-icon-lg">--}}
+{{--								<!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->--}}
+{{--								<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1">--}}
+{{--                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">--}}
+{{--                                        <rect x="0" y="0" width="24" height="24"></rect>--}}
+{{--                                        <rect fill="#000000" opacity="0.3" x="13" y="4" width="3" height="16" rx="1.5"></rect>--}}
+{{--                                        <rect fill="#000000" x="8" y="9" width="3" height="11" rx="1.5"></rect>--}}
+{{--                                        <rect fill="#000000" x="18" y="11" width="3" height="9" rx="1.5"></rect>--}}
+{{--                                        <rect fill="#000000" x="3" y="13" width="3" height="7" rx="1.5"></rect>--}}
+{{--                                    </g>--}}
+{{--                                </svg>--}}
+{{--                                <!--end::Svg Icon-->--}}
+{{--							</span>--}}
+{{--						</span>--}}
+{{--                <div class="d-flex flex-column flex-grow-1 mr-2">--}}
+{{--                    <a href="{{ route('home') }}" class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">--}}
+{{--                        Расход--}}
+{{--                    </a>--}}
+{{--                    <span class="text-muted font-size-sm">Всего расходов компании</span>--}}
+{{--                </div>--}}
+{{--                <span class="font-weight-bolder text-info py-1 font-size-lg">--}}
+{{--                    {{ request()->user()->company->getCurrencySign() }}{{ request()->user()->company->sumCardsPayments() }}--}}
+{{--                </span>--}}
+{{--            </div>--}}
             <!--end::Item-->
             <!--begin::Item-->
 {{--            <div class="d-flex align-items-center bg-light-success rounded p-5 gutter-b">--}}

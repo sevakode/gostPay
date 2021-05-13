@@ -376,7 +376,7 @@ class Card extends Model
             $account = Account::where('account_id', $account_id[1]);
         }
 
-        return $account->first() ?? null;
+        return isset($account) ? $account->first() : null;
     }
 
     public function getNumberAttribute($val): string

@@ -39,11 +39,11 @@ return [
                         'icon' => 'media/svg/icons/General/Settings-2.svg',
                         'permission' => OptionsPermissions::ADMIN_ROLE_SET['slug'],
                     ],
-//                    [
-//                        'title' => 'Список счетов',
-//                        'page' => 'company/invoices',
-//                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
-//                    ],
+                    [
+                        'title' => 'Список счетов',
+                        'page' => 'company/invoices',
+                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                    ],
                 ],
                 'permission' => OptionsPermissions::ADMIN_ROLE_SET['slug'],
             ],

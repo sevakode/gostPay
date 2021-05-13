@@ -28,16 +28,17 @@ class DatatablesController extends Controller
     }
 
     /**
-     * Company Cards --------------------------------------------------------------------------------------
+     * Invoice Cards --------------------------------------------------------------------------------------
      * @param Request $request
      * @return JsonResponse
      */
-    public function companyCards(Request $request): JsonResponse
+
+    public function invoiceCards(Request $request): JsonResponse
     {
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
-
-        $cards = $request->user()->company->cards();
+        $invoices = $request->user()->company->invoices()->where('account_id', $filter['account_id']);
+        $cards = $invoices->cards();
 
         if (isset($filter['sort']) and count($filter['sort']) == 2) {
             $this->sortNumber($cards, $filter);
@@ -65,18 +66,25 @@ class DatatablesController extends Controller
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
+        if (isset($data['data'])) {
+            $data['data'] = $this->getSort(collect($data['data']), $filter);
+        }
 
-        $data['data'] = $this->getSort(collect($data['data']), $filter);
 
         return new JsonResponse($data);
     }
 
-    public function invoiceCards(Request $request): JsonResponse
+    /**
+     * Company Cards --------------------------------------------------------------------------------------
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function companyCards(Request $request): JsonResponse
     {
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
-        $invoices = $request->user()->company->invoices()->where('account_id', $filter['account_id']);
-        $cards = $invoices->cards();
+
+        $cards = $request->user()->company->cards();
 
         if (isset($filter['sort']) and count($filter['sort']) == 2) {
             $this->sortNumber($cards, $filter);
