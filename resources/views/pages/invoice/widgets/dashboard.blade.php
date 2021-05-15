@@ -6,9 +6,9 @@
     <div class="card card-custom card-stretch gutter-b">
         <!--begin::Header-->
         <div class="card-header border-0">
-            <h3 class="card-title font-weight-bolder text-dark">Пользователи</h3>
+            <h3 class="card-title font-weight-bolder text-dark">Счета:</h3>
             <div class="card-toolbar">
-                <a href="{{ route('add_user') }}" class="btn btn-primary mr-2">Создать пользователя</a>
+                <a href="{{ route('invoice.edit') }}" class="btn btn-primary mr-2">Изменить</a>
             </div>
         </div>
         <!--end::Header-->
@@ -46,15 +46,6 @@
                             {{ (int) $invoice->avail }} {{ $invoice->currency }}
                         </span>
                     </div>
-
-                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" data-html="true" data-placement="left"
-                         data-original-title="">
-                        <a href="#" class="btn btn-hover-light-danger btn-sm btn-icon btn-delete-ajax"
-                           aria-haspopup="true" aria-expanded="false"
-                           data-account-id="{{ $invoice->id }}">
-                            <i class="fas fa-trash text-danger"></i>
-                        </a>
-                    </div>
                     <!--end::Dropdown-->
                 </div>
                 <!--end::Item-->
@@ -64,53 +55,3 @@
     </div>
 @endsection
 
-@section('scripts')
-{{--    <script>--}}
-{{--        $('.btn-delete-ajax').on('click', function () {--}}
-{{--            let accountId = $(this).attr("data-account-id");--}}
-{{--            console.log(accountId);--}}
-{{--            $.ajax({--}}
-{{--                type:'post',--}}
-{{--                url:'{{ route('account_delete') }}',--}}
-{{--                dataType: "json",--}}
-{{--                data:{--}}
-{{--                    '_token':$('meta[name="csrf-token"]').attr('content'),--}}
-{{--                    'account_id': accountId,--}}
-{{--                },--}}
-{{--                success: function (data) {--}}
-{{--                    console.log(data);--}}
-{{--                    div = $('#account-id-'+ data.account_id);--}}
-{{--                    div.html('')--}}
-{{--                    sendNotification()--}}
-{{--                },--}}
-{{--                error: function () {--}}
-{{--                    sendNotification()--}}
-{{--                }--}}
-{{--            });--}}
-{{--            // let roleId = $(this).attr("data-role-id");--}}
-{{--        });--}}
-{{--        $('.roleEvent').on('click', function () {--}}
-{{--            let accountId = $(this).attr("data-account-id");--}}
-{{--            let roleId = $(this).attr("data-role-id");--}}
-{{--            $.ajax({--}}
-{{--                type:'post',--}}
-{{--                url:'{{ route('role_update') }}',--}}
-{{--                dataType: "json",--}}
-{{--                data:{--}}
-{{--                    '_token':$('meta[name="csrf-token"]').attr('content'),--}}
-{{--                    'account_id': accountId,--}}
-{{--                    'role_id': roleId--}}
-{{--                },--}}
-{{--                success: function (data) {--}}
-{{--                    console.log(data);--}}
-{{--                    div = $('#account-role-id-'+ data.account_id);--}}
-{{--                    div.html(data.role)--}}
-{{--                    sendNotification()--}}
-{{--                },--}}
-{{--                error: function () {--}}
-{{--                    sendNotification()--}}
-{{--                }--}}
-{{--            });--}}
-{{--        })--}}
-{{--    </script>--}}
-@endsection

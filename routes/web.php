@@ -1,7 +1,7 @@
 <?php
 
-use App\Classes\TochkaBank\TochkaBank;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PagesController;
@@ -127,9 +127,15 @@ Route::middleware('auth')->group(function () {
 
 
             Route::prefix('/invoices')->group(function () {
-                Route::get('/', [\App\Http\Controllers\InvoiceController::class, 'index'])
+                Route::get('/', [InvoiceController::class, 'index'])
                     ->name('invoices');
-                Route::get('/{account_id}', [\App\Http\Controllers\InvoiceController::class, 'show'])
+                Route::get('/edit', [InvoiceController::class, 'edit'])
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug'])
+                    ->name('invoice.edit');
+                Route::post('/insert', [InvoiceController::class, 'insert'])
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug'])
+                    ->name('invoice.insert');
+                Route::get('/{account_id}', [InvoiceController::class, 'show'])
                     ->name('invoice.show');
             });
         });

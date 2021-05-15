@@ -1,5 +1,5 @@
 {{-- Extends layout --}}
-@extends('pages.manager.dashboard')
+@extends('pages.invoice.dashboard')
 
 {{-- Content --}}
 @section('content-widget')
