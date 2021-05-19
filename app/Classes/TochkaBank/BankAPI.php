@@ -2,6 +2,7 @@
 
 use App\Classes\TochkaBank\Traits\ConnectBanking;
 use App\Classes\TochkaBank\Traits\OpenBanking;
+use App\Models\Bank\Account;
 use App\Models\Bank\BankToken;
 use Illuminate\Support\Facades\Log;
 
@@ -19,6 +20,41 @@ class BankAPI
     public static function make(): BankAPI
     {
         return new BankAPI(BankToken::make());
+    }
+
+    public function getAccountsData(&$data)
+    {
+        $i = 0;
+        foreach (Account::get() as $account) {
+            $data[$i]['id'] = $account->id;
+            $data[$i]['account_id'] = $account->account_id;
+            $data[$i]['company_id'] = $account->company_id;
+
+            $accountId = "$account->account_id/044525999";
+            try {
+                $balanceTypeList = $this->getBalanceInfo($accountId)->Data->Balance;
+            }
+            catch (\Exception $e) {
+                if(!isset($this->getBalanceInfo($accountId)->message))
+                    dd($this->getBalanceInfo($accountId));
+                continue;
+            }
+
+            foreach ($balanceTypeList as $balance) {
+                $data[$i]['currency'] = $balance->Amount->currency;
+
+                if($balance->type == 'OpeningAvailable') {
+                    $data[$i]['avail'] = $balance->Amount->amount;
+                }
+                else if ($balance->type == 'ClosingAvailable') {
+                    $data[$i]['current'] = $balance->Amount->amount;
+                }
+            }
+
+            $i++;
+        }
+
+        return $data;
     }
 
 	protected function send($uri, $headers = null, $body = null)

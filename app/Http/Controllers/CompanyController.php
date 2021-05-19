@@ -17,28 +17,14 @@ use Illuminate\Support\Facades\Notification as Notify;
 
 class CompanyController extends Controller
 {
+
+    /** CRUD */
     public function list()
     {
         $page_title = 'Компании';
         $page_description = $page_title;
 
         return view('pages.company.widgets.list', compact('page_title', 'page_description'));
-    }
-
-    public static function auth(User $user, int $id)
-    {
-        $user->company_id = $id;
-        $user->save();
-    }
-
-    public function login(Request $request)
-    {
-        self::auth($request->user(), $request->id);
-        Notify::send($request->user(), DataNotification::success());
-
-        return $request->wantsJson()
-            ? new JsonResponse(true, 201)
-            : redirect()->back();
     }
 
     public function destroy(Request $request)
@@ -49,12 +35,6 @@ class CompanyController extends Controller
         return $request->wantsJson()
             ? new JsonResponse([], 201)
             : redirect()->back();
-    }
-
-    public function loginAndShow($id)
-    {
-        self::auth(request()->user(), $id);
-        return redirect(route('company.show'));
     }
 
     public function show($id='')
@@ -69,7 +49,6 @@ class CompanyController extends Controller
 
         return view('pages.company.widgets.create', compact('page_title', 'page_description'));
     }
-
 
     public function edit()
     {
@@ -88,10 +67,9 @@ class CompanyController extends Controller
         if(isset($file))
             $company->image('avatar')->make($file, 'images/company/avatar/original/');
 
-        $parametersBank = $this->getParametersBank($request->typeBank);
-        $bank = BankToken::create(
-            array_merge($request->only(['bankId', 'bankSecret', 'accessToken', 'refreshToken']), array_merge($parametersBank, ['company_id' => $company->id]))
-        );
+        foreach ($request->bank_auth as $bank) {
+            $company->banks()->attach($bank);
+        }
 
         return $request->wantsJson()
             ? new JsonResponse([], 201)
@@ -108,15 +86,43 @@ class CompanyController extends Controller
         if(isset($file))
             $company->image('avatar')->make($file, 'images/company/avatar/original/');
 
-        $parametersBank = $this->getParametersBank($request->typeBank);
-        $company->bank->update( array_merge(
-            $request->only(['key', 'bankId', 'bankSecret', 'accessToken', 'refreshToken']),
-            array_merge($parametersBank, ['company_id' => $company->id])
-        ));
+        $accountList = $company->banks()->get()->pluck('id')->toArray();
+        $detachList = array_diff($accountList, $request->bank_auth);
+        $attachList = array_diff($request->bank_auth, $accountList);
+        foreach ($detachList as $bank) {
+            $company->banks()->detach($bank);
+        }
+        foreach ($attachList as $bank) {
+            $company->banks()->attach($bank);
+        }
 
         Notify::send($request->user(), DataNotification::success());
 
         return redirect()->back();
+    }
+
+
+    /** LOGIN */
+    public static function auth(User $user, int $id)
+    {
+        $user->company_id = $id;
+        $user->save();
+    }
+
+    public function login(Request $request)
+    {
+        self::auth($request->user(), $request->id);
+        Notify::send($request->user(), DataNotification::success());
+
+        return $request->wantsJson()
+            ? new JsonResponse(true, 201)
+            : redirect()->back();
+    }
+
+    public function loginAndShow($id)
+    {
+        self::auth(request()->user(), $id);
+        return redirect(route('company.show'));
     }
 
     public function logout()
@@ -127,13 +133,17 @@ class CompanyController extends Controller
         return redirect()->back();
     }
 
-    private function getParametersBank($type)
+    /** - */
+    public static function getParametersBank($type)
     {
-        if($type == 'tochkabank')
+        $bank = collect(config('bank_list.info'))
+            ->where('title', $type)
+            ->first();
+        if($bank)
             return [
-                'url' => 'https://enter.tochka.com',
-                'rsUrl' => 'https://enter.tochka.com/uapi',
-                'apiVersion' => 'v1.0',
+                'url' => $bank['url'],
+                'rsUrl' => $bank['rsUrl'],
+                'apiVersion' => $bank['apiVersion'],
             ];
 
         return null;

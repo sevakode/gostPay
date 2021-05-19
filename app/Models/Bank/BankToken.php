@@ -4,7 +4,8 @@
 namespace App\Models\Bank;
 
 
-use App\Classes\TochkaBank\BankAPI;
+use App\Classes\TochkaBank\BankAPI as TochkaBank;
+use App\Classes\Tinkoff\BankAPI as TinkOff;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
  * @package App\Models\Bank
  * @property int id
  * @property string url
+ * @property string title
  * @property string bankId
  * @property string bankSecret
  * @property null|string authCode
@@ -36,7 +38,7 @@ class BankToken extends Model
     ];
 
     protected $fillable = [
-        'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id', 'key'
+        'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id', 'key', 'title'
     ];
 
     public function company()
@@ -44,9 +46,51 @@ class BankToken extends Model
         return $this->hasOne(Company::class, 'id');
     }
 
+    public function companies()
+    {
+        return $this->belongsToMany(Company::class, 'companies_bank_token');;
+    }
+
+    public function api()
+    {
+        $bank = collect(config('bank_list.info'));
+        switch ($this->url) {
+            case $bank->where('title', 'Tochkabank')->first()['url']:
+                $api = new TochkaBank($this);
+                break;
+            case $bank->where('title', 'Tinkoff')->first()['url']:
+                $api = new TinkOff($this);
+                break;
+            default :
+                $api = null;
+                break;
+        }
+
+        return $api;
+    }
+
+    public function getTitleAttribute()
+    {
+        return $this->attributes['title'] ?? 'Неизвестный банк';
+    }
+
     public function getCompanyAttribute()
     {
         return $this->company()->first();
+    }
+
+    public function getBankAttribute()
+    {
+        $bankAr = collect(config('bank_list.info'))->where('url', $this->url)->first();
+        if(is_null($bankAr)) {
+            $bankAr = [
+                'title' => '',
+                'icon' => '',
+                'bin' => ''
+            ];
+        }
+
+        return (object) $bankAr;
     }
 
     public static function make()
@@ -78,22 +122,6 @@ class BankToken extends Model
     {
         $this->setToken('refreshToken', $value);
     }
-
-//    protected function getToken(string $attribute, int $timeout)
-//    {
-//        /** @var null|Carbon $date */
-//        $date = $this->attributes["{$attribute}Date"];
-//        if (!$date) {
-//            return null;
-//        }
-//        $elapsed = time() - $date->getTimestamp();
-//        if ($elapsed > $timeout) {
-//            $this->setToken($attribute, null);
-//            $this->save();
-//            return null;
-//        }
-//        return $this->attributes[$attribute];
-//    }
 
     protected function setToken(string $attribute, $value)
     {
@@ -138,5 +166,10 @@ class BankToken extends Model
         }
 
         return self::all();
+    }
+
+    public function getDateRefresh(): string
+    {
+        return $this->refreshTokenDate->format('M d, Y H:m');
     }
 }

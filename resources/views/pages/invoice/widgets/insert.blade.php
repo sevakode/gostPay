@@ -60,24 +60,24 @@
     </div>
 </form>
 
-@push('scripts')
-    @if(isset($company) and isset($company->bank->key))
-        <script>
-            function clickFunction() {
-                /* Get the text field */
-                var copyText = document.getElementById("copy-key");
+{{--@push('scripts')--}}
+{{--    @if(isset($company) and isset($company->banks()->first()->key))--}}
+{{--        <script>--}}
+{{--            function clickFunction() {--}}
+{{--                /* Get the text field */--}}
+{{--                var copyText = document.getElementById("copy-key");--}}
 
-                /* Select the text field */
-                // copyText.select();
+{{--                /* Select the text field */--}}
+{{--                // copyText.select();--}}
 
-                let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
+{{--                let link = "{{ route('api.tauth', $company->banks()->first()->key) }}" + copyText.value;--}}
 
-                var tmp = $("<input>");
-                $("body").append(tmp);
-                tmp.val(link).select();
-                document.execCommand("copy");
-                tmp.remove();
-            }
-        </script>
-    @endif
-@endpush
+{{--                var tmp = $("<input>");--}}
+{{--                $("body").append(tmp);--}}
+{{--                tmp.val(link).select();--}}
+{{--                document.execCommand("copy");--}}
+{{--                tmp.remove();--}}
+{{--            }--}}
+{{--        </script>--}}
+{{--    @endif--}}
+{{--@endpush--}}

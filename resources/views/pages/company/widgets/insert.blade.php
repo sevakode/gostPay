@@ -49,124 +49,119 @@
         </div>
 
         <div class="row">
-            <label class="col-xl-3"></label>
-            <div class="col-lg-9 col-xl-6">
-                <h5 class="font-weight-bold mt-10 mb-6">Интеграция с банком</h5>
-            </div>
-        </div>
-
+                <label class="col-xl-3"></label>
+                <div class="col-lg-9 col-xl-6">
+                    <h5 class="font-weight-bold mt-10 mb-6">Интеграция с банком</h5>
+                </div>
+    </div>
         <div class="form-group row">
-            <label class="col-xl-3 col-lg-3 col-form-label">Тип банка
-                <span class="text-danger">*</span></label>
-            <select class="form-control col-lg-9 col-xl-6" name="typeBank" required>
-                <option value="tochkabank">Tochka Bank</option>
-            </select>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-xl-3 col-lg-3 col-form-label">Ключ для интеграции</label>
-            <div class="col-lg-9 col-xl-6 input-group">
-                <input type="text" class="form-control form-control-lg" placeholder="Company key"
-                       aria-describedby="basic-addon2"
-                       value="{{ $company->bank->key ?? '' }}"
-                       name="key" id="copy-key">
-                @if(isset($company) and isset($company->bank->key))
-                    <button onclick="clickFunction()" type="button" class="example-copy">
-                        <i class="la la-copy"></i>
-                    </button>
-                @endif
-            </div>
-        </div>
-
-        <div class="form-group row">
-            <label class="col-xl-3 col-lg-3 col-form-label">Клиент ID</label>
-            <div class="col-lg-9 col-xl-6">
-                <div class="input-group input-group-lg input-group-solid">
-                    <div class="input-group-prepend">
+            @if(request()->user()->hasPermissionTo(\App\Interfaces\OptionsPermissions::OWNER['slug']))
+                <label class="col-xl-3 col-lg-3 col-form-label">Аккаунты:</label>
+                <div class="col-lg-9 col-xl-6" style="
+                    padding-left: 0px;
+                    padding-right: 0px;
+                ">
+                    <div class="mb-2">
+                        <div class="col-lg-12 col-md-12 col-sm-12">
+                                <select class="form-control select2" id="kt_select2_3" multiple="multiple" name="bank_auth[]">
+                                    @isset($company)
+                                        @foreach($company->banks()->get() as $account)
+                                            <option value="{{ $account->id }}" selected="selected">{{ $account->title }}</option>
+                                        @endforeach
+                                    @endisset
+                                </select>
+                        </div>
                     </div>
-                    <input type="text" class="form-control form-control-lg form-control-solid"
-                           value="{{ $company->bank->bankId ?? '' }}" placeholder="Client ID" name="bankId"/>
-                    @error('phone')
-                    <span class="form-text text-danger">
-                    {{ $message }}
-                </span>
-                    @enderror
+                </div>
+            @else
+                @foreach($company->banks()->get() as $account)
+                    <div class="col-xl-12 col-lg-12 d-flex align-items-center bg-diagonal-white rounded p-1 gutter-b">
+                            <span class="svg-icon svg-icon-warning mr-5">
+                                <span class="svg-icon svg-icon-lg">
+                                    <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+                                    {{ \App\Classes\Theme\Metronic::getSVG( $account->bank->icon) }}
+                                <!--end::Svg Icon-->
+                                </span>
+                            </span>
+                        <div class="d-flex flex-column flex-grow-1 mr-2">
+                                {{ $account->title }}
+
+                                <span class="text-muted font-size-sm">{{ $account->bank->title }}</span>
+                        </div>
+                        <div class="d-flex flex-column flex-grow-1 mr-2">
+                            {{ $account->getDateRefresh() }}
+
+                                <span class="text-muted font-size-sm">Последнее обновление</span>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+        </div>
+
+        @isset($company)
+            <div class="row">
+                <label class="col-xl-3"></label>
+                <div class="col-lg-9 col-xl-6">
+                    <h5 class="font-weight-bold mt-10 mb-6">Список счетов:</h5>
                 </div>
             </div>
-        </div>
+            <div class="form-group row">
+            @foreach($company->invoices()->get() as $invoice)
+                <div class="col-xl-12 col-lg-12 d-flex align-items-center bg-diagonal-white rounded gutter-b">
+                    <span class="svg-icon svg-icon-warning mr-5">
+                        <span class="svg-icon svg-icon-lg">
+                            <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+                            {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                        <!--end::Svg Icon-->
+                        </span>
+                    </span>
+                    <div class="d-flex flex-column flex-grow-1 mr-2">
+                        <a href="{{ route('invoice.show', $invoice->account_id) }}"
+                           class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
+                            {{ $invoice->account_id }}
+                        </a>
 
-        <div class="form-group row">
-            <label class="col-xl-3 col-lg-3 col-form-label">Секретный ключ</label>
-            <div class="col-lg-9 col-xl-6">
-                <div class="input-group input-group-lg input-group-solid">
-                    <div class="input-group-prepend">
+                        <span class="text-muted font-size-sm">{{ $invoice->bank->title }}</span>
                     </div>
-                    <input type="text" class="form-control form-control-lg form-control-solid"
-                           value="{{ $company->bank->bankSecret ?? '' }}" placeholder="Client Secret" name="bankSecret"/>
-                    @error('phone')
-                    <span class="form-text text-danger">
-                    {{ $message }}
-                </span>
-                    @enderror
+                    <span class="font-weight-bolder py-1 font-size-lg">
+                        {{ $invoice->currencySign }}{{ (int) $invoice->avail }}
+                    </span>
                 </div>
-            </div>
+            @endforeach
         </div>
-
-        <div class="form-group row">
-            <label class="col-xl-3 col-lg-3 col-form-label">Access Токен</label>
-            <div class="col-lg-9 col-xl-6">
-                <div class="input-group input-group-lg input-group-solid">
-                    <div class="input-group-prepend">
-                    </div>
-                    <input type="text" class="form-control form-control-lg form-control-solid"
-                           value="{{ $company->bank->accessToken ?? '' }}" placeholder="Access Token" name="accessToken"/>
-                    @error('phone')
-                    <span class="form-text text-danger">
-                    {{ $message }}
-                </span>
-                    @enderror
-                </div>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-xl-3 col-lg-3 col-form-label">Refresh Токен</label>
-            <div class="col-lg-9 col-xl-6">
-                <div class="input-group input-group-lg input-group-solid">
-                    <div class="input-group-prepend">
-                    </div>
-                    <input type="text" class="form-control form-control-lg form-control-solid"
-                           value="{{ $company->bank->refreshToken ?? '' }}" placeholder="Refresh Token" name="refreshToken"/>
-                    @error('phone')
-                    <span class="form-text text-danger">
-                    {{ $message }}
-                </span>
-                    @enderror
-                </div>
-            </div>
-        </div>
+        @endisset
 
         <button type="submit" form="form-create-personal" class="btn btn-success mr-2">Сохранить изменения</button>
     </div>
 </form>
 
 @push('scripts')
-    @if(isset($company) and isset($company->bank->key))
+{{--    @if(isset($company) and isset($company->bank->key))--}}
+    @if(request()->user()->hasPermissionTo(\App\Interfaces\OptionsPermissions::OWNER['slug']))
         <script>
-            function clickFunction() {
-                /* Get the text field */
-                var copyText = document.getElementById("copy-key");
+            $("#kt_select2_3").select2({
+                placeholder: "Поиск аккаунтов банка",
+                allowClear: true,
+                ajax: {
+                    url: "{{route('bank.account.list.ajax')}}",
+                    method: 'POST',
 
-                /* Select the text field */
-                // copyText.select();
-
-                let link = "{{ route('api.tauth', $company->bank->key) }}" + copyText.value;
-
-                var tmp = $("<input>");
-                $("body").append(tmp);
-                tmp.val(link).select();
-                document.execCommand("copy");
-                tmp.remove();
-            }
+                    dataType: 'json',
+                    delay: 250,
+                    data: function data(params) {
+                        return {
+                            q: params.term,
+                            // search term
+                            page: params.page,
+                            '_token': $('meta[name="csrf-token"]').attr('content'),
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function escapeMarkup(markup) {
+                    return markup;
+                },
+            });
         </script>
     @endif
 @endpush

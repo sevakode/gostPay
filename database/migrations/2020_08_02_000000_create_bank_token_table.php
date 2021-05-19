@@ -28,6 +28,9 @@ class CreateBankTokenTable extends Migration
 	{
 		Schema::create($this->table, function (Blueprint $table) {
 			$table->id();
+
+			$table->string('title')->nullable();
+
 			$table->string('url');
 			$table->string('rsUrl');
             $table->string('apiVersion');
@@ -37,7 +40,7 @@ class CreateBankTokenTable extends Migration
 			$table->string('bankId');
 			$table->string('bankSecret');
 
-            $table->integer('company_id')->references('id')->on('companies')->onDelete('cascade');
+//            $table->integer('company_id')->references('id')->on('companies')->onDelete('cascade');
 
 			$table->timestamps();
 			$table->string('authCode')->nullable();

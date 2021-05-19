@@ -37,6 +37,11 @@ class Company extends Model
         return $this->hasOne(BankToken::class, 'company_id', 'id');
     }
 
+    public function banks()
+    {
+        return $this->belongsToMany(BankToken::class, 'companies_bank_token');
+    }
+
     public function permissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Permission::class, 'companies_permissions');

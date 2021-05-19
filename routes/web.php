@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AccountBankController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManagerController;
@@ -70,13 +71,28 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/', [PagesController::class, 'index'])->name('home');
 
-    Route::prefix(RouteServiceProvider::PROFILE)
-        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['slug'])
+    Route::prefix(RouteServiceProvider::ADMIN)
+        ->middleware('auth.permission:'.OptionsPermissions::OWNER['slug'])
         ->group(function () {
 
-            Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
+            Route::prefix('/accounts')
+                ->middleware('auth.permission:'.OptionsPermissions::OWNER['slug'])
+                ->group(function () {
+                    Route::get('/', [AccountBankController::class, 'list'])
+                        ->name('bank.account.list');
+                    Route::get('/create', [AccountBankController::class, 'create'])
+                        ->name('bank.account.create');
+                    Route::get('/{id}/edit', [AccountBankController::class, 'edit'])
+                        ->name('bank.account.edit');
+                    Route::post('/{id}/update', [AccountBankController::class, 'updating'])
+                        ->name('bank.account.updating');
+                    Route::post('/create', [AccountBankController::class, 'creating'])
+                        ->name('bank.account.creating');
+                    Route::delete('/delete', [AccountBankController::class, 'delete'])
+                        ->name('bank.account.delete');
+                });
 
-            Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
+            Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
 
             Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
                 ->middleware('auth.demo');
@@ -99,7 +115,6 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/show/{id?}', [CompanyController::class, 'show'])->name('company.show')
                 ->whereNumber('id');
-//                ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_COMPANY['slug']);
 
             Route::get('/create', [CompanyController::class, 'create'])->name('company.create.show')
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug']);
@@ -137,7 +152,25 @@ Route::middleware('auth')->group(function () {
                     ->name('invoice.insert');
                 Route::get('/{account_id}', [InvoiceController::class, 'show'])
                     ->name('invoice.show');
+                Route::post('/ajax', [AccountBankController::class, 'sendList'])->name('bank.account.list.ajax')
+                    ->middleware('auth.permission:'.OptionsPermissions::OWNER['slug'])
+                    ->middleware('isAjax');
             });
+        });
+
+    Route::prefix(RouteServiceProvider::PROFILE)
+        ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_PROFILE['slug'])
+        ->group(function () {
+
+            Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
+
+            Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
+
+            Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
+                ->middleware('auth.demo');
+
+            Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create')
+                ->middleware('auth.demo');
         });
 
     Route::prefix(RouteServiceProvider::MANAGER)

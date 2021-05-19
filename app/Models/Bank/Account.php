@@ -104,37 +104,16 @@ class Account extends Model
         return $sign;
     }
 
-    public static function getCollectApi(BankAPI $api): \Illuminate\Support\Collection
+    public static function getCollectApi($api): \Illuminate\Support\Collection
     {
         $data = array();
-        $i = 0;
-        foreach (Account::get() as $account) {
-            $data[$i]['id'] = $account->id;
-            $data[$i]['account_id'] = $account->account_id;
-            $data[$i]['company_id'] = $account->company_id;
 
-            $accountId = "$account->account_id/044525999";
-            try {
-                $balanceTypeList = $api->getBalanceInfo($accountId)->Data->Balance;
-            }
-            catch (\Exception $e) {
-                continue;
-            }
-
-            foreach ($balanceTypeList as $balance) {
-                $data[$i]['currency'] = $balance->Amount->currency;
-
-                if($balance->type == 'OpeningAvailable') {
-                    $data[$i]['avail'] = $balance->Amount->amount;
-                }
-                else if ($balance->type == 'ClosingAvailable') {
-                    $data[$i]['current'] = $balance->Amount->amount;
-                }
-            }
-
-            $i++;
+        if($api->url == 'https://business.tinkoff.ru') {
+            $api->api()->getAccountsData($data);
         }
-
+        else if($api->url == 'https://business.tinkoff.ru') {
+            $api->api()->getAccountsData($data);
+        }
         return collect($data);
     }
 
@@ -142,7 +121,7 @@ class Account extends Model
     {
         foreach (BankToken::all() as $bank)
         {
-            $collect = self::getCollectApi(new BankAPI($bank));
+            $collect = self::getCollectApi($bank);
             self::upsert(
                 $collect->toArray(),
                 [

@@ -130,6 +130,24 @@ return [
             ],
             'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
         ],
+        [
+            'title' => 'Admin',
+            'root' => true,
+            'toggle' => 'click',
+            'submenu' => [
+                'type' => 'classic',
+                'alignment' => 'left',
+                'items' => [
+                    [
+                        'title' => 'Аккаунты',
+                        'description' => 'Список проектов',
+                        'page' => 'admin/accounts',
+                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                    ]
+                ]
+            ],
+            'permission' => OptionsPermissions::OWNER['slug']
+        ],
     ]
 
 ];
