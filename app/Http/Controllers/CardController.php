@@ -111,7 +111,7 @@ class CardController extends Controller
         try {
             $xlsx = new Reader($options);
             $xlsx->open($request->file('xlsx')->getPathname());
-            Card::parseXlsx($xlsx);
+            Card::parseXlsx($xlsx, $request->invoice);
         }
         catch (\Exception $e) {
             DataNotification::sendErrors(['Файл зашифрован'], $request->user());

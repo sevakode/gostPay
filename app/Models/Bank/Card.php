@@ -175,10 +175,18 @@ class Card extends Model
         self::parsing($listCards);
     }
 
-    public static function parseXlsx($XLSX)
+    public static function parseXlsx($XLSX, $invoice)
     {
         $listCards = array();
         foreach ($XLSX as $text){
+            try {
+                if(!isset($text[1]) and !isset($text[2]) or $text[1] == '' and $text[2] == '')
+                    $text = explode(' ', $text[0]);
+            }
+            catch (\Exception $e) {
+                dd($text);
+            }
+
             if(isset($text[1]) and isset($text[2])) {
                 if (iconv_strlen($text[1]) == 3) {
                     $cardsTxt = "$text[0] $text[1] $text[2]";
@@ -205,8 +213,12 @@ class Card extends Model
             }
             else if(isset($text[0]) and $text[0] != null){
                 preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $text[0], $cardsAr);
-
-                $number = self::getNumberSplit($cardsAr[1]);
+                try {
+                    $number = self::getNumberSplit($cardsAr[1]);
+                }
+                catch (\Exception $e) {
+                    dd($cardsAr);
+                }
                 $cardsTxt = [$cardsAr[0]];
 
                 unset($cardsAr[0]);
@@ -217,10 +229,10 @@ class Card extends Model
 
             $listCards[] = $cardAr;
         }
-        self::parsing($listCards);
+        self::parsing($listCards, $invoice);
     }
 
-    public static function parsing(array $listCards)
+    public static function parsing(array $listCards, $invoice = null)
     {
         $cards = [];
         foreach ($listCards as $card) {
@@ -237,8 +249,8 @@ class Card extends Model
             if(!$isCard){
                 $count++;
                 $cards[] = [
-                    'account_code' => $apiCard['account_code'] ?? null,
-                    'bank_code' => $apiCard['bank_code'] ?? null,
+                    'account_code' => $apiCard['account_code'] ?? $invoice,
+                    'bank_code' => $apiCard['bank_code'] ?? '044525999' ?? null,
                     'number' => $number,
                     'head' => $head,
                     'tail' => $tail,
@@ -271,8 +283,8 @@ class Card extends Model
                 'company_id',
             ]
         );
-//        Statement::refreshApi();
-//        Payment::refreshApi();
+        Statement::refreshApi();
+        Payment::refreshApi();
     }
 
     public static function getCollectApi(): \Illuminate\Support\Collection

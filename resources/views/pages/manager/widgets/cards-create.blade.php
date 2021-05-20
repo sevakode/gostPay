@@ -91,8 +91,20 @@
                             <label class="custom-file-label" for="customFile">Выбрать файл</label>
                         </div>
                     </div>
+                    <div class="col-lg-3 col-md-12 col-sm-12">
+                        <div class="form-group row">
+                            <select class="form-control selectpicker" id="invoice_cards_input_pdf" name="invoice" required>
+                                @isset(request()->user()->company)
+                                    <option value="">--Выберите счет--</option>
+                                    @foreach(request()->user()->company->invoices()->get() as $invoice)
+                                        <option value="{{ $invoice->account_id }}">{{ $invoice->account_id }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-9 ml-lg-auto">
+                        <div class="col-lg-3 ml-lg-auto">
                             <button id="create_cards_pfd" type="button" class="btn btn-primary mr-2">Добавить</button>
                         </div>
                     </div>
@@ -122,8 +134,20 @@
                             <label class="custom-file-label" for="customFile">Выбрать файл</label>
                         </div>
                     </div>
+                    <div class="col-lg-3 col-md-12 col-sm-12">
+                        <div class="form-group row">
+                            <select class="form-control selectpicker" id="invoice_cards_input_xlsx" name="invoice" required>
+                                @isset(request()->user()->company)
+                                    <option value="">--Выберите счет--</option>
+                                    @foreach(request()->user()->company->invoices()->get() as $invoice)
+                                        <option value="{{ $invoice->account_id }}">{{ $invoice->account_id }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="col-lg-9 ml-lg-auto">
+                        <div class="col-lg-3 ml-lg-auto">
                             <button id="create_cards_xlsx" type="button" class="btn btn-primary mr-2">Добавить</button>
                         </div>
                     </div>
@@ -179,11 +203,13 @@
     <script>
         $(document).ready(function() {
             var input = $("#create_cards_input_pdf");
+            var invoice = $("#invoice_cards_input_pdf");
             var fd = new FormData;
 
 
             $('#create_cards_pfd').on('click', function () {
                 fd.append(input[0].name, input.prop('files')[0]);
+                fd.append(invoice[0].name, invoice[0].value);
                 $.ajax({
                     type: 'post',
                     url: '{{ route('cards.create.pdf') }}',
@@ -214,11 +240,13 @@
     <script>
         $(document).ready(function() {
             var input = $("#create_cards_input_xlsx");
+            var invoice = $("#invoice_cards_input_xlsx");
             var fd = new FormData;
 
 
             $('#create_cards_xlsx').on('click', function () {
                 fd.append(input[0].name, input.prop('files')[0]);
+                fd.append(invoice[0].name, invoice[0].value);
                 $.ajax({
                     type: 'post',
                     url: '{{ route('cards.create.xlsx') }}',
