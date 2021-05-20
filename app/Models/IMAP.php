@@ -6,6 +6,7 @@ use App\Models\Bank\Card;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Webklex\IMAP\Facades\Client;
+use Webklex\PHPIMAP\Message;
 
 /** @property  \Webklex\PHPIMAP\Client $client */
 class IMAP extends Model
@@ -34,7 +35,6 @@ class IMAP extends Model
                 preg_match('/Карта \W(\d{4})/', $htmlBody, $tail);
                 $tail = $tail[1] ?? null;
                 $cards = Card::select('tail', 'id')->where('tail', $tail);
-
                 if(isset($htmlBody) and !IMAP::where('uid', $message->get('uid'))->exists()) {
                     foreach ($cards->get() as $card) {
                         $list[] = [
