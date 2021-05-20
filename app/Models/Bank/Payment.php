@@ -27,6 +27,11 @@ class Payment extends Model
 
     protected $dates = ['operationAt', 'updated_at'];
 
+    public function card()
+    {
+        return Card::find($this->card_id);
+    }
+
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
         $payments = array();
@@ -38,22 +43,34 @@ class Payment extends Model
                 preg_match("/дата операции:([^q]{10})/", $payment->description, $data);
 
                 if(isset($cards[1], $cards[2])) {
-                    $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
-                        Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
-                        null;
+                    if(!Payment::where('transaction_id', $payment->transactionId)->exists()) {
+                        $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
+                            Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
+                            null;
 
-                    $payments[] = [
-                        'transaction_id' => $payment->transactionId,
-                        'description' => $payment->description,
-                        'account_id' => $statement->Data->Statement[0]->accountId,
-                        'card_id' => $cardId,
-                        'type' => $payment->creditDebitIndicator == 'Credit' ? self::REVENUE : self::EXPENDITURE,
-                        'status' => $payment->status,
-                        'amount' => $payment->Amount->amount,
-                        'currency' => $payment->Amount->currency,
-                        'operationAt' => Carbon::createFromFormat('d#m#Y H', $data[1] . ' 00'),
-                    ];
+                        $payments[] = [
+                            'transaction_id' => $payment->transactionId,
+                            'description' => $payment->description,
+                            'account_id' => $statement->Data->Statement[0]->accountId,
+                            'card_id' => $cardId,
+                            'type' => $payment->creditDebitIndicator == 'Credit' ? self::REVENUE : self::EXPENDITURE,
+                            'status' => $payment->status,
+                            'amount' => $payment->Amount->amount,
+                            'currency' => $payment->Amount->currency,
+                            'operationAt' => Carbon::createFromFormat('d#m#Y H', $data[1] . ' 00'),
+                        ];
+                    }
+                    else {
+                        $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
+                            Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
+                            null;
+
+                        $payment = Payment::where('transaction_id', $payment->transactionId)->first();
+                        $payment->card_id = $cardId;
+                        $payment->save();
+                    }
                 }
+
             }
         }
         return collect($payments);
@@ -127,5 +144,10 @@ class Payment extends Model
     public function scopeNowDay($query)
     {
         return $query->where("created_at", ">=", date("Y-m-d H:i:s", strtotime('-24 hours', time())));
+    }
+
+    public function scopeIsDate($query, Carbon $dateStart, Carbon $dateEnd)
+    {
+        return $query->where('operationAt', '>=', $dateStart)->where('operationAt', '<=', $dateEnd);
     }
 }

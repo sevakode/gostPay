@@ -34,7 +34,9 @@ class IMAP extends Model
                 $htmlBody = $htmlBody[1] ?? null;
                 preg_match('/Карта \W(\d{4})/', $htmlBody, $tail);
                 $tail = $tail[1] ?? null;
-                $cards = Card::select('tail', 'id')->where('tail', $tail);
+                $head = collect(config('bank_list.info'))->where('title', 'Tinkoff')->first()['bin'];
+                $head = substr($head, 0, 3);
+                $cards = Card::select('head', 'tail', 'id')->where('head', $head)->where('tail', $tail);
                 if(isset($htmlBody) and !IMAP::where('uid', $message->get('uid'))->exists()) {
                     foreach ($cards->get() as $card) {
                         $list[] = [

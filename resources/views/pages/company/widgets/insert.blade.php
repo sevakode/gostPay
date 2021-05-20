@@ -49,11 +49,11 @@
         </div>
 
         <div class="row">
-                <label class="col-xl-3"></label>
-                <div class="col-lg-9 col-xl-6">
-                    <h5 class="font-weight-bold mt-10 mb-6">Интеграция с банком</h5>
-                </div>
-    </div>
+            <label class="col-xl-3"></label>
+            <div class="col-lg-9 col-xl-6">
+                <h5 class="font-weight-bold mt-10 mb-6">Интеграция с банком</h5>
+            </div>
+        </div>
         <div class="form-group row">
             @if(request()->user()->hasPermissionTo(\App\Interfaces\OptionsPermissions::OWNER['slug']))
                 <label class="col-xl-3 col-lg-3 col-form-label">Аккаунты:</label>

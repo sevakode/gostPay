@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
+use App\Models\Bank\Payment;
 use App\Models\Bank\Project;
 use App\Traits\HasProjects;
 use App\Traits\Imageable;
@@ -145,33 +146,45 @@ class Company extends Model
 
     public function exportReportXls()
     {
-        $excel = array();
-        foreach ($this->users()->get() as $user)
-        {
-            $cards = $user->cards();
+        $excel[] = [
+            'номер',
+            'описание',
+            'сумма',
+            'реквезиты',
+            'карта',
+            'пользователь',
+            'проект',
+            'дата',
+        ];
 
-            $dateStart = request()->get('date_start');
-            $dateEnd = request()->get('date_end');
+        $dateStart = request()->get('date_start');
+        $dateEnd = request()->get('date_end');
 
-            if($dateStart and $dateEnd) {
-                $dateStart = Carbon::createFromFormat('m#d#Y', $dateStart)
-                    ->setTime(0,0,0);
-                $dateEnd = Carbon::createFromFormat('m#d#Y', $dateEnd)
-                    ->setTime(0,0,0);
-                $cards = $cards->isDatePayments($dateStart, $dateEnd);
-            }
+        if ($dateStart and $dateEnd) {
+            $dateStart = Carbon::createFromFormat('m#d#Y', $dateStart)
+                ->setTime(0,0,0);
+            $dateEnd = Carbon::createFromFormat('m#d#Y', $dateEnd)
+                ->setTime(0,0,0);
 
-            foreach ($cards->get() as $card)
-            {
-                $excel[] = array(
-                    $card->amount(),
-                    $card->number,
-                    $user->fullname,
-                    $card->project ? $card->project->name : null,
-                    isset($card->user) ? $card->updated_at->format('M d, Y H:i:s') : 'none'
-                );
-            }
+            $invoices = request()->user()->company->invoices();
+            $payments = $invoices->payments()->isDate($dateStart, $dateEnd);
         }
+
+        foreach ($payments->get() as $payment)
+        {
+            $excel[] = array(
+                $payment->transaction_id,
+                $payment->description,
+                $payment->amount . ' ' . $payment->currency != null ? $payment->currency : 'RUB',
+                $payment->account_id,
+                $payment->number() ?? null,
+                $payment->card()->user()->first()->fullName ?? null,
+                $payment->card()->project ? $payment->card()->project->name : null,
+                $payment->operationAt->format('M d, Y H:i:s') ?? $payment->update_at->format('M d, Y H:i:s') ?? null
+            );
+        }
+        dd($excel);
+
         return (new Collection($excel))->downloadExcel('report.xlsx', null, false);
     }
 }

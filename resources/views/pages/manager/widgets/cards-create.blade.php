@@ -21,7 +21,7 @@
     </div>
     <div class="card-body">
         <div class="form-group row">
-            <div class="col-lg-6">
+            <div class="col-lg-4">
                 <label>Номер:</label>
                 <input type="text"
                        id="number_card"
@@ -32,12 +32,12 @@
                        placeholder="Enter number card">
                 <span class="form-text text-muted">Пожалуйста введите номер карты</span>
             </div>
-                <div class="col-lg-2">
+            <div class="col-lg-2">
                     <label>CVC:</label>
                     <input id="cvc_card" name="cvc" type="text" maxlength="3" class="form-control" placeholder="Enter cvc">
                     <span class="form-text text-muted">Please enter your contact number</span>
                 </div>
-            <div class=" col-lg-3 col-md-9 col-sm-12">
+            <div class=" col-lg-3">
                 <label>Дата:</label>
                 <div class="input-daterange input-group">
                     <input id="month_card" type="text" maxlength="2" class="form-control" placeholder="Month" name="date_month">
@@ -47,6 +47,20 @@
                     <input id="year_card" type="text" maxlength="2" class="form-control" placeholder="Year" name="date_year">
                 </div>
                 <span class="form-text text-muted">Пожалуйста введите срок годности карты</span>
+            </div>
+            <div class="col-lg-3">
+                <label>Счет:</label>
+                <div class="form-group row">
+                    <select class="form-control selectpicker" id="invoice_card" name="invoice" required>
+                        @isset(request()->user()->company)
+                            <option value="">--Выберите счет--</option>
+                            @foreach(request()->user()->company->invoices()->get() as $invoice)
+                                <option value="{{ $invoice->account_id }}">{{ $invoice->account_id }}</option>
+                            @endforeach
+                        @endisset
+                    </select>
+                </div>
+                <span class="form-text text-muted">Пожалуйста выберите счет банка к которому принадлежит карта</span>
             </div>
             <div class="row">
                 <div class="col-lg-9 ml-lg-auto">
@@ -127,6 +141,7 @@
                 $('#cvc_card'),
                 $('#month_card'),
                 $('#year_card'),
+                $('#invoice_card'),
             ];
             var fd = new FormData;
 

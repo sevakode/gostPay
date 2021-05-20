@@ -39,6 +39,8 @@ class CardController extends Controller
 
     public function sendCard(Request $request)
     {
+        $invoices = $request->user()->company->invoices();
+
         if(strlen($request->number) < 16 or !is_numeric($request->number))
             return DataNotification::sendErrors(['Номер карты не валиден'], $request->user());
         if(strlen($request->cvc) < 3 or !is_numeric($request->cvc))
@@ -47,6 +49,8 @@ class CardController extends Controller
             return DataNotification::sendErrors(['Число месяца указано не верно'], $request->user());
         if(!is_numeric($request->date_year))
             return DataNotification::sendErrors(['Год указан не верно'], $request->user());
+        if(!isset($request->invoice) and !$invoices->where('account_id', $request->invoice)->exists())
+            return DataNotification::sendErrors(['Счет не указан'], $request->user());
 
         $cardAr = Card::getNumberSplit($request->number);
         $cards = Card::where('head', $cardAr[0])->where('tail', $cardAr[3]);
@@ -63,6 +67,8 @@ class CardController extends Controller
             $card->cvc = $request->cvc;
             $card->state = Card::ACTIVE;
             $card->expiredAt = $expiredAt;
+            $card->account_code = $request->invoice;
+            $card->bank_code = '044525999';
             $card->company_id = $request->user()->company->id;
             $card->save();
 

@@ -15,7 +15,7 @@ return [
         [
             'title' => 'Tinkoff',
             'icon' => 'media/gp/bank/tinkoff.svg',
-            'bin' => '514017',
+            'bin' => '553417',
             'url' => 'https://business.tinkoff.ru',
             'rsUrl' => 'https://business.tinkoff.ru/openapi',
             'apiVersion' => 'v3',

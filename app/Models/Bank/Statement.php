@@ -18,7 +18,6 @@ class Statement extends Model
         $statements = array();
 
         if(!isset($accountList->Data)) $api->connectTokenRefresh();
-
         foreach ($accountList->Data->Account as $account)
         {
             $statement = $api->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
