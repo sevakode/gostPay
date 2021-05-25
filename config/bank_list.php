@@ -1,8 +1,6 @@
 <?php
 
 return [
-
-    // Self
     'info' => [
         [
             'title' => 'Tochkabank',
@@ -15,7 +13,7 @@ return [
         [
             'title' => 'Tinkoff',
             'icon' => 'media/gp/bank/tinkoff.svg',
-            'bin' => '553417',
+            'bin' => '553420',
             'url' => 'https://business.tinkoff.ru',
             'rsUrl' => 'https://business.tinkoff.ru/openapi',
             'apiVersion' => 'v3',

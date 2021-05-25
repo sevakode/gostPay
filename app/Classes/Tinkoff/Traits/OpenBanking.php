@@ -22,9 +22,10 @@ trait OpenBanking
      */
     public function getAccountsList()
     {
-        $url = $this->bank->rsUrl.'/sandbox/api/'.$this->bank->apiVersion.'/bank-accounts';
+        $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-accounts';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/bank-accounts/get'
         ];
 
         $response = Http::withHeaders($headers)->get($url);

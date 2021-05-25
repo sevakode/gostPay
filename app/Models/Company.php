@@ -147,14 +147,14 @@ class Company extends Model
     public function exportReportXls()
     {
         $excel[] = [
-            'номер',
-            'описание',
-            'сумма',
-            'реквезиты',
-            'карта',
-            'пользователь',
-            'проект',
-            'дата',
+            'Номер карты',
+            'Детали операции',
+            'Сумма в валюте счета',
+            'Номер счета',
+            'Номер карты',
+            'Пользователь карты',
+            'Проект',
+            'Дата транзакции',
         ];
 
         $dateStart = request()->get('date_start');
@@ -183,7 +183,6 @@ class Company extends Model
                 $payment->operationAt->format('M d, Y H:i:s') ?? $payment->update_at->format('M d, Y H:i:s') ?? null
             );
         }
-        dd($excel);
 
         return (new Collection($excel))->downloadExcel('report.xlsx', null, false);
     }

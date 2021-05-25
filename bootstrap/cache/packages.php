@@ -49,6 +49,17 @@
       0 => 'Laravel\\Ui\\UiServiceProvider',
     ),
   ),
+  'maatwebsite/excel' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Maatwebsite\\Excel\\ExcelServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 
@@ -61,6 +72,17 @@
     'providers' => 
     array (
       0 => 'NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider',
+    ),
+  ),
+  'webklex/laravel-imap' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Webklex\\IMAP\\Providers\\LaravelServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Client' => 'Webklex\\IMAP\\Facades\\Client',
     ),
   ),
 );

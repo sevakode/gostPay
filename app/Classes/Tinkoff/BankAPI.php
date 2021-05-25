@@ -33,8 +33,8 @@ class BankAPI
                 $data[$i]['account_id'] = $account->account_id;
                 $data[$i]['company_id'] = $account->company_id;
                 $data[$i]['currency'] = $accountApi->currency == 643 ? 'RUB' : 'USD';
-                $data[$i]['avail'] = $accountApi->balance->authorized;
-                $data[$i]['current'] = $accountApi->balance->otb;
+                $data[$i]['avail'] = $accountApi->balance->otb;
+                $data[$i]['current'] = $accountApi->balance->authorized;
             }
 
             $i++;
