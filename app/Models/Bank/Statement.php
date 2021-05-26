@@ -3,30 +3,34 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Interfaces\ApiGostPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Statement extends Model
+class Statement extends Model implements ApiGostPayment
 {
     use HasFactory;
 
-    public static function refreshApi()
+    public static function getCollectApi($api): array
     {
-        self::truncate();
-        $api = (new BankAPI(BankToken::first()));
-        $accountList = $api->getAccountsList();
+        $data = array();
+
+        $api->api()->getStatementsData($data);
+
+        return $data;
+    }
+
+    public static function refreshApi(): mixed
+    {
         $statements = array();
 
-        if(!isset($accountList->Data)) $api->connectTokenRefresh();
-        foreach ($accountList->Data->Account as $account)
-        {
-            $statement = $api->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
+        if(BankToken::exists()) self::truncate();
 
-            $statements[] = [
-                'accountId' => $statement->Data->Statement->accountId,
-                'statementId' => $statement->Data->Statement->statementId,
-            ];
+        foreach (BankToken::all() as $bank) {
+            $api = (new BankAPI($bank));
+            $statements = array_merge($statements, self::getCollectApi($api));
         }
+
         self::upsert($statements, ['accountId', 'statementId']);
     }
 }

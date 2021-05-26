@@ -20,7 +20,7 @@ trait OpenBanking
      *
      * @return object
      */
-    public function getAccountsList()
+    public function getAccountsList(): object
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-accounts';
         $headers = [
@@ -39,17 +39,18 @@ trait OpenBanking
      * @param string $accountId
      * @return object
      */
-    public function getAccountInfo(string $accountId): object
-    {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId;
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
-        ];
-
-        $response = Http::withHeaders($headers)->get($url);
-
-        return $response->object();
-    }
+//    public function getAccountInfo(string $accountId): object
+//    {
+//        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId;
+//        $headers = [
+//
+//            'Authorization' => 'Bearer '. $this->bank->accessToken
+//        ];
+//
+//        $response = Http::withHeaders($headers)->get($url);
+//
+//        return $response->object();
+//    }
 
 
     /**
@@ -121,17 +122,22 @@ trait OpenBanking
      * Метод получения конкретной выписки
      *
      * @param string $accountId
-     * @param string $statementId
+     * @param string|null $statementId
      * @return object
      */
-    public function getStatement(string $accountId, string $statementId): object
+    public function getStatement(string $accountId, string $statementId = null): object
     {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/statements/'.$statementId;
+        $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-statement';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/bank-statements/get'
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
+        $parameters = [
+            'accountNumber' => $accountId
+        ];
+
+        $response = Http::withHeaders($headers)->get($url, $parameters);
 
         return $response->object();
     }

@@ -3,6 +3,7 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Interfaces\ApiGostPayment;
 use App\Interfaces\ListBank;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $current
  * @property $currency
  */
-class Account extends Model
+class Account extends Model implements ApiGostPayment
 {
     use HasFactory;
 
@@ -108,16 +109,12 @@ class Account extends Model
     {
         $data = array();
 
-        if($api->url == 'https://business.tinkoff.ru') {
-            $api->api()->getAccountsData($data);
-        }
-        else if($api->url == 'https://business.tinkoff.ru') {
-            $api->api()->getAccountsData($data);
-        }
+        $api->api()->getAccountsData($data);
+
         return collect($data);
     }
 
-    public static function refreshApi()
+    public static function refreshApi(): bool
     {
         foreach (BankToken::all() as $bank)
         {
