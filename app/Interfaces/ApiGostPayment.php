@@ -1,15 +1,14 @@
 <?php namespace App\Interfaces;
 
 
-use \Illuminate\Support\Collection;
 
 interface ApiGostPayment
 {
     /** Возвращает коллекцию из данных апи в виде коллекции
      * @param $api
-     * @return Collection|array
+     * @return mixed
      */
-    public static function getCollectApi($api): Collection|array;
+    public static function getCollectApi($api): mixed;
 
     /** Заполняет/обновляет данные в модель
      * @return mixed

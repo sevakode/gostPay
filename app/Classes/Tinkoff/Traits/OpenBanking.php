@@ -30,7 +30,7 @@ trait OpenBanking
 
         $response = Http::withHeaders($headers)->get($url);
 
-        return $response->object();
+        return (object) $response->object();
     }
 
     /**
@@ -139,7 +139,7 @@ trait OpenBanking
 
         $response = Http::withHeaders($headers)->get($url, $parameters);
 
-        return $response->object();
+        return (object) $response->json();
     }
 
     /**
@@ -151,25 +151,21 @@ trait OpenBanking
      */
     public function initStatement(string $accountId, $startDateTime, $endDateTime): object
     {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/statements';
+        $url = $this->bank->rsUrl.'/api/v1/bank-statement';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'Content-Type' => 'application/json',
+            'scope' => 'opensme/inn/246525853385/kpp/0/bank-statements/get'
         ];
 
-        $data = [
-            "Data" => [
-                "Statement" => [
-                    "accountId" => $accountId,
-                    "startDateTime" => $startDateTime,
-                    "endDateTime" => $endDateTime
-                ]
-            ]
+        $parameters = [
+            'accountNumber' => $accountId,
+            'from' => $startDateTime,
+            'till' => $endDateTime
         ];
 
-        $response = Http::withHeaders($headers)->post($url, $data);
+        $response = Http::withHeaders($headers)->get($url, $parameters);
 
-        return $response->object();
+        return (object) $response->json();
     }
 
 
@@ -299,16 +295,16 @@ trait OpenBanking
         return $response->object();
     }
 
-     /**
-      * Метод смены состояния карты
-      * string (Новый статус карты)
-         Enum:
-         "lockedCard"
-         "unlockedCard"
-      *
-      * @return object
-      * @var string $cardCode
-      */
+    /**
+     * Метод смены состояния карты
+     * string (Новый статус карты)
+    Enum:
+    "lockedCard"
+    "unlockedCard"
+     *
+     * @return object
+     * @var string $cardCode
+     */
     public function editCardState(string $cardCode, string $newState = 'lockedCard'): object
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/card/' . $cardCode . '/limits';
@@ -327,13 +323,13 @@ trait OpenBanking
         return $response->object();
     }
 
-     /**
-      * Метод закрытия карты
-      *
-      * @var string $cardCode
-      * @var string $message
-      * @return object
-      */
+    /**
+     * Метод закрытия карты
+     *
+     * @var string $cardCode
+     * @var string $message
+     * @return object
+     */
     public function deleteCard(string $cardCode, string $message = ''): object
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/card/' . $cardCode;
@@ -503,14 +499,4 @@ trait OpenBanking
 
         return $response->object();
     }
-
-
-
-
-
-
-
-
-
-
 }

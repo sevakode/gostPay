@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $current
  * @property $currency
  */
-class Account extends Model implements ApiGostPayment
+class Account extends Model
 {
     use HasFactory;
 
@@ -105,7 +105,7 @@ class Account extends Model implements ApiGostPayment
         return $sign;
     }
 
-    public static function getCollectApi($api): \Illuminate\Support\Collection
+    public static function getCollectApi($api)
     {
         $data = array();
 
@@ -114,9 +114,9 @@ class Account extends Model implements ApiGostPayment
         return collect($data);
     }
 
-    public static function refreshApi(): bool
+    public static function refreshApi()
     {
-        foreach (BankToken::all() as $bank)
+        foreach (BankToken::where('') as $bank)
         {
             $collect = self::getCollectApi($bank);
             self::upsert(

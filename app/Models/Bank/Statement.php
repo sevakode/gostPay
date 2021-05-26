@@ -7,11 +7,11 @@ use App\Interfaces\ApiGostPayment;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Statement extends Model implements ApiGostPayment
+class Statement extends Model
 {
     use HasFactory;
 
-    public static function getCollectApi($api): array
+    public static function getCollectApi($api)
     {
         $data = array();
 
@@ -20,7 +20,7 @@ class Statement extends Model implements ApiGostPayment
         return $data;
     }
 
-    public static function refreshApi(): mixed
+    public static function refreshApi()
     {
         $statements = array();
 

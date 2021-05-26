@@ -59,7 +59,7 @@ trait ConnectBanking
         $response = Http::asForm()->post($url, $data)
             ->object();
 
-        if(isset($response->error)) dd($response);
+//        if(isset($response->error)) dd($response);
 
         return (object) $response;
     }

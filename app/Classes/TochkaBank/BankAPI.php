@@ -108,6 +108,4 @@ class BankAPI extends BankMain
 
         return $data;
     }
-
-
 }

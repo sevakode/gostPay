@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property string $description
  */
-class Payment extends Model implements ApiGostPayment
+class Payment extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -41,9 +41,9 @@ class Payment extends Model implements ApiGostPayment
         return $data;
     }
 
-    public static function refreshApi(): mixed
+    public static function refreshApi()
     {
-        foreach (BankToken::all() as $bank)
+        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->get() as $bank)
         {
             $payments = self::getCollectApi($bank);
             self::upsert(
@@ -119,3 +119,5 @@ class Payment extends Model implements ApiGostPayment
         return $query->where('operationAt', '>=', $dateStart)->where('operationAt', '<=', $dateEnd);
     }
 }
+
+
