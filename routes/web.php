@@ -92,6 +92,11 @@ Route::middleware('auth')->group(function () {
                         ->name('bank.account.delete');
                 });
 
+            Route::post('/ajax', [AccountBankController::class, 'sendList'])
+                ->name('bank.account.list.ajax')
+//                ->middleware('auth.permission:'.OptionsPermissions::OWNER['slug'])
+                ->middleware('isAjax');
+
             Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
 
             Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
@@ -152,8 +157,8 @@ Route::middleware('auth')->group(function () {
                     ->name('invoice.insert');
                 Route::get('/{account_id}', [InvoiceController::class, 'show'])
                     ->name('invoice.show');
-                Route::post('/ajax', [AccountBankController::class, 'sendList'])->name('bank.account.list.ajax')
-                    ->middleware('auth.permission:'.OptionsPermissions::OWNER['slug'])
+                Route::post('/ajax', [AccountBankController::class, 'sendCompanyList'])
+                    ->name('bank.company.account.list.ajax')
                     ->middleware('isAjax');
             });
         });

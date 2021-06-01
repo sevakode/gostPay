@@ -45,6 +45,32 @@ class AccountBankController extends Controller
             : redirect()->back();
     }
 
+    public function sendCompanyList(Request $request)
+    {
+        $invoices = $request->user()->company->banks();
+
+        $data = array();
+        $option = array();
+
+        foreach (config('bank_list.info') as $bank) {
+            $option['text'] = $bank['title'];
+            $option['children'] = [];
+
+            foreach ($invoices->where('url', $bank['url'])->get() as $invoice) {
+                $option['children'][] = [
+                    'id' => $invoice->id,
+                    'text' => $invoice->title,
+                    'selected' => true
+                ];
+            }
+            $data['items'][] = $option;
+        }
+
+        return $request->wantsJson()
+            ? new JsonResponse($data, 201)
+            : redirect()->back();
+    }
+
     /** CRUD */
     public function list()
     {

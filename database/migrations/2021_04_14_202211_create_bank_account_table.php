@@ -18,6 +18,7 @@ class CreateBankAccountTable extends Migration
             $table->string('account_id')->unique();
 
             $table->integer('company_id');
+            $table->integer('bank_token_id');
 
             $table->float('avail')->nullable();
             $table->float('current')->nullable();

@@ -54,6 +54,11 @@ class Account extends Model
         return $cards;
     }
 
+    public function bank()
+    {
+        return $this->hasOne(BankToken::class, 'id', 'bank_token_id');
+    }
+
     public function scopeCards($query)
     {
         $accounts = $query->select('account_id')->get()->pluck('account_id');
@@ -74,8 +79,11 @@ class Account extends Model
 
     public function getBankAttribute()
     {
-        $bankAr = collect(config('bank_list.info'))->where('bin', $this->bin)->first();
-        if(is_null($bankAr)) {
+        if($this->bank()->exists()) {
+            $bank = $this->bank()->first();
+            $bankAr = collect(config('bank_list.info'))->where('url', $bank->url)->first();
+        }
+        else {
             $bankAr = [
                 'title' => '',
                 'icon' => '',
@@ -116,7 +124,7 @@ class Account extends Model
 
     public static function refreshApi()
     {
-        foreach (BankToken::where('') as $bank)
+        foreach (BankToken::all() as $bank)
         {
             $collect = self::getCollectApi($bank);
             self::upsert(
@@ -126,7 +134,7 @@ class Account extends Model
                     'account_id',
                 ],
                 [
-                    'currency', 'avail', 'current'
+                    'currency', 'avail', 'current', 'bank_token_id'
                 ]
             );
         }

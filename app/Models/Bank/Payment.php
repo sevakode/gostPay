@@ -43,7 +43,7 @@ class Payment extends Model
 
     public static function refreshApi()
     {
-        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->get() as $bank)
+        foreach (BankToken::all() as $bank)
         {
             $payments = self::getCollectApi($bank);
             self::upsert(

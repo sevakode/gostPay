@@ -80,10 +80,16 @@ class InvoiceController extends Controller
         $company = $request->user()->company;
 
         $accounts = array();
-        foreach ($request->account_id as $account)
+        foreach ($request->account_id as $bankId => $account_list)
         {
-            $account['company_id'] = $company->id;
-            $accounts[] = $account;
+            foreach ($account_list as $account) {
+                if(!$account['account_id']) continue;
+
+                $account['company_id'] = $company->id;
+                $account['bank_token_id'] = $bankId;
+
+                $accounts[] = $account;
+            }
         }
 
         if($accounts[0] != null) {
@@ -94,8 +100,8 @@ class InvoiceController extends Controller
 
                 Account::upsert(
                     $accounts,
-                    ['account_id', 'company_id'],
-                    ['account_id', 'company_id']
+                    ['account_id', 'company_id', 'bank_token_id'],
+                    ['account_id', 'company_id', 'bank_token_id']
                 );
             }
             else {

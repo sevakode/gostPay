@@ -51,6 +51,11 @@ class BankToken extends Model
         return $this->belongsToMany(Company::class, 'companies_bank_token');;
     }
 
+    public function invoices()
+    {
+        return $this->hasMany(Account::class);
+    }
+
     public function api()
     {
         $bank = collect(config('bank_list.info'));
