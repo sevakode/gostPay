@@ -182,14 +182,15 @@ trait OpenBanking
      */
     public function getCards(): object
     {
-        $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card';
+        $url = $this->bank->rsUrl.'/api/v1/card';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/bank-statements/get'
         ];
 
         $response = Http::withHeaders($headers)->get($url);
 
-        return $response->object();
+        return (object) $response->json();
     }
 
     /**
@@ -404,14 +405,16 @@ trait OpenBanking
      */
     public function getPaymentStatus(string $requestId): object
     {
-        $url = $this->bank->rsUrl . '/payment/' . $this->bank->apiVersion . '/status/'.$requestId;
+        $url = $this->bank->rsUrl . '/api/v1/payment/'.$requestId;
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/payment/' . $requestId;
         $headers = [
-            'Authorization' => 'Bearer ' . $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/payments/rub-pay'
         ];
 
         $response = Http::withHeaders($headers)->get($url);
 
-        return $response->object();
+        return (object) $response->json();
     }
 
     /**

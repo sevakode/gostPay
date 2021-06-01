@@ -4,9 +4,11 @@ namespace App\Models\Bank;
 
 use App\Interfaces\ApiGostPayment;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class Payment
@@ -41,11 +43,14 @@ class Payment extends Model
         return collect($data);
     }
 
-    public static function refreshApi()
+    public static function refreshApi($command = false)
     {
+        $countCards = 0;
         foreach (BankToken::all() as $bank)
         {
             $payments = self::getCollectApi($bank->api());
+            if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
+            unset($payments['countCard']);
             self::upsert(
                 $payments->toArray(),
                 [
@@ -60,6 +65,8 @@ class Payment extends Model
                 ]
             );
         }
+
+        if($command) $command->info('Обновленные карты: '. $countCards);
     }
 
     public function number()

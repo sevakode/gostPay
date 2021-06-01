@@ -50,6 +50,7 @@ class BankAPI extends BankMain
     public function getPaymentsData(array &$data): array
     {
         $data = array();
+        $countCard = 0;
         foreach (Statement::all() as $statement) {
             $statement = $this->getStatement($statement->accountId, $statement->statementId);
             foreach ($statement->Data->Statement[0]->Transaction as $payment)
@@ -62,13 +63,14 @@ class BankAPI extends BankMain
                         $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
                             Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
                             null;
+                        if($cardId) $countCard++;
 
                         $data[] = [
                             'transaction_id' => $payment->transactionId,
                             'description' => $payment->description,
                             'account_id' => $statement->Data->Statement[0]->accountId,
                             'card_id' => $cardId,
-                            'type' => $payment->creditDebitIndicator == 'Credit' ? self::REVENUE : self::EXPENDITURE,
+                            'type' => $payment->creditDebitIndicator == 'Credit' ? Payment::REVENUE : Payment::EXPENDITURE,
                             'status' => $payment->status,
                             'amount' => $payment->Amount->amount,
                             'currency' => $payment->Amount->currency,
@@ -87,6 +89,7 @@ class BankAPI extends BankMain
                 }
             }
         }
+        $data['countCard'] = $countCard;
 
         return $data;
     }

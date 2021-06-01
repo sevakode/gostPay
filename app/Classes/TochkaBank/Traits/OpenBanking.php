@@ -179,6 +179,7 @@ trait OpenBanking
      */
     public function getCards(): object
     {
+        //https://business.tinkoff.ru/openapi/api/v1/card
         $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
