@@ -26,20 +26,22 @@
     <div class="offcanvas-content px-10">
         <div class="tab-content">
             {{-- Tabpane --}}
-            @include('quick-panel.item-payment-list', [
-                'id' => 'kt_quick_panel_logs',
-                'payments' => request()->user()->company->invoices()->payments()->nowDay()->getNotCards(),
-                'image' => request()->user()->company->avatar('small') ?? asset('media/svg/avatars/009-boy-4.svg'),
-                'title' => request()->user()->company->name,
-                ])
+            @isset(request()->user()->company)
+                @include('quick-panel.item-payment-list', [
+                    'id' => 'kt_quick_panel_logs',
+                    'payments' => request()->user()->company->invoices()->payments()->nowDay()->getNotCards(),
+                    'image' => request()->user()->company->avatar('small') ?? asset('media/svg/avatars/009-boy-4.svg'),
+                    'title' => request()->user()->company->name ?? 'Компания не привязана',
+                    ])
 
-            @include('quick-panel.item-payment-list', [
-                'id' => 'kt_quick_panel_notifications',
-                'title' => '',
-                'payments' => request()->user()->company->invoices()->payments()->nowDay()->getCards(),
-                'image' => asset('media\svg\icons\Shopping\Credit-card.svg'),
-                'imaps' => request()->user()->cards()->messages()->nowDay()->get(),
-                ])
+                @include('quick-panel.item-payment-list', [
+                    'id' => 'kt_quick_panel_notifications',
+                    'title' => '',
+                    'payments' => request()->user()->company->invoices()->payments()->nowDay()->getCards(),
+                    'image' => asset('media\svg\icons\Shopping\Credit-card.svg'),
+                    'imaps' => request()->user()->cards()->messages()->nowDay()->get(),
+                    ])
+            @endisset
         </div>
     </div>
 </div>
