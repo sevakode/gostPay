@@ -18,8 +18,8 @@
                     padding-left: 0px;
                     padding-right: 0px;
                 ">
-                        @if(isset($company) and $bank->invoices()->exists())
-                            @foreach($bank->invoices()->get() as $invoice)
+                        @if(isset($company) and $bank->companyInvoices()->exists())
+                            @foreach($bank->companyInvoices()->get() as $invoice)
                                 <div data-repeater-item class="mb-2">
                                     <div class="input-group">
                                         <input type="text" class="form-control"
