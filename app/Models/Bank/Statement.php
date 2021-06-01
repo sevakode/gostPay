@@ -15,7 +15,7 @@ class Statement extends Model
     {
         $data = array();
 
-        $api->api()->getStatementsData($data);
+        $api->getStatementsData($data);
 
         return $data;
     }

@@ -40,6 +40,7 @@ class BankAPI extends BankMain
     {
         foreach ($this->bank->invoices()->get() as $account) {
             $statement = $this->initStatement($account->account_id, '2020-08-01', now()->format('Y-m-d'));
+            dd($statement);
             foreach ($statement->operation as $payment) {
                 $data[] = [
                     'transaction_id' => $payment->operationId,

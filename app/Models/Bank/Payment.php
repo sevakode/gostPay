@@ -32,20 +32,20 @@ class Payment extends Model
         return Card::find($this->card_id);
     }
 
-    public static function getCollectApi($api): array
+    public static function getCollectApi($api)
     {
         $data = array();
 
-        $api->api()->getPaymentsData($data);
+        $api->getPaymentsData($data);
 
-        return $data;
+        return collect($data);
     }
 
     public static function refreshApi()
     {
         foreach (BankToken::all() as $bank)
         {
-            $payments = self::getCollectApi($bank);
+            $payments = self::getCollectApi($bank->api());
             self::upsert(
                 $payments->toArray(),
                 [

@@ -95,7 +95,10 @@ class BankAPI extends BankMain
     {
         $accountList = $this->getAccountsList();
 
-        if(!isset($accountList->Data)) $this->connectTokenRefresh();
+        if(!isset($accountList->Data)) {
+            $this->connectTokenRefresh();
+            return  $data;
+        }
         foreach ($accountList->Data->Account as $account)
         {
             $statement = $this->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
