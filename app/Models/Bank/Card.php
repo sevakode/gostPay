@@ -178,18 +178,22 @@ class Card extends Model
     public static function parseXlsx($XLSX, $invoice)
     {
         $listCards = array();
+        $cardsAr = array();
         foreach ($XLSX as $text){
             try {
-                if(!isset($text[1]) and !isset($text[2]) or $text[1] == '' and $text[2] == '')
+                if(!isset($text[1]) and !isset($text[2]) or
+                    isset($text[1]) and $text[1] == '' or
+                    $text[1] == '' and $text[2] == '')
                     $text = explode(' ', $text[0]);
             }
             catch (\Exception $e) {
-                dd($text);
+                dd($text, 'asd');
             }
-
             if(isset($text[1]) and isset($text[2])) {
-                if (iconv_strlen($text[1]) == 3) {
-                    $cardsTxt = "$text[0] $text[1] $text[2]";
+                if (iconv_strlen((integer) $text[1]) == 3) {
+                    $text[0] = str_replace(' ', '', $text[0]);
+                    $text[1] = (integer) $text[1];
+                    $cardsTxt = preg_replace('/\s+/', ' ', "$text[0] $text[1] $text[2]");
 
                     preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $cardsTxt, $cardsAr);
                     unset($cardsAr[0]);
@@ -198,9 +202,17 @@ class Card extends Model
                     $number = self::getNumberSplit($text[0]);
 
                     $cardAr = array_merge([$cardsTxt], $number, $cardsAr);
+                    try {
+
+                        $number = $cardAr[6];
+                    }
+                    catch (\Exception $e) {
+                        dd($cardAr, $cardsAr, $cardsTxt, $text);
+                    }
                 }
-                else if (iconv_strlen($text[2]) == 3) {
-                    $cardsTxt = "$text[0] $text[2] $text[1]";
+                else if (iconv_strlen((integer)$text[2]) == 3) {
+                    $text[2] = (integer) $text[2];
+                    $cardsTxt =  preg_replace('/\s+/', ' ', "$text[0] $text[2] $text[1]");
 
                     preg_match("/(\d{16}) (\d{3}) ([0-1][0-9][\W][0-3][0-9])/", $cardsTxt, $cardsAr);
                     unset($cardsAr[0]);
@@ -208,7 +220,7 @@ class Card extends Model
 
                     $number = self::getNumberSplit($text[0]);
 
-                    $cardAr = array_merge([$cardsTxt], $number, $cardsAr);
+                    $cardAr = preg_replace('/\s+/', ' ', array_merge([$cardsTxt], $number, $cardsAr));
                 }
             }
             else if(isset($text[0]) and $text[0] != null){
@@ -217,14 +229,14 @@ class Card extends Model
                     $number = self::getNumberSplit($cardsAr[1]);
                 }
                 catch (\Exception $e) {
-                    dd($cardsAr);
+                    dd($cardsAr, 'aaa');
                 }
                 $cardsTxt = [$cardsAr[0]];
 
                 unset($cardsAr[0]);
                 unset($cardsAr[1]);
 
-                $cardAr = array_merge($cardsTxt, $number, $cardsAr);
+                $cardAr = preg_replace('/\s+/', ' ', array_merge($cardsTxt, $number, $cardsAr));
             }
 
             $listCards[] = $cardAr;
@@ -236,12 +248,18 @@ class Card extends Model
     {
         $cards = [];
         foreach ($listCards as $card) {
-            $number = $card[1] . $card[2] . $card[3] . $card[4];
-            $head = $card[1];
-            $tail = $card[4];
-            $date = explode('/',$card[6]);
-            $expiredAt = Carbon::createFromFormat('m#y#d H', $card[6]. '-1 00');
-            $cvc = $card[5];
+            try {
+
+                $number = $card[1] . $card[2] . $card[3] . $card[4];
+                $head = $card[1];
+                $tail = $card[4];
+                $date = explode('/',$card[6]);
+                $expiredAt = Carbon::createFromFormat('m#y#d H', $card[6]. '-1 00');
+                $cvc = $card[5];
+            }
+            catch (\Exception $e) {
+                dd($card, 'asda');
+            }
 
             $count = 0;
 
