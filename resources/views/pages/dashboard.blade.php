@@ -193,7 +193,7 @@
             })
         };
         jQuery(document).ready(function () {
-            chartArea();
+            chartArea($("#date-start").val(), $("#date-end").val());
             $('#datepicker_chart').datepicker().on('changeDate', function(e) {
                 date_start = $("#date-start").val();
                 date_end = $("#date-end").val();

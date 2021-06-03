@@ -22,6 +22,7 @@ class BankAPI extends BankMain
             if ($accountApi) {
                 $data[$i]['id'] = $account->id;
                 $data[$i]['account_id'] = $account->account_id;
+                $data[$i]['bank_token_id'] = $account->bank_token_id;
                 $data[$i]['company_id'] = $account->company_id;
                 $data[$i]['currency'] = $accountApi->currency == 643 ? 'RUB' : 'USD';
                 $data[$i]['avail'] = $accountApi->balance->otb;
@@ -71,11 +72,12 @@ class BankAPI extends BankMain
             foreach ($statement->operation as $payment) {
                 preg_match("/номер (\d{4})...(\d{4})/", $payment['paymentPurpose'] ?? '', $cards);
                 if(isset($cards[1], $cards[2])) {
-                    if (Payment::where('transaction_id', $payment['operationId'])->exists()) continue;
-
                     $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
                         Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
                         null;
+
+                    if (Payment::where('transaction_id', $payment['operationId'])->where('card_id', $cardId)->exists())
+                        continue;
 
                     if($cardId) $countCard++;
                 }

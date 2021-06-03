@@ -2,11 +2,13 @@
         <div class="card-body row">
             <div class=" col-lg-4 col-xxl-8 col-sm-12">
                 <div class="input-daterange input-group" id="datepicker_chart">
-                    <input type="text" class="form-control" id="date-start" name="date_start">
+                    <input type="text" value="{{ \Carbon\Carbon::now()->startOfMonth()->format('m/d/Y') }}" class="form-control"
+                           id="date-start" name="date_start">
                     <div class="input-group-append">
                         <span class="input-group-text"><=</span>
                     </div>
-                    <input type="text" class="form-control" id="date-end" name="date_end">
+                    <input type="text" value="{{ \Carbon\Carbon::now()->endOfMonth()->format('m/d/Y') }}" class="form-control"
+                           id="date-end" name="date_end">
                 </div>
                 <span class="form-text text-muted">Фильтр по дате</span>
             </div>

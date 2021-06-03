@@ -16,10 +16,11 @@ class BankAPI extends BankMain
     public function getAccountsData(&$data)
     {
         $i = 0;
-        foreach (Account::get() as $account) {
+        foreach ($this->bank->invoices()->get() as $account) {
             $data[$i] = [
                 'id' => $account->id,
                 'account_id' => $account->account_id,
+                'bank_token_id' => $account->bank_token_id,
                 'company_id' => $account->company_id,
             ];
 

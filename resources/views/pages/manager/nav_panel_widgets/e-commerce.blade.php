@@ -25,10 +25,12 @@
     </div>
     <!--end::Text-->
     <!--begin::label-->
-    <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px mr-1">
+    <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px mr-1"
+          data-toggle="tooltip"  title="Активные карты">
         {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->whereActive()->count() }}
     </span>
-    <span class="font-weight-bolder label label-xl label-light-info label-inline px-3 py-5 min-w-45px">
+    <span class="font-weight-bolder label label-xl label-light-info label-inline px-3 py-5 min-w-45px"
+          data-toggle="tooltip"  title="Свободные карты">
         {{ \Illuminate\Support\Facades\Auth::user()->company->cards()->free()->count() }}
     </span>
     <!--end::label-->

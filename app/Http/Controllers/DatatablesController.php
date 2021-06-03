@@ -123,6 +123,7 @@ class DatatablesController extends Controller
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
         if (!isset($filter['id'])) dd('error');
+
         $cards = $request->user()->company->cards()->where('user_id', $filter['id']);
 
         if (isset($filter['query']['date'])) {

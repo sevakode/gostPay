@@ -80,7 +80,7 @@ trait OpenBanking
      * @param string $accountId
      * @return object
      */
-    public function getBalanceInfo(string $accountId)
+    public function getBalanceInfo(string $accountId): object
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/balances';
         $headers = [
@@ -89,7 +89,7 @@ trait OpenBanking
 
         $response = Http::withHeaders($headers)->get($url);
 
-        return $response->object();
+        return (object) $response->object();
     }
 
 
