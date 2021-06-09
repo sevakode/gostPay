@@ -116,14 +116,14 @@
         </div>
         <!-- end: Invoice footer-->
         <!-- begin: Invoice action-->
-        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">
-            <div class="col-md-10">
-                <div class="d-flex justify-content-between">
-                    <button type="button" class="btn btn-light-primary font-weight-bold" onclick="window.print();">Download Order Details</button>
-                    <button type="button" class="btn btn-primary font-weight-bold" onclick="window.print();">Print Order Details</button>
-                </div>
-            </div>
-        </div>
+{{--        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">--}}
+{{--            <div class="col-md-10">--}}
+{{--                <div class="d-flex justify-content-between">--}}
+{{--                    <button type="button" class="btn btn-light-primary font-weight-bold" onclick="window.print();">Download Order Details</button>--}}
+{{--                    <button type="button" class="btn btn-primary font-weight-bold" onclick="window.print();">Print Order Details</button>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
         <!-- end: Invoice action-->
         <!-- end: Invoice-->
     </div>

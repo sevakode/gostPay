@@ -85,10 +85,13 @@ Route::middleware('auth')->group(function () {
                     Route::get('/{id}/edit', [AccountBankController::class, 'edit'])
                         ->name('bank.account.edit');
                     Route::post('/{id}/update', [AccountBankController::class, 'updating'])
+                        ->middleware('auth.demo')
                         ->name('bank.account.updating');
                     Route::post('/create', [AccountBankController::class, 'creating'])
+                        ->middleware('auth.demo')
                         ->name('bank.account.creating');
                     Route::delete('/delete', [AccountBankController::class, 'delete'])
+                        ->middleware('auth.demo')
                         ->name('bank.account.delete');
                 });
 
@@ -97,12 +100,15 @@ Route::middleware('auth')->group(function () {
 //                ->middleware('auth.permission:'.OptionsPermissions::OWNER['slug'])
                 ->middleware('isAjax');
 
-            Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('profile_show');
+            Route::get('/', [ProfileController::class, 'showPersonalInformation'])
+                ->name('profile_show');
 
-            Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
+            Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])
+                ->name('profile_update')
                 ->middleware('auth.demo');
 
-            Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create')
+            Route::post('/create', [ProfileController::class, 'createUser'])
+                ->name('profile_create')
                 ->middleware('auth.demo');
         });
 
@@ -116,6 +122,7 @@ Route::middleware('auth')->group(function () {
 
             Route::post('/login', [CompanyController::class, 'login'])->name('company.login.post')
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])
+                ->middleware('auth.demo')
                 ->middleware('isAjax');
 
             Route::get('/show/{id?}', [CompanyController::class, 'show'])->name('company.show')
@@ -125,9 +132,11 @@ Route::middleware('auth')->group(function () {
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug']);
 
             Route::post('/creating', [CompanyController::class, 'creating'])->name('company.create')
+                ->middleware('auth.demo')
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug']);
 
             Route::delete('/closed', [CompanyController::class, 'destroy'])->name('company.delete')
+                ->middleware('auth.demo')
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug']);
 
             Route::get('/logout', [CompanyController::class, 'logout'])->name('company.logout')
@@ -137,6 +146,7 @@ Route::middleware('auth')->group(function () {
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['slug']);
 
             Route::post('/update', [CompanyController::class, 'update'])->name('company.update')
+                ->middleware('auth.demo')
                 ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['slug']);
 
             Route::prefix('/download')->group(function () {
@@ -153,6 +163,7 @@ Route::middleware('auth')->group(function () {
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug'])
                     ->name('invoice.edit');
                 Route::post('/insert', [InvoiceController::class, 'insert'])
+                    ->middleware('auth.demo')
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug'])
                     ->name('invoice.insert');
                 Route::get('/{account_id}', [InvoiceController::class, 'show'])
@@ -171,10 +182,14 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
 
-            Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])->name('profile_update')
+            Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])
+                ->middleware('auth.demo')
+                ->name('profile_update')
                 ->middleware('auth.demo');
 
-            Route::post('/create', [ProfileController::class, 'createUser'])->name('profile_create')
+            Route::post('/create', [ProfileController::class, 'createUser'])
+                ->middleware('auth.demo')
+                ->name('profile_create')
                 ->middleware('auth.demo');
         });
 
@@ -189,21 +204,27 @@ Route::middleware('auth')->group(function () {
 
             Route::get('/user/add', [ManagerController::class, 'addUser'])->name('add_user');
 
-            Route::get('/cards/closing_list', [ManagerController::class, 'closingList'])->name('cards_closing_list');
+            Route::get('/cards/closing_list', [ManagerController::class, 'closingList'])
+                ->name('cards_closing_list');
 
-            Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])->name('permission_update')
+            Route::post('/permission_edit', [ManagerController::class, 'updatePermission'])
+                ->name('permission_update')
                 ->middleware('auth.demo');
 
-            Route::post('/permission_edit', [ManagerController::class, 'updateRole'])->name('role_update')
+            Route::post('/permission_edit', [ManagerController::class, 'updateRole'])
+                ->name('role_update')
                 ->middleware('auth.demo');
 
-            Route::post('/user_delete', [ManagerController::class, 'deleteUser'])->name('user_delete')
+            Route::post('/user_delete', [ManagerController::class, 'deleteUser'])
+                ->name('user_delete')
                 ->middleware('auth.demo');
 
-            Route::post('/cards/closing', [ManagerController::class, 'closingCard'])->name('cards_closing')
+            Route::post('/cards/closing', [ManagerController::class, 'closingCard'])
+                ->name('cards_closing')
                 ->middleware('auth.demo');
 
-            Route::post('/cards/closing-all', [ManagerController::class, 'closingCardAll'])->name('cards_closing_all')
+            Route::post('/cards/closing-all', [ManagerController::class, 'closingCardAll'])
+                ->name('cards_closing_all')
                 ->middleware('auth.demo');
         });
 
@@ -222,18 +243,22 @@ Route::middleware('auth')->group(function () {
 
                 Route::post('/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])
                     ->name('cards.create.pdf')
+                    ->middleware('auth.demo')
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
                     ->name('cards.create.xlsx')
+                    ->middleware('auth.demo')
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/create', [\App\Http\Controllers\CardController::class, 'sendCard'])
                     ->name('cards.create')
+                    ->middleware('auth.demo')
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
                     ->name('cards.download.txt')
+                    ->middleware('auth.demo')
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
                     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
             });
@@ -248,6 +273,7 @@ Route::middleware('auth')->group(function () {
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']);
         Route::post('creating', [\App\Http\Controllers\ProjectController::class, 'creating'])
             ->name('projects.creating')
+            ->middleware('auth.demo')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']);
 
         Route::get('{slug}/edit', [\App\Http\Controllers\ProjectController::class, 'update'])
@@ -255,6 +281,7 @@ Route::middleware('auth')->group(function () {
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['slug']);
         Route::post('{slug}/updating', [\App\Http\Controllers\ProjectController::class, 'updating'])
             ->name('projects.updating')
+            ->middleware('auth.demo')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['slug']);
 
         Route::get('{slug}/show', [\App\Http\Controllers\ProjectController::class, 'show'])

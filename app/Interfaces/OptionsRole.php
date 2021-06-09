@@ -97,6 +97,11 @@ interface OptionsRole
             Permission::ACCESS_TO_REMOVE_CARDS,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
+
+            Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
+            Permission::ACCESS_TO_SHOW_PROJECTS_COMPANY,
+            Permission::ACCESS_TO_CREATE_PROJECTS_COMPANY,
+            Permission::ACCESS_TO_UPDATE_PROJECTS_COMPANY,
         ]
 
     ],
