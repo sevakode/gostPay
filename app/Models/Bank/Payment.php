@@ -73,7 +73,7 @@ class Payment extends Model
     {
         preg_match("/(\d{4})\**(\d{4})/", $this->description, $cards);
 
-        return $cards[0];
+        return $cards[0] ?? null;
     }
 
     public function scopeExpenditure($query)

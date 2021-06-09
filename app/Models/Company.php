@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
-use App\Models\Bank\Payment;
 use App\Models\Bank\Project;
 use App\Traits\HasProjects;
 use App\Traits\Imageable;
@@ -16,7 +15,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Maatwebsite\Excel\Facades\Excel;
 
 class Company extends Model
 {
@@ -168,20 +166,28 @@ class Company extends Model
 
             $invoices = request()->user()->company->invoices();
             $payments = $invoices->payments()->isDate($dateStart, $dateEnd);
-        }
 
-        foreach ($payments->get() as $payment)
-        {
-            $excel[] = array(
-                $payment->transaction_id,
-                $payment->description,
-                $payment->amount . ' ' . $payment->currency != null ? $payment->currency : 'RUB',
-                $payment->account_id,
-                $payment->number() ?? null,
-                $payment->card()->user()->first()->fullName ?? null,
-                $payment->card()->project ? $payment->card()->project->name : null,
-                $payment->operationAt->format('M d, Y H:i:s') ?? $payment->update_at->format('M d, Y H:i:s') ?? null
-            );
+            foreach ($payments->get() as $payment)
+            {
+                $number =  $payment->number();
+                $fullname = null;
+                $project = null;
+                if($payment->card()) {
+                    $fullname = $payment->card()->user()->first() ? $payment->card()->user()->first()->fullName : null;
+                    $project = $payment->card()->project ? $payment->card()->project->name : null;
+                }
+
+                $excel[] = array(
+                    $payment->transaction_id,
+                    $payment->description,
+                    $payment->amount . ' ' . $payment->currency != null ? $payment->currency : 'RUB',
+                    $payment->account_id,
+                    $number,
+                    $fullname,
+                    $project,
+                    $payment->operationAt->format('M d, Y H:i:s') ?? $payment->update_at->format('M d, Y H:i:s') ?? null
+                );
+            }
         }
 
         return (new Collection($excel))->downloadExcel('report.xlsx', null, false);
