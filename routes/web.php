@@ -239,6 +239,8 @@ Route::middleware('auth')->group(function () {
                 Route::get('/', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
 
                 Route::get('/create', [\App\Http\Controllers\CardController::class, 'create'])
+                    ->middleware('auth.demo')
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug'])
                     ->name('cards.create');
 
                 Route::post('/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])

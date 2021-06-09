@@ -91,13 +91,13 @@ return [
                         'title' => 'Карты компании',
                         'page' => 'bank/cards',
                         'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
-                        'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+                        'permission' => OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']
                     ],
                     [
                         'title' => 'Добавить карты',
                         'page' => 'bank/cards/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
-                        'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+                        'permission' => OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']
                     ],
                     [
                         'title' => 'Мои карты',

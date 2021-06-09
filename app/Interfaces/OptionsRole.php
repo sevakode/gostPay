@@ -93,9 +93,9 @@ interface OptionsRole
             Permission::MANAGER_ROLE_SET,
             Permission::ACCESS_TO_PROFILE,
             Permission::ACCESS_TO_MANAGER,
-            Permission::ACCESS_TO_ADD_CARDS,
-            Permission::ACCESS_TO_REMOVE_CARDS,
+
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
+
             Permission::ACCESS_TO_ALL_CARDS_COMPANY,
 
             Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
