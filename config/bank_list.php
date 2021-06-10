@@ -17,6 +17,14 @@ return [
             'url' => 'https://business.tinkoff.ru',
             'rsUrl' => 'https://business.tinkoff.ru/openapi',
             'apiVersion' => 'v3',
+        ],
+        [
+            'title' => 'Gost',
+            'icon' => 'media/logos/logo-light.svg',
+            'bin' => '553420',
+            'url' => 'https://gp.gost.agency',
+            'rsUrl' => 'https://gp.gost.agency/api',
+            'apiVersion' => 'v3',
         ]
     ]
 

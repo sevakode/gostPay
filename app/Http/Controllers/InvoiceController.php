@@ -34,11 +34,11 @@ class InvoiceController extends Controller
 
         $invoices = request()->user()->company->invoices()->where('account_id', $account_id);
 
-        if(!$invoices->exists())
-            return response()->view('pages.errors.error-1', [
-                'code' => 500,
-                'message' => 'У вас недостаточно прав!'
-            ]);
+//        if(!$invoices->exists())
+//            return response()->view('pages.errors.error-1', [
+//                'code' => 500,
+//                'message' => 'У вас нет счетов!'
+//            ]);
 
         $invoice = $invoices->first();
 
