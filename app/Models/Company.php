@@ -172,15 +172,19 @@ class Company extends Model
                 $number =  $payment->number();
                 $fullname = null;
                 $project = null;
+                $amount = null;
+
                 if($payment->card()) {
                     $fullname = $payment->card()->user()->first() ? $payment->card()->user()->first()->fullName : null;
                     $project = $payment->card()->project ? $payment->card()->project->name : null;
+                    $amount = $payment->amount . ' ' . $payment->currency;
                 }
+                if(is_null($payment->amount)) dd($payment);
 
                 $excel[] = array(
                     $payment->transaction_id,
                     $payment->description,
-                    $payment->amount . ' ' . $payment->currency != null ? $payment->currency : 'RUB',
+                    $amount,
                     $payment->account_id,
                     $number,
                     $fullname,
@@ -189,6 +193,7 @@ class Company extends Model
                 );
             }
         }
+        dd($excel);
 
         return (new Collection($excel))->downloadExcel('report.xlsx', null, false);
     }
