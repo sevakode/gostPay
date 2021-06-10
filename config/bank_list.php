@@ -21,7 +21,7 @@ return [
         [
             'title' => 'Gost',
             'icon' => 'media/logos/logo-light.svg',
-            'bin' => '553420',
+            'bin' => '000001',
             'url' => 'https://gp.gost.agency',
             'rsUrl' => 'https://gp.gost.agency/api',
             'apiVersion' => 'v3',
