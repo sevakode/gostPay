@@ -59,11 +59,11 @@ class InvoiceController extends Controller
         $company = request()->user()->company;
         $invoices = $company->invoices();
 
-        if(!$invoices->exists())
-            return response()->view('pages.errors.error-1', [
-                'code' => 500,
-                'message' => 'У вас недостаточно прав!'
-            ]);
+//        if(!$invoices->exists())
+//            return response()->view('pages.errors.error-1', [
+//                'code' => 500,
+//                'message' => 'У вас недостаточно прав!'
+//            ]);
 
         $data = compact(
             'page_title',
