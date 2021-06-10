@@ -161,9 +161,11 @@ Route::middleware('auth')->group(function () {
                     ->name('invoices');
                 Route::get('/edit', [InvoiceController::class, 'edit'])
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug'])
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_EDIT_INVOICE['slug'])
                     ->name('invoice.edit');
                 Route::post('/insert', [InvoiceController::class, 'insert'])
                     ->middleware('auth.demo')
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_INVOICE['slug'])
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug'])
                     ->name('invoice.insert');
                 Route::get('/{account_id}', [InvoiceController::class, 'show'])

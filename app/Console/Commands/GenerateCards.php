@@ -42,14 +42,19 @@ class GenerateCards extends Command
         $factory = new CardTestFactory();
 
         $company = Company::updateOrCreate([
-            'name' => 'TestCompany',
+            'name' => 'Test Company',
             'slug' => 'test-company'
         ]);
 
         $company->cards()->delete();
         if (!$company->cards()->exists()) {
-            $cards = $factory->count(20)->create([
-                'company_id' => $company->id
+            $factory->count(20)->create([
+                'company_id' => $company->id,
+                'account_code' => '00000000000000000000',
+            ]);
+            $factory->count(20)->create([
+                'company_id' => $company->id,
+                'account_code' => '00000000000000000001',
             ]);
         }
 

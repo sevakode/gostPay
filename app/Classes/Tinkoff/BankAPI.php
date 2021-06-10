@@ -13,6 +13,25 @@ class BankAPI extends BankMain
 {
     use OpenBanking, ConnectBanking;
 
+    private function currency($code)
+    {
+        switch ($code) {
+            case 643:
+                $result = 'RUB';
+                break;
+            case 826:
+                $result = 'GBP';
+                break;
+            case 840:
+                $result = 'USD';
+                break;
+            case 978:
+                $result = 'EUR';
+                break;
+        }
+        return $result;
+    }
+
     public function getAccountsData(&$data)
     {
         $i = 0;
@@ -24,7 +43,7 @@ class BankAPI extends BankMain
                 $data[$i]['account_id'] = $account->account_id;
                 $data[$i]['bank_token_id'] = $account->bank_token_id;
                 $data[$i]['company_id'] = $account->company_id;
-                $data[$i]['currency'] = $accountApi->currency == 643 ? 'RUB' : 'USD';
+                $data[$i]['currency'] = $this->currency($accountApi->currency);
                 $data[$i]['avail'] = $accountApi->balance->otb;
                 $data[$i]['current'] = $accountApi->balance->authorized;
             }

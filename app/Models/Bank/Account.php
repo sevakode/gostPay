@@ -108,6 +108,10 @@ class Account extends Model
                 break;
             case 'USD' : $sign = '$';
                 break;
+            case 'EUR' : $sign = '€';
+                break;
+            case 'GBP' : $sign = '£';
+                break;
         }
 
         return $sign;

@@ -49,6 +49,16 @@ interface OptionsPermissions
     ];
 
     const
+        ACCESS_TO_EDIT_INVOICE = [
+            'title' => 'Доступ к странице изменения и добавление счетов',
+            'slug' => 'access-to-edit-invoices'
+    ],
+        ACCESS_TO_INSERT_INVOICE = [
+            'title' => 'Доступ к внесению изменений',
+            'slug' => 'access-to-insert-invoices'
+    ];
+
+    const
         ACCESS_TO_ALL_CARDS_COMPANY = [
             'title' => 'Доступ ко всем картам',
             'slug' => 'access-to-all-cards-company'
@@ -159,6 +169,9 @@ interface OptionsPermissions
         self::ACCESS_TO_SHOW_PROJECTS_COMPANY,
         self::ACCESS_TO_ALL_PROJECTS_COMPANY,
         self::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+        self::ACCESS_TO_EDIT_INVOICE,
+        self::ACCESS_TO_INSERT_INVOICE,
 
         self::ACCESS_TO_INVISIBLE,
     ];

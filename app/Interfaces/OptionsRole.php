@@ -36,6 +36,9 @@ interface OptionsRole
             Permission::ACCESS_TO_LOGOUT_COMPANY,
             Permission::ACCESS_TO_ALL_COMPANY,
 
+            Permission::ACCESS_TO_EDIT_INVOICE,
+            Permission::ACCESS_TO_INSERT_INVOICE,
+
             Permission::ACCESS_TO_UPDATE_COMPANY,
             Permission::ACCESS_TO_SHOW_COMPANY,
             Permission::ACCESS_TO_INSERT_COMPANY,

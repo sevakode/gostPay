@@ -7,9 +7,11 @@
         <!--begin::Header-->
         <div class="card-header border-0">
             <h3 class="card-title font-weight-bolder text-dark">Счета:</h3>
-            <div class="card-toolbar">
-                <a href="{{ route('invoice.edit') }}" class="btn btn-primary mr-2">Изменить</a>
-            </div>
+            @if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_EDIT_INVOICE['slug']))
+                <div class="card-toolbar">
+                    <a href="{{ route('invoice.edit') }}" class="btn btn-primary mr-2">Изменить</a>
+                </div>
+            @endif
         </div>
         <!--end::Header-->
         <!--begin::Body-->
