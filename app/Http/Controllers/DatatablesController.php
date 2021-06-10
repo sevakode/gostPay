@@ -108,7 +108,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->invoice ?  $card->amount() . $card->invoice->currencySign : $card->amount() . '₽',
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
