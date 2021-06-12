@@ -118,6 +118,12 @@ class BankToken extends Model
         return $this->url . $method;
     }
 
+    public function isBank($name) {
+        $url = collect(config('bank_list.info'))->where('title', $name)->first()['url'];
+
+        return $this->url == $url;
+    }
+
     public function setAuthCodeAttribute($value)
     {
         $this->setToken('authCode', $value);

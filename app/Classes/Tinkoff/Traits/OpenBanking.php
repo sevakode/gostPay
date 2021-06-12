@@ -180,15 +180,19 @@ trait OpenBanking
      *
      * @return object
      */
-    public function getCards(): object
+    public function getCards($accountNumber = null): object
     {
         $url = $this->bank->rsUrl.'/api/v1/card';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/bank-statements/get'
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/get'
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
+        $parameters = $accountNumber ? [
+            'accountNumber' => $accountNumber,
+        ] : [];
+
+        $response = Http::withHeaders($headers)->get($url, $parameters);
 
         return (object) $response->json();
     }
@@ -275,25 +279,46 @@ trait OpenBanking
      */
     public function editCardLimits(string $cardCode, $limitType = 'MaxAtmOperationSumPerDay', $newValue = '1666'): object
     {
-        $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode.'/limits';
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
         ];
 
-        $data = '{
-            "Data": {
-                "Limits": [
-                    {
-                        "limit_type": "'.$limitType.'",
-                        "new_value": '.$newValue.'
-                    }
-                ]
-            }
-        }';
+        $parameters = [
+            'ucid' => $cardCode,
+        ];
 
-        $response = Http::withHeaders($headers)->post($url, [$data]);
+        $response = Http::withHeaders($headers)->post($url, $parameters);
 
-        return $response->object();
+        return (object) $response->json();
+    }
+
+    /**
+     * Метод получения состояния карты
+     * string (Новый статус карты)
+    Enum:
+    "lockedCard"
+    "unlockedCard"
+     *
+     * @return object
+     * @var string $cardCode
+     */
+    public function getCardState(string $correlationId): object
+    {
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue/result';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
+        ];
+
+        $parameters = [
+            'correlationId' => $correlationId,
+        ];
+
+        $response = Http::withHeaders($headers)->get($url, $parameters);
+
+        return (object) $response->json();
     }
 
     /**

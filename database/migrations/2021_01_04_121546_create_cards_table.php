@@ -19,6 +19,9 @@ class CreateCardsTable extends Migration
             $table->string('head')->nullable();
             $table->string('tail')->nullable();
 
+            $table->string('ucid')->nullable();
+            $table->string('correlation_id')->nullable();
+
             $table->string('card_description')->nullable();
             $table->string('card_type')->nullable();
             $table->string('account_code')->nullable();

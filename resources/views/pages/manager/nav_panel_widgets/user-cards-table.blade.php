@@ -91,18 +91,24 @@
                         <li class="navi-item">
                             <a href="#" id="close-cards" class="navi-link disabled">
                                 <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
-                                <span class="navi-text">Закрыть</span>
+                                <span class="navi-text">Подать заявку на закрытие</span>
                             </a>
                         </li>
                         @endif
                         @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
 \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
-                        <li class="navi-item">
-                            <a href="#" id="download-cards-txt" class="navi-link disabled">
-                                <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>
-                                <span class="navi-text">Скачать</span>
-                            </a>
-                        </li>
+                            <li class="navi-item">
+                                <a href="#" id="close-cards-remove" class="navi-link disabled">
+                                    <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
+                                    <span class="navi-text">Закрыть</span>
+                                </a>
+                            </li>
+                            <li class="navi-item">
+                                <a href="#" id="download-cards-txt" class="navi-link disabled">
+                                    <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>
+                                    <span class="navi-text">Скачать</span>
+                                </a>
+                            </li>
                         @endif
                     </ul>
                 </div>
@@ -320,6 +326,19 @@
                 checkboxes_value = checkboxes_value.toString();
                 datatable.search(checkboxes_value, 'closeCards');
                 datatable.setDataSourceParam('query.closeCards', '');
+            });
+
+            $('#close-cards-remove').on('click', function () {
+                datatable.setDataSourceParam('query.listCartForAdding', '');
+                var checkboxes_value = [];
+                $('input[name="checkboxes"]').each(function(){
+                    if(this.checked) {
+                        checkboxes_value.push($(this).val());
+                    }
+                });
+                checkboxes_value = checkboxes_value.toString();
+                datatable.search(checkboxes_value, 'closeCardsRemove');
+                datatable.setDataSourceParam('query.closeCardsRemove', '');
             });
 
             $('#download-cards-txt').on('click', function () {

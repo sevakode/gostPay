@@ -134,10 +134,10 @@ class CompanyController extends Controller
     }
 
     /** - */
-    public static function getParametersBank($type)
+    public static function getParametersBank($title)
     {
         $bank = collect(config('bank_list.info'))
-            ->where('title', $type)
+            ->where('title', $title)
             ->first();
         if($bank)
             return [

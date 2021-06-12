@@ -3,6 +3,7 @@
 namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI;
+use App\Http\Controllers\CompanyController;
 use App\Models\Company;
 use App\Models\IMAP;
 use App\Models\User;
@@ -40,6 +41,10 @@ class Card extends Model
     const PENDING = 'pending';
     const CLOSE = 'close';
 
+    const STATUS_CLOSED_READY = 'READY';
+    const STATUS_CLOSED_IN_PROGRESS = 'IN_PROGRESS';
+    const STATUS_CLOSED_ERROR = 'ERROR';
+
     protected $dates = ['expiredAt', 'updated_at', 'issue_at'];
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -55,6 +60,57 @@ class Card extends Model
     public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(IMAP::class, 'card_id');
+    }
+
+    public function project()
+    {
+        return $this->belongsToMany(Project::class, 'projects_cards');
+    }
+
+    public function invoice()
+    {
+        return $this->belongsTo(Account::class, 'account_code', 'account_id');
+    }
+
+    public function close() {
+        if (is_null($this->ucid)) return false;
+
+        $bank = $this->invoice->bank()->first();
+        if (!$bank->isBank('Tinkoff')) return false;
+
+        $correlationId = $bank->api()->editCardLimits($this->ucid)->correlationId;
+        $cardState = $bank->api()->getCardState($correlationId);
+
+        $this->correlation_id = $correlationId;
+
+        switch ($cardState->status) {
+            case self::STATUS_CLOSED_READY:
+                $this->ucid = $cardState->info['newUcid'];
+                $this->state = self::CLOSE;
+                $this->correlation_id = null;
+                break;
+
+            case self::STATUS_CLOSED_ERROR:
+            case self::STATUS_CLOSED_IN_PROGRESS:
+                $this->state = self::PENDING;
+                break;
+        }
+
+        $this->save();
+
+        return $cardState->status;
+    }
+
+    public function scopeClosed($query)
+    {
+        $cardsNoUcid = $query->where('ucid', null);
+        $cards = $query->where('ucid', '!=', null);
+
+        if ($cardsNoUcid->exists()) self::refreshUcidApi();
+
+        foreach ($cards->get() as $card) {
+            $card->close();
+        }
     }
 
     public function scopeMessages($query)
@@ -120,11 +176,6 @@ class Card extends Model
 
         $this->user_id = null;
         $this->save();
-    }
-
-    public function project()
-    {
-        return $this->belongsToMany(Project::class, 'projects_cards');
     }
 
     public function getProjectAttribute()
@@ -305,6 +356,25 @@ class Card extends Model
         Payment::refreshApi();
     }
 
+    public static function refreshApi()
+    {
+        $cards = self::getCollectApi();
+
+        self::upsert(
+            $cards->toArray(),
+            [
+                'number',
+                'card_description',
+                'head',
+                'tail',
+                'card_type',
+                'expiredAt',
+                'state',
+                'card_type'
+            ]
+        );
+    }
+
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
         $cardsApi = (new BankAPI(BankToken::first()))->getCards();
@@ -346,12 +416,13 @@ class Card extends Model
         return collect($cards);
     }
 
-    public static function refreshApi()
+    public static function refreshUcidApi()
     {
-            $cards = self::getCollectApi();
-
+        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->get() as $bank)
+        {
+            $collect = self::getCollectUcidApi($bank);
             self::upsert(
-                $cards->toArray(),
+                $collect,
                 [
                     'number',
                     'card_description',
@@ -360,9 +431,70 @@ class Card extends Model
                     'card_type',
                     'expiredAt',
                     'state',
-                    'card_type'
+                    'card_type',
+                    'ucid'
                 ]
             );
+        }
+    }
+
+    public static function getCollectUcidApi($api)
+    {
+        $cards = array();
+        foreach ($api->invoices()->get() as $accountId) {
+            $cardsApi = $api->api()->getCards($accountId);
+            if(!isset($cardsApi->totalNumber) and !isset($cardsApi->Data)) {
+                continue;
+            }
+
+            $cards = array_merge(
+                $cards,
+                self::getCollectUcidParse($cardsApi->Data->cards ?? $cardsApi->cards)->toArray()
+            );
+        }
+
+        return $cards;
+    }
+
+    public static function getCollectUcidParse($cardsData): \Illuminate\Support\Collection
+    {
+        $cards =[];
+        foreach ($cardsData as $cardApi) {
+
+            $number = "$cardApi[cardBin]******$cardApi[cardLastFourDigits]";
+            $matches = self::getNumberSplit($number);
+            $cardModel = Card::where('head', $matches[0])->where('tail', $matches[3]);
+
+            if($cardModel->exists()) {
+                $cardModel = $cardModel->first();
+                $cards[] = collect([
+                    'account_code' => $cardModel->account_code,
+                    'bank_code' => $cardModel->bank_code,
+                    'number' => $cardModel->numberFull,
+                    'head' => $matches[0],
+                    'tail' => $matches[3],
+                    'card_description' => $cardModel->card_description,
+                    'card_type' => $cardModel->card_type,
+                    'expiredAt' => $cardModel->expiredAt,
+                    'state' => $cardModel->state,
+                    'ucid' => $cardApi['ucid']
+                ]);
+            }
+        }
+
+        return collect($cards);
+    }
+
+    public static function refreshStateApi() {
+        $bank_list = [
+            CompanyController::getParametersBank('Tinkoff')['url']
+        ];
+        $bank_ids = BankToken::whereIn('url', $bank_list)->select('id')->get()->pluck('id');
+        $cards = self::where('state', self::PENDING)
+            ->whereHas('invoice', function (Builder $query) use ($bank_ids) {
+                $query->where('bank_token_id', $bank_ids);
+            });
+        $cards->closed();
     }
 
     public function getAccountIdAttribute(): string
