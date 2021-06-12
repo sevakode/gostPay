@@ -97,7 +97,7 @@ return [
                         'title' => 'Добавить карты',
                         'page' => 'bank/cards/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
-                        'permission' => OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']
+                        'permission' => OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']
                     ],
                     [
                         'title' => 'Мои карты',

@@ -242,29 +242,29 @@ Route::middleware('auth')->group(function () {
 
                 Route::get('/create', [\App\Http\Controllers\CardController::class, 'create'])
                     ->middleware('auth.demo')
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug'])
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug'])
                     ->name('cards.create');
 
                 Route::post('/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])
                     ->name('cards.create.pdf')
                     ->middleware('auth.demo')
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
                     ->name('cards.create.xlsx')
                     ->middleware('auth.demo')
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/create', [\App\Http\Controllers\CardController::class, 'sendCard'])
                     ->name('cards.create')
                     ->middleware('auth.demo')
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
                 Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
                     ->name('cards.download.txt')
                     ->middleware('auth.demo')
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
-                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
+                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
             });
         });
 

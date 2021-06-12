@@ -52,7 +52,7 @@ interface OptionsRole
             Permission::ACCESS_TO_PROFILE,
             Permission::ACCESS_TO_MANAGER,
             Permission::ACCESS_TO_ADD_CARDS,
-            Permission::ACCESS_TO_CREATE_CARDS,
+//            Permission::ACCESS_TO_CREATE_CARDS,
             Permission::ACCESS_TO_REMOVE_CARDS,
             Permission::ACCESS_TO_CLOSE_CARDS,
             Permission::ACCESS_TO_ALL_USERS_COMPANY,
