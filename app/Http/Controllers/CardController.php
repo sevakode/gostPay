@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
 use Aspera\Spreadsheet\XLSX\Reader;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\JsonResponse;
@@ -129,10 +131,14 @@ class CardController extends Controller
 
     public function download(Request $request)
     {
-        $cardsChecked = $request->user()->company->cards()->where('user_id', $request->id);
+        $user = $request->user();
+        $isPermission = Route::is('profile_cards') or $user()->
+            hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']);
 
-        if(!$cardsChecked->exists()) {
-            DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());
+        $cardsChecked = $user()->company->cards()->where('user_id', $request->id);
+
+        if(!$cardsChecked->exists() or $isPermission) {
+            DataNotification::sendErrors(['У вас недостаточно прав!'], $user());
             die;
         }
 
