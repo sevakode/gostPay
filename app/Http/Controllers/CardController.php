@@ -132,7 +132,7 @@ class CardController extends Controller
     public function download(Request $request)
     {
         $user = $request->user();
-        $isPermission = Route::is('profile_cards') or $user()
+        $isPermission = Route::is('profile_cards') or $user
             ->hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']);
 
         $cardsChecked = $user()->company->cards()->where('user_id', $request->id);
