@@ -82,18 +82,18 @@
                             Выберите действие:
                         </li>
                         @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']))
-                        <li class="navi-item">
-                            <a href="#" id="remove-cards" class="navi-link disabled">
-                                <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
-                                <span class="navi-text">Отвязать</span>
-                            </a>
-                        </li>
-                        <li class="navi-item">
-                            <a href="#" id="close-cards" class="navi-link disabled">
-                                <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
-                                <span class="navi-text">Подать заявку на закрытие</span>
-                            </a>
-                        </li>
+                            <li class="navi-item">
+                                <a href="#" id="remove-cards" class="navi-link disabled">
+                                    <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
+                                    <span class="navi-text">Отвязать</span>
+                                </a>
+                            </li>
+                            <li class="navi-item">
+                                <a href="#" id="close-cards" class="navi-link disabled">
+                                    <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
+                                    <span class="navi-text">Подать заявку на закрытие</span>
+                                </a>
+                            </li>
                         @endif
                         @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
 \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
@@ -283,7 +283,8 @@
                 if (sliderInput.value > 0) {
                     datatable.search({
                         "count": sliderInput.value,
-                        "project": $('#selectpicker_random_project').val()
+                        "project": $('#selectpicker_random_project').val(),
+                        "account_id": $('#selectpicker_random_invoice').val()
                     }, 'countCards');
                 }
                 datatable.setDataSourceParam('query.countCards', '')

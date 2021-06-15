@@ -144,11 +144,15 @@ class DatatablesController extends Controller
         if (!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
             if (isset($filter['query']['countCards']) and $filter['query']['countCards'] and $filter['query']['countCards']['count']) {
                 $countCards = $filter['query']['countCards']['count'];
-                $project = $request->user()->company->projects()->whereSlug($filter['query']['countCards']['project']);
+                $account_id = $filter['query']['countCards']['account_id'];
+
+                $company = $request->user()->company;
+                $project = $company->projects()->whereSlug($filter['query']['countCards']['project']);
+                $invoice = $company->invoices()->whereAccountId($account_id);
                 $userId = $filter['id'];
 
-                if ($project = $project->first()) {
-                    $cardsFree = $request->user()->company->cards()->free();
+                if ($project = $project->first() and $invoice->exists()) {
+                    $cardsFree = $company->cards()->free()->where('account_code', $account_id);
 
                     if ($cardsFree->count() >= (integer)$countCards) {
                         $cardsFree = $cardsFree->get()->shuffle()->forPage(1, $countCards);
@@ -160,7 +164,7 @@ class DatatablesController extends Controller
 
                             $project->cards()->attach($card->id);
                         }
-                        $cards = $request->user()->company->cards()->where('user_id', $userId);
+                        $cards = $company->cards()->where('user_id', $userId);
                         Notify::send($request->user(), DataNotification::success());
                     } else {
                         DataNotification::sendErrors(['Осталось ' . $cardsFree->count() . ' карт!']);
