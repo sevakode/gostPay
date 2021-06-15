@@ -135,10 +135,10 @@ class CardController extends Controller
         $isPermission = Route::is('profile_cards') or $user
             ->hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']);
 
-        $cardsChecked = $user()->company->cards()->where('user_id', $request->id);
+        $cardsChecked = $user->company->cards()->where('user_id', $request->id);
 
         if(!$cardsChecked->exists() or $isPermission) {
-            DataNotification::sendErrors(['У вас недостаточно прав!'], $user());
+            DataNotification::sendErrors(['У вас недостаточно прав!'], $user);
             die;
         }
 
