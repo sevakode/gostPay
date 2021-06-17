@@ -8,11 +8,9 @@ Route::get('/', [ProfileController::class, 'showPersonalInformation'])->name('pr
 Route::get('/cards', [ProfileController::class, 'showCards'])->name('profile_cards');
 
 Route::post('/update', [ProfileController::class, 'updatePersonalInformation'])
-    ->middleware('auth.demo')
     ->name('profile_update')
-    ->middleware('auth.demo');
+    ->withoutMiddleware('auth.demo');
 
 Route::post('/create', [ProfileController::class, 'createUser'])
-    ->middleware('auth.demo')
     ->name('profile_create')
-    ->middleware('auth.demo');
+    ->withoutMiddleware('auth.demo');

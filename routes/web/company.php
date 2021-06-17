@@ -14,7 +14,7 @@ Route::get('/login/{id}', [CompanyController::class, 'loginAndShow'])->name('com
 
 Route::post('/login', [CompanyController::class, 'login'])->name('company.login.post')
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])
-    ->middleware('auth.demo')
+    ->withoutMiddleware('auth.demo')
     ->middleware('isAjax');
 
 Route::get('/show/{id?}', [CompanyController::class, 'show'])->name('company.show')
@@ -24,11 +24,11 @@ Route::get('/create', [CompanyController::class, 'create'])->name('company.creat
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_COMPANY['slug']);
 
 Route::post('/creating', [CompanyController::class, 'creating'])->name('company.create')
-    ->middleware('auth.demo')
+    ->withoutMiddleware('auth.demo')
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug']);
 
 Route::delete('/closed', [CompanyController::class, 'destroy'])->name('company.delete')
-    ->middleware('auth.demo')
+    ->withoutMiddleware('auth.demo')
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug']);
 
 Route::get('/logout', [CompanyController::class, 'logout'])->name('company.logout')
@@ -38,7 +38,7 @@ Route::get('/edit', [CompanyController::class, 'edit'])->name('company.edit')
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['slug']);
 
 Route::post('/update', [CompanyController::class, 'update'])->name('company.update')
-    ->middleware('auth.demo')
+    ->withoutMiddleware('auth.demo')
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_COMPANY['slug']);
 
 Route::prefix('/download')->group(function () {
@@ -56,7 +56,7 @@ Route::prefix('/invoices')->group(function () {
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_EDIT_INVOICE['slug'])
         ->name('invoice.edit');
     Route::post('/insert', [InvoiceController::class, 'insert'])
-        ->middleware('auth.demo')
+        ->withoutMiddleware('auth.demo')
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_INVOICE['slug'])
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_INSERT_COMPANY['slug'])
         ->name('invoice.insert');

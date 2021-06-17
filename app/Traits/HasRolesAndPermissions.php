@@ -41,10 +41,10 @@ trait HasRolesAndPermissions
      */
     public function hasPermission(string $permission): bool
     {
-        $result = $permission and $this->permissions() ?
+        $result = ($permission and $this->permissions()) ?
             $this->permissions()->where('slug', Str::slug($permission))->exists() :
             true;
-        return (bool) $result;
+        return $result;
     }
 
     /** Метод проверяет, содержат ли права пользователя заданное право
