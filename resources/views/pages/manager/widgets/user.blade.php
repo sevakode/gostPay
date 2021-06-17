@@ -151,7 +151,7 @@
                                             data-size="12"
                                             data-live-search="true"
                                             tabindex="null">
-                                        <option value="">Select</option>
+                                        <option value="">Случайные счета</option>
                                         @foreach(request()->user()->company->invoices()->get() as $invoice)
                                             <option @if(!$invoice->cards()->free()->exists()) disabled @endif
                                             value="{{$invoice->account_id}}"

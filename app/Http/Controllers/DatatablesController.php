@@ -119,6 +119,7 @@ class DatatablesController extends Controller
 
     public function userCards(Request $request)
     {
+        // TODO: Почистить код!
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
         if (!isset($filter['id'])) dd('error');
@@ -150,8 +151,10 @@ class DatatablesController extends Controller
                 $invoice = $company->invoices()->whereAccountId($account_id);
                 $userId = $filter['id'];
 
-                if ($project = $project->first() and $invoice->exists()) {
-                    $cardsFree = $company->cards()->free()->where('account_code', $account_id);
+                if ($project = $project->first()) {
+                    $cardsFree = $company->cards()->free();
+                    if ($invoice->exists())
+                        $cardsFree = $cardsFree->where('account_code', $account_id);
 
                     if ($cardsFree->count() >= (integer)$countCards) {
                         $cardsFree = $cardsFree->get()->shuffle()->forPage(1, $countCards);
