@@ -25,6 +25,9 @@
     </div>
     <!--end::Text-->
     <!--begin::label-->
-    <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{ Auth::user()->companyUsers()->count() }}</span>
+    <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px"
+          data-toggle="tooltip"  title="Количество пользователей.">
+        {{ Auth::user()->companyUsers()->count() }}
+    </span>
     <!--end::label-->
 </div>

@@ -181,6 +181,14 @@ class Card extends Model
         return $query;
     }
 
+
+    public function scopePayments($query)
+    {
+        $cardIds = $query->select('id')->get()->pluck('id');
+
+        return Payment::whereIn('card_id', $cardIds);
+    }
+
     public function exit()
     {
         $this->project()->detach();

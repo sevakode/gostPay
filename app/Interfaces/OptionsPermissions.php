@@ -136,8 +136,26 @@ interface OptionsPermissions
 
     const ACCESS_TO_REMOVE_USERS = [
         'title' => 'Доступ к удалению пользователей',
-        'slug' => 'access_to_remove_users',
+        'slug' => 'access-to-remove-users',
         ];
+
+
+    const ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS = [
+        'title' => 'Доступ к просмотру статистики платежей пользователей компании',
+        'slug' => 'access-to-show-chart-company-users-payments',
+    ],
+        ACCESS_TO_SHOW_CHART_USER_PAYMENTS = [
+        'title' => 'Доступ к просмотру статистики платежей пользователя',
+        'slug' => 'access-to-show-chart-user-payments',
+    ],
+        ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS = [
+        'title' => 'Доступ к просмотру статистики проектов пользователей компании',
+        'slug' => 'access-to-show-chart-company-users-projects',
+    ],
+        ACCESS_TO_SHOW_CHART_USER_PROJECTS = [
+        'title' => 'Доступ к просмотру статистики проектов пользователя',
+        'slug' => 'access-to-show-chart-user-projects',
+    ];
 
     const ALL = [
         self::OWNER,
@@ -174,5 +192,10 @@ interface OptionsPermissions
         self::ACCESS_TO_INSERT_INVOICE,
 
         self::ACCESS_TO_INVISIBLE,
+
+        self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
+        self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
+        self::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+        self::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
     ];
 }

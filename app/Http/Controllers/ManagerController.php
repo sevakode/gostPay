@@ -115,7 +115,7 @@ class ManagerController extends Controller
     public function deleteUser(Request $request)
     {
         $user = $request->user()->companyUsers()->find($request->user_id);
-        if(!request()->user()->hasPermission(Permission::ACCESS_TO_REMOVE_USERS['slug']) or !$user)
+        if(!$user)
             return DataNotification::sendErrors(['У вас недостаточно прав']);
 
         $user->delete();

@@ -42,6 +42,11 @@ interface OptionsRole
             Permission::ACCESS_TO_UPDATE_COMPANY,
             Permission::ACCESS_TO_SHOW_COMPANY,
             Permission::ACCESS_TO_INSERT_COMPANY,
+
+            Permission::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
         ]
     ],
         MANAGER = [
@@ -69,6 +74,11 @@ interface OptionsRole
             Permission::ACCESS_TO_UPDATE_PROJECTS_COMPANY,
             Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
             Permission::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+            Permission::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
         ]
     ],
         ADMIN = [
@@ -86,6 +96,11 @@ interface OptionsRole
             Permission::ACCESS_TO_CREATE_PROJECTS_COMPANY,
             Permission::ACCESS_TO_ALL_PROJECTS_COMPANY,
             Permission::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+            Permission::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
         ]
     ],
         DEMO = [
@@ -115,6 +130,9 @@ interface OptionsRole
             Permission::ACCESS_TO_PROFILE,
             Permission::ACCESS_TO_ADD_CARDS,
             Permission::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+            Permission::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
         ],
     ],
         USER = [
@@ -122,6 +140,9 @@ interface OptionsRole
         'slug' => 'user',
         'permissions' => [
             Permission::ACCESS_TO_PROFILE,
+
+            Permission::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+            Permission::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
         ]
     ];
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ManagerController;
+use App\Models\Permission;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ManagerController::class, 'dashboard'])->name('dashboard');
@@ -22,6 +23,7 @@ Route::post('/permission_edit', [ManagerController::class, 'updateRole'])
 
 Route::post('/user_delete', [ManagerController::class, 'deleteUser'])
     ->name('user_delete')
+    ->middleware('auth.permission:'.Permission::ACCESS_TO_REMOVE_USERS['slug'])
     ->middleware('auth.demo');
 
 Route::post('/cards/closing', [ManagerController::class, 'closingCard'])
