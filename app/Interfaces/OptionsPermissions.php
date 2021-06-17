@@ -19,10 +19,6 @@ interface OptionsPermissions
         'title' => 'Demo',
         'slug' => 'demo'
     ],
-        ACCESS_TO_INVISIBLE = [
-        'title' => 'Доступ к неведимке',
-        'slug' => 'access-to-invisible'
-    ],
         ACCESS_TO_PROFILE = [
         'title' => 'Доступ к профилю',
         'slug' => 'access-to-profile'
@@ -46,6 +42,15 @@ interface OptionsPermissions
         ACCESS_TO_CLOSE_CARDS = [
         'title' => 'Доступ к закрытию карт',
         'slug' => 'access-to-add-close-cards'
+    ];
+
+    const ACCESS_TO_INVISIBLE = [
+        'title' => 'Доступ к неведимке',
+        'slug' => 'access-to-invisible'
+    ],
+        ACCESS_TO_SHOW_INVISIBLE = [
+        'title' => 'Доступ к просмотру пользователей с неведимкой',
+        'slug' => 'access-to-show-invisible'
     ];
 
     const
@@ -192,6 +197,7 @@ interface OptionsPermissions
         self::ACCESS_TO_INSERT_INVOICE,
 
         self::ACCESS_TO_INVISIBLE,
+        self::ACCESS_TO_SHOW_INVISIBLE,
 
         self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
         self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,

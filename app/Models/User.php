@@ -133,6 +133,9 @@ class User extends Authenticatable
 
     public function scopeWithPermissionInvisible($query)
     {
+        if ($this->hasPermissionTo(Permission::ACCESS_TO_SHOW_INVISIBLE['slug']))
+            return $query;
+
         $queryInvisible = clone $query;
         $queryInvisible->whereHas('role', function ( $query) {
             $query->whereHas('permissions', function ($query) {

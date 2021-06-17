@@ -12,6 +12,7 @@ interface OptionsRole
             Permission::OWNER,
 
             Permission::ACCESS_TO_INVISIBLE,
+            Permission::ACCESS_TO_SHOW_INVISIBLE,
 
             Permission::ADMIN_ROLE_SET,
             Permission::MANAGER_ROLE_SET,
@@ -58,6 +59,7 @@ interface OptionsRole
             Permission::ACCESS_TO_MANAGER,
 
             Permission::ACCESS_TO_INVISIBLE,
+            Permission::ACCESS_TO_SHOW_INVISIBLE,
 
             Permission::ACCESS_TO_ADD_CARDS,
 //            Permission::ACCESS_TO_CREATE_CARDS,
