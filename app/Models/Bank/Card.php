@@ -490,7 +490,7 @@ class Card extends Model
         $bank_ids = BankToken::whereIn('url', $bank_list)->select('id')->get()->pluck('id');
         $cards = self::where('state', self::PENDING)
             ->whereHas('invoice', function (Builder $query) use ($bank_ids) {
-                $query->where('bank_token_id', $bank_ids);
+                $query->whereIn('bank_token_id', $bank_ids);
             });
         $cards->closed();
     }
