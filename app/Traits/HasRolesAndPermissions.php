@@ -18,9 +18,9 @@ trait HasRolesAndPermissions
         return $this->hasOne(Role::class, 'id', 'role_id');
     }
 
-    public function permissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function permissions()
     {
-        return $this->role()->first()->permissions();
+        return $this->role()->first() ? $this->role()->first()->permissions() : null;
     }
 
     /** В функцию мы передаем массив $roles и проверяем в цикле, содержат ли роли текущего пользователя заданную роль.
@@ -42,9 +42,9 @@ trait HasRolesAndPermissions
     public function hasPermission(string $permission): bool
     {
         $result = $permission ?
-            (bool) $this->permissions()->where('slug', Str::slug($permission))->count() :
+            $this->permissions()->where('slug', Str::slug($permission))->exists() :
             true;
-        return $result;
+        return (bool) $result;
     }
 
     /** Метод проверяет, содержат ли права пользователя заданное право
