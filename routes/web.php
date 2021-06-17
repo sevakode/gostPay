@@ -34,7 +34,7 @@ Route::post('/send-notification', [NotificationController::class, 'sendMessageNo
     ->middleware('isAjax');
 
 // Auth routes
-Route::prefix('auth')->group(base_path('routes/auth'));
+Route::prefix('auth')->group(base_path('routes/auth.php'));
 
 // Web routes
 Route::middleware('auth')->group(function () {
