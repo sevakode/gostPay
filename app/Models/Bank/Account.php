@@ -26,7 +26,7 @@ class Account extends Model
     const AVAIL = 'avail';
     const CURRENT = 'current';
 
-    protected $fillable = ['account_id', 'avail', 'current'];
+    protected $fillable = ['account_id', 'avail', 'current', 'bank_token_id'];
 
     protected $table = 'bank_account';
 
@@ -80,7 +80,7 @@ class Account extends Model
     public function getBankAttribute()
     {
         if($this->bank()->exists()) {
-            $bank = $this->bank()->first();
+            $bank = $this->bank()->select('url')->first();
             $bankAr = collect(config('bank_list.info'))->where('url', $bank->url)->first();
         }
         else {

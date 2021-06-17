@@ -1,12 +1,19 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountBankController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CardController;
+use App\Http\Controllers\ChartsController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\DatatablesController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\QuickPanelController;
 use App\Http\Controllers\TochkaBankController;
 use App\Interfaces\OptionsPermissions;
 use App\Providers\RouteServiceProvider;
@@ -25,11 +32,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/send-notification', [NotificationController::class, 'sendMessageNotification'])->middleware('isAjax');
 
-Route::get('/login', [\App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login/sign-in', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('sign_in')->middleware('isAjax');
-Route::get('/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login/sign-in', [LoginController::class, 'login'])->name('sign_in')->middleware('isAjax');
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::post('/login/sign-up', [\App\Http\Controllers\Auth\RegisterController::class, 'register'])->name('sign_up')->middleware('isAjax');;
+Route::post('/login/sign-up', [RegisterController::class, 'register'])->name('sign_up')->middleware('isAjax');;
 
 
 // Demo routes
@@ -38,35 +45,35 @@ Route::middleware('auth')->group(function () {
     Route::prefix('datatables')
         ->group(function () {
 
-            Route::post('company-cards', [\App\Http\Controllers\DatatablesController::class, 'companyCards'])
+            Route::post('company-cards', [DatatablesController::class, 'companyCards'])
                 ->name('datatables.company-cards');
 
-            Route::post('invoice-cards', [\App\Http\Controllers\DatatablesController::class, 'invoiceCards'])
+            Route::post('invoice-cards', [DatatablesController::class, 'invoiceCards'])
                 ->name('datatables.invoice-cards');
 
-            Route::post('company-projects', [\App\Http\Controllers\DatatablesController::class, 'companyProjects'])
+            Route::post('company-projects', [DatatablesController::class, 'companyProjects'])
                 ->name('datatables.company-projects');
 
-            Route::post('company-project-cards', [\App\Http\Controllers\DatatablesController::class, 'companyProjectCards'])
+            Route::post('company-project-cards', [DatatablesController::class, 'companyProjectCards'])
                 ->name('datatables.project-cards');
 
-            Route::post('payment-chart', [\App\Http\Controllers\DatatablesController::class, 'paymentChart'])
+            Route::post('payment-chart', [DatatablesController::class, 'paymentChart'])
                 ->name('datatables.payment-chart');
 
-            Route::post('user-cards', [\App\Http\Controllers\DatatablesController::class, 'userCards'])
+            Route::post('user-cards', [DatatablesController::class, 'userCards'])
                 ->name('datatables.user-cards');
 
-            Route::post('select-add-cards', [\App\Http\Controllers\DatatablesController::class, 'selectAddCard'])
+            Route::post('select-add-cards', [DatatablesController::class, 'selectAddCard'])
                 ->name('datatables.select-add-cards');
         });
     Route::prefix('charts')
         ->group(function () {
-            Route::post('areas', [\App\Http\Controllers\ChartsController::class, 'area'])
+            Route::post('areas', [ChartsController::class, 'area'])
                 ->name('charts.areas');
         });
     Route::prefix('quick-panel')
         ->group(function () {
-            Route::post('all-payment-list', [\App\Http\Controllers\QuickPanelController::class, 'userCards']);
+            Route::post('all-payment-list', [QuickPanelController::class, 'userCards']);
         });
 
     Route::get('/', [PagesController::class, 'index'])->name('home');
@@ -236,32 +243,38 @@ Route::middleware('auth')->group(function () {
         ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug'])
         ->group(function () {
 
-            Route::get('card/{id}', [\App\Http\Controllers\CardController::class, 'card'])->name('card')
+            Route::get('card/{id}', [CardController::class, 'show'])->name('card')
                 ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
             Route::prefix('/cards')->group(function () {
-                Route::get('/', [\App\Http\Controllers\CardController::class, 'show'])->name('cards');
+                Route::get('/', [CardController::class, 'list'])->name('cards');
 
-                Route::get('/create', [\App\Http\Controllers\CardController::class, 'create'])
+                Route::get('/create', [CardController::class, 'create'])
                     ->middleware('auth.demo')
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug'])
                     ->name('cards.create');
 
-                Route::post('/create/pdf', [\App\Http\Controllers\CardController::class, 'sendPDF'])
+                Route::post('/create/pdf', [CardController::class, 'sendPDF'])
                     ->name('cards.create.pdf')
                     ->middleware('auth.demo')
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
-                Route::post('/create/xlsx', [\App\Http\Controllers\CardController::class, 'sendXLSX'])
+                Route::post('/create/xlsx', [CardController::class, 'sendXLSX'])
                     ->name('cards.create.xlsx')
                     ->middleware('auth.demo')
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
-                Route::post('/create', [\App\Http\Controllers\CardController::class, 'sendCard'])
+                Route::post('/create', [CardController::class, 'sendCard'])
                     ->name('cards.create')
                     ->middleware('auth.demo')
                     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
-                Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
+                Route::post('/limit', [CardController::class, 'setLimit'])
+                    ->name('cards.limit.update')
+                    ->middleware('isAjax')
+                    ->middleware('auth.demo')
+                    ->middleware('auth.permission:'.OptionsPermissions::ADMIN_ROLE_SET['slug']);
+
+                Route::post('/download', [CardController::class, 'download'])
                     ->name('cards.download.txt')
                     ->middleware('auth.demo')
 //                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
@@ -270,26 +283,26 @@ Route::middleware('auth')->group(function () {
         });
 
     Route::prefix(RouteServiceProvider::PROJECTS)->group(function () {
-        Route::get('/', [\App\Http\Controllers\ProjectController::class, 'list'])->name('projects')
+        Route::get('/', [ProjectController::class, 'list'])->name('projects')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_PROJECTS_COMPANY['slug']);
 
-        Route::get('create', [\App\Http\Controllers\ProjectController::class, 'create'])
+        Route::get('create', [ProjectController::class, 'create'])
             ->name('projects.create')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']);
-        Route::post('creating', [\App\Http\Controllers\ProjectController::class, 'creating'])
+        Route::post('creating', [ProjectController::class, 'creating'])
             ->name('projects.creating')
             ->middleware('auth.demo')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']);
 
-        Route::get('{slug}/edit', [\App\Http\Controllers\ProjectController::class, 'update'])
+        Route::get('{slug}/edit', [ProjectController::class, 'update'])
             ->name('projects.edit')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['slug']);
-        Route::post('{slug}/updating', [\App\Http\Controllers\ProjectController::class, 'updating'])
+        Route::post('{slug}/updating', [ProjectController::class, 'updating'])
             ->name('projects.updating')
             ->middleware('auth.demo')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_UPDATE_PROJECTS_COMPANY['slug']);
 
-        Route::get('{slug}/show', [\App\Http\Controllers\ProjectController::class, 'show'])
+        Route::get('{slug}/show', [ProjectController::class, 'show'])
             ->name('projects.show')
             ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_PROJECTS_COMPANY['slug']);
     });

@@ -264,6 +264,7 @@
                     },
                 ],
             });
+
             $('#check_all').on('click', function () {
                 $(".check_cards").prop('checked', this.checked);
             });

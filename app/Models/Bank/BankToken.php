@@ -118,8 +118,8 @@ class BankToken extends Model
         return $this->url . $method;
     }
 
-    public function isBank($name) {
-        $url = collect(config('bank_list.info'))->where('title', $name)->first()['url'];
+    public function isBank($bin) {
+        $url = collect(config('bank_list.info'))->where('bin', $bin)->first()['url'];
 
         return $this->url == $url;
     }

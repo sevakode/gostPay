@@ -1,11 +1,13 @@
 <?php
 
+use App\Classes\BankMain;
+
 return [
     'info' => [
         [
             'title' => 'Tochkabank',
             'icon' => 'media/gp/bank/tochkabank.svg',
-            'bin' => '514017',
+            'bin' => BankMain::TOCHKABANK_BIN,
             'url' => 'https://enter.tochka.com',
             'rsUrl' => 'https://enter.tochka.com/uapi',
             'apiVersion' => 'v1.0',
@@ -13,7 +15,7 @@ return [
         [
             'title' => 'Tinkoff',
             'icon' => 'media/gp/bank/tinkoff.svg',
-            'bin' => '553420',
+            'bin' => BankMain::TINKOFF_BIN,
             'url' => 'https://business.tinkoff.ru',
             'rsUrl' => 'https://business.tinkoff.ru/openapi',
             'apiVersion' => 'v3',

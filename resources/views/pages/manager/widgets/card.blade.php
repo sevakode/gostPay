@@ -56,9 +56,13 @@
                     <div class="d-flex flex-column flex-root">
                         <span class="font-weight-bolder mb-2">Счет</span>
                         @if($card->invoice)
-                            <a href="{{ route('invoice.show', $card->invoice->account_id) }}" class="">
+                            <a href="{{ route('invoice.show', $card->invoice->account_id) }}">
                                 <span class="opacity-70 text-dark">
-                                    {{ $card->invoice->currencySign }}{{ $card->invoice->avail }}
+                                    {{
+                                        $card->invoice->avail ?
+                                        $card->invoice->currencySign . $card->invoice->avail :
+                                        $card->invoice->account_id
+                                    }}
                                 </span>
                             </a>
                         @else
@@ -66,8 +70,8 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column flex-root">
-                        <span class="font-weight-bolder mb-2">Геолокация</span>
-                        <span class="opacity-70">{{ $card->geo ?? 'Россия' }}</span>
+                        <span class="font-weight-bolder mb-2">Лимит</span>
+                        <span class="opacity-70" id="limit">{{ $card->limit ?? 'Безлимит' }}</span>
                     </div>
                 </div>
             </div>
@@ -132,18 +136,89 @@
                 </div>
             </div>
         </div>
-        <!-- end: Invoice footer-->
-        <!-- begin: Invoice action-->
-{{--        <div class="row justify-content-center py-8 px-8 py-md-10 px-md-0">--}}
-{{--            <div class="col-md-10">--}}
-{{--                <div class="d-flex justify-content-between">--}}
-{{--                    <button type="button" class="btn btn-light-primary font-weight-bold" onclick="window.print();">Download Order Details</button>--}}
-{{--                    <button type="button" class="btn btn-primary font-weight-bold" onclick="window.print();">Print Order Details</button>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--        </div>--}}
-        <!-- end: Invoice action-->
-        <!-- end: Invoice-->
     </div>
 </div>
+
+
+@if($card->isBank(\App\Classes\BankMain::TINKOFF_BIN) and \Illuminate\Support\Facades\Auth::user()
+        ->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+
+    <div class="card card-custom gutter-b">
+        <div class="card-body">
+            <div class="form-group row mb-6">
+                <label class="col-form-label text-right col-lg-3 col-sm-12">Установить лимит</label>
+                <div class="col-lg-6 col-md-12 col-sm-12">
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <input type="text" class="form-control" id="kt_nouislider_1_input"  placeholder="Quantity"/>
+                        </div>
+                        <div class="col-8">
+                            <div id="kt_nouislider_1" class="nouislider-drag-danger"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-9 ml-lg-auto">
+                        <button type="button" class="btn btn-primary" id="edit_spend_limit">
+                            Добавить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+    @section('scripts_next')
+        @if($card->isBank(\App\Classes\BankMain::TINKOFF_BIN) and \Illuminate\Support\Facades\Auth::user()
+                ->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+            <script>
+                var slider = document.getElementById('kt_nouislider_1');
+
+                noUiSlider.create(slider, {
+                    start: [ {{ $card->limit ?? 0 }} ],
+                    step: 1,
+                    range: {
+                        'min': [ 0 ],
+                        'max': [ {{ env('CARD_LIMIT', 100000) }} ]
+                    },
+                    format: wNumb({
+                        decimals: 0
+                    })
+                });
+
+                // init slider input
+                var sliderInput = document.getElementById('kt_nouislider_1_input');
+
+                slider.noUiSlider.on('update', function( values, handle ) {
+                    sliderInput.value = values[handle];
+                });
+
+                sliderInput.addEventListener('change', function(){
+                    slider.noUiSlider.set(this.value);
+                });
+
+                {{--&& sliderInput.value !== {{ $card->limit }}--}}
+                $('#edit_spend_limit').on('click', function () {
+                    if (sliderInput.value > 0) {
+                        $.ajax({
+                            type:'post',
+                            url:'{{ route('cards.limit.update') }}',
+                            data:{
+                                '_token':$('meta[name="csrf-token"]').attr('content'),
+                                'id': {{ $card->id }},
+                                'limit': sliderInput.value,
+                            },
+                            success: function(data) {
+                                $('#limit').html(data['limit']);
+
+                                return true;
+                            },
+                        });
+                    }
+                });
+            </script>
+        @endif
+    @endsection
 @endsection
+

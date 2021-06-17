@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Http;
  */
 trait OpenBanking
 {
+    public static string $LIMIT_TYPE_DAY = 'DAY';
+    public static string $LIMIT_TYPE_MONTH = 'MONTH';
+    public static string $LIMIT_TYPE_IRREGULAR = 'IRREGULAR';
+
     /**
      * ----------------------------------------------------------------------------------------------------------------
      * Работа со счетами
@@ -277,16 +281,19 @@ trait OpenBanking
      * @return object
      * @var string $cardCode
      */
-    public function editCardLimits(string $cardCode, $limitType = 'MaxAtmOperationSumPerDay', $newValue = '1666'): object
+    public function editCardLimits(string $ucid, $limitType = null, $limitPeriod = '1666'): object
     {
-        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue';
+        $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
+
+        $url = "https://secured-openapi.business.tinkoff.ru/api/v1/card/$ucid/spend-limit";
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
+            'scope' => 'opensme/inn/246525853385/kpp/0//card/limit/set'
         ];
 
         $parameters = [
-            'ucid' => $cardCode,
+            'limitValue' => $limitType,
+            'limitPeriod' => $limitPeriod
         ];
 
         $response = Http::withHeaders($headers)->post($url, $parameters);
@@ -358,20 +365,19 @@ trait OpenBanking
      */
     public function deleteCard(string $cardCode, string $message = ''): object
     {
-        $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/card/' . $cardCode;
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue';
         $headers = [
-            'Authorization' => 'Bearer ' . $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
         ];
 
-        $data = '{
-            "Data": {
-                "message": "'.$message.'"
-            }
-        }';
+        $parameters = [
+            'ucid' => $cardCode,
+        ];
 
-        $response = Http::withHeaders($headers)->delete($url);
+        $response = Http::withHeaders($headers)->post($url, $parameters);
 
-        return $response->object();
+        return (object) $response->json();
     }
 
 

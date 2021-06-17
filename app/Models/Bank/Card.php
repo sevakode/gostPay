@@ -2,6 +2,7 @@
 
 namespace App\Models\Bank;
 
+use App\Classes\BankMain;
 use App\Classes\TochkaBank\BankAPI;
 use App\Http\Controllers\CompanyController;
 use App\Models\Company;
@@ -77,13 +78,18 @@ class Card extends Model
         return $this->belongsTo(Account::class, 'account_code', 'account_id');
     }
 
+    public function bank()
+    {
+        return $this->invoice()->select('bank_token_id')->first()->bank();
+    }
+
     public function close() {
         if (is_null($this->ucid)) return false;
 
         $bank = $this->invoice->bank()->first();
-        if (!$bank->isBank('Tinkoff')) return false;
+        if (!$bank->isBank(BankMain::TINKOFF_BIN)) return false;
 
-        $correlationId = $bank->api()->editCardLimits($this->ucid)->correlationId;
+        $correlationId = $bank->api()->deleteCard($this->ucid)->correlationId;
         $cardState = $bank->api()->getCardState($correlationId);
 
         $this->correlation_id = $correlationId;
@@ -598,5 +604,12 @@ class Card extends Model
     public function amountRevenue(): int
     {
         return (integer) $this->payments()->revenue()->sum('amount');
+    }
+
+    public function isBank($bin)
+    {
+        $bank = $this->invoice()->select('bank_token_id')->first()->bank;
+
+        return $bin == $bank->bin;
     }
 }
