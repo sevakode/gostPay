@@ -89,7 +89,7 @@
                                             <option @if(!$invoice->cards()->free()->exists()) disabled @endif
                                                     value="{{$invoice->account_id}}"
                                                     data-subtext="{{ $invoice->bank->title }}">
-                                                {{ $invoice->account_id }}
+                                                {{ $invoice->account_id }}({{ $invoice->currency }})
                                             </option>
                                         @endforeach
                                     </select>
