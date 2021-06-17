@@ -13,7 +13,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
 use Illuminate\Support\Str;
@@ -62,7 +61,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $card->currencySign,
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
@@ -108,7 +107,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->invoice ?  $card->amount() . $card->invoice->currencySign : $card->amount() . '₽',
+                'amount' => $card->amount() . $card->currencySign,
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
@@ -281,7 +280,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $card->currencySign,
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
@@ -289,7 +288,7 @@ class DatatablesController extends Controller
         if (isset($data['data']))
             $data['data'] = $this->getSort(collect($data['data']), $filter);
 
-        $data['amountAll'] .= '₽';
+        $data['amountAll'] .= $cards->first()->invoice()->select('currency')->first()->currencySign;;
 
         return new JsonResponse($data);
     }
@@ -389,14 +388,14 @@ class DatatablesController extends Controller
                 'state' => $card->state,
                 'project' => $card->project->name ?? 'none',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . '₽',
+                'amount' => $card->amount() . $card->currencySign,
                 'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
             ];
         }
 
         $data['data'] = $this->getSort(collect($data['data']), $filter);
 
-        $data['amountAll'] .= '₽';
+        $data['amountAll'] .= $cards->first()->invoices()->select('currency')->first()->currencySign;
 
         return new JsonResponse($data);
     }

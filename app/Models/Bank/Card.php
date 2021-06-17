@@ -47,6 +47,11 @@ class Card extends Model
 
     protected $dates = ['expiredAt', 'updated_at', 'issue_at'];
 
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
+    }
+
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -176,13 +181,6 @@ class Card extends Model
 
         $this->user_id = null;
         $this->save();
-    }
-
-    public function getProjectAttribute()
-    {
-        return $this->project() ?
-                $this->project()->first() :
-                null;
     }
 
     public function updateNumberAttribute(string $value = null): void
@@ -502,9 +500,23 @@ class Card extends Model
         return $this->account_code .'/'. $this->bank_code;
     }
 
+    public function getCurrencySignAttribute()
+    {
+        $invoice = $this->invoice()->select('currency')->first();
+
+        return $invoice ? $invoice->currencySign : '₽';
+    }
+
     public function getUserAttribute()
     {
         return $this->user()->first();
+    }
+
+    public function getProjectAttribute()
+    {
+        return $this->project() ?
+            $this->project()->first() :
+            null;
     }
 
     public function getStateRuAttribute(): string
@@ -513,11 +525,6 @@ class Card extends Model
         elseif ($this->attributes['state'] == self::CLOSE) $state = 'Закрытая';
         else $state = 'В процессе закрытия';
         return $state;
-    }
-
-    public function company()
-    {
-        return $this->hasOne(Company::class, 'id', 'company_id');
     }
 
     public function getCompanyAttribute()
