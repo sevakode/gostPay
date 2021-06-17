@@ -263,9 +263,9 @@ Route::middleware('auth')->group(function () {
 
                 Route::post('/download', [\App\Http\Controllers\CardController::class, 'download'])
                     ->name('cards.download.txt')
-                    ->middleware('auth.demo');
+                    ->middleware('auth.demo')
 //                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_MANAGER['slug'])
-//                    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
+                    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
             });
         });
 

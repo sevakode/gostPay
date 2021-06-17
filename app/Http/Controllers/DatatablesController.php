@@ -221,11 +221,13 @@ class DatatablesController extends Controller
                 $cardsChecked = $request->user()->company->cards()
                     ->where('user_id', $userId)
                     ->whereIn('id', $downloadCardsTxt);
+
                 $txt = '';
                 foreach ($cardsChecked->get() as $card) {
                     $txt .= $card->number;
                     $txt .= "\n";
                 }
+
                 $dirPath = public_path('download/');
                 $fileName = Str::random(10) . '.txt';
                 $fullPath = $dirPath . $fileName;
@@ -262,7 +264,6 @@ class DatatablesController extends Controller
 
         $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->free()->count();
         $data['amountAll'] = 0;
-
 
         $cards = $cards->get()
             ->where('company_id', $request->user()->company()->select('id')->first()->id)
