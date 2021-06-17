@@ -141,34 +141,34 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-form-label text-right col-lg-3 col-sm-12">Счет</label>
-                                <div class="col-lg-8 col-md-8 col-sm-12">
-                                    <div class="dropdown bootstrap-select form-control dropup">
-                                        <select class="form-control selectpicker"
-                                                id="selectpicker_random_invoice"
-                                                data-size="12"
-                                                data-live-search="true"
-                                                tabindex="null">
-                                            <option value="">Select</option>
-                                            @foreach(request()->user()->company->invoices()->get() as $invoice)
-                                                <option @if(!$invoice->cards()->free()->exists()) disabled @endif
-                                                value="{{$invoice->account_id}}"
-                                                        data-subtext="{{ $invoice->bank->title }}">
-                                                    {{ $invoice->account_id }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <div class="dropdown-menu" style="max-height: 343px; overflow: hidden;">
-                                            <div class="bs-searchbox">
-                                                <input type="search" class="form-control"
-                                                       autocomplete="off"
-                                                       role="combobox"
-                                                       aria-label="Search"
-                                                       aria-controls="bs-select-6"
-                                                       aria-autocomplete="list"
-                                                       aria-activedescendant="bs-select-6-236">
-                                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3 col-sm-12">Счет</label>
+                            <div class="col-lg-8 col-md-8 col-sm-12">
+                                <div class="dropdown bootstrap-select form-control dropup">
+                                    <select class="form-control selectpicker"
+                                            id="selectpicker_random_invoice"
+                                            data-size="12"
+                                            data-live-search="true"
+                                            tabindex="null">
+                                        <option value="">Select</option>
+                                        @foreach(request()->user()->company->invoices()->get() as $invoice)
+                                            <option @if(!$invoice->cards()->free()->exists()) disabled @endif
+                                            value="{{$invoice->account_id}}"
+                                                    data-subtext="{{ $invoice->bank->title }}">
+                                                {{ $invoice->account_id }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="dropdown-menu" style="max-height: 343px; overflow: hidden;">
+                                        <div class="bs-searchbox">
+                                            <input type="search" class="form-control"
+                                                   autocomplete="off"
+                                                   role="combobox"
+                                                   aria-label="Search"
+                                                   aria-controls="bs-select-6"
+                                                   aria-autocomplete="list"
+                                                   aria-activedescendant="bs-select-6-236">
                                         </div>
                                     </div>
                                 </div>
