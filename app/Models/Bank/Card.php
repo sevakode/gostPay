@@ -435,18 +435,12 @@ class Card extends Model
         {
             $collect = self::getCollectUcidApi($bank);
             self::upsert(
+
                 $collect,
                 [
-                    'number',
-                    'head',
-                    'tail',
+                    'id'
                 ],
                 [
-                    'card_description',
-                    'card_type',
-                    'expiredAt',
-                    'state',
-                    'card_type',
                     'ucid'
                 ]
             );
@@ -484,6 +478,7 @@ class Card extends Model
             if($cardModel->exists()) {
                 $cardModel = $cardModel->first();
                 $cards[] = collect([
+                    'id' => $cardModel->id,
                     'account_code' => $cardModel->account_code,
                     'bank_code' => $cardModel->bank_code,
                     'number' => $cardModel->numberFull,
