@@ -453,8 +453,9 @@ class Card extends Model
     public static function getCollectUcidApi($api)
     {
         $cards = array();
-        foreach ($api->invoices()->get() as $accountId) {
-            $cardsApi = $api->api()->getCards($accountId);
+        foreach ($api->invoices()->get() as $account) {
+            $cardsApi = $api->api()->getCards($account->account_id);
+
             if(!isset($cardsApi->totalNumber) and !isset($cardsApi->Data)) {
                 continue;
             }

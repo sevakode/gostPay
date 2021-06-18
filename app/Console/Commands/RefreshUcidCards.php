@@ -2,25 +2,24 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Bank\Account;
 use App\Models\Bank\Card;
 use Illuminate\Console\Command;
 
-class AccountsRefresh extends Command
+class RefreshUcidCards extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'accounts:refresh';
+    protected $signature = 'cards:ucidRefresh';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Обновление счетов';
+    protected $description = 'Обновление статуса карт';
 
     /**
      * Create a new command instance.
@@ -39,8 +38,6 @@ class AccountsRefresh extends Command
      */
     public function handle()
     {
-        Account::refreshApi();
-
-        return true;
+        return Card::refreshUcidApi();
     }
 }
