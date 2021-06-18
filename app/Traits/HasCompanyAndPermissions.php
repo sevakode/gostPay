@@ -31,11 +31,30 @@ trait HasCompanyAndPermissions
 
     /** Для проверки прав доступа текущего компании
      * @param string $permission
+     * @param string|null $role
      * @return bool
      */
     public function hasCompanyPermission(string $permission): bool
     {
-        return (bool) $this->companyPermissions()->where('slug', $permission)->count();
+        return $this->companyPermissions()
+            ->where('slug', $permission)
+            ->whereNull('role_id')
+            ->exists();
+    }
+
+    /** Для проверки прав доступа роли текущей компании
+     * @param string $permission
+     * @param string|null $role
+     * @return bool
+     */
+    public function hasCompanyPermissionWithRole(string $permission): bool
+    {
+        $role = request()->user()->role()->select('id')->first()->id;
+
+        return $this->companyPermissions()
+            ->where('slug', $permission)
+            ->where('role_id', $role)
+            ->exists();
     }
 
     /** Метод проверяет, содержат ли права компании заданное право

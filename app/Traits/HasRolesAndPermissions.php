@@ -30,7 +30,7 @@ trait HasRolesAndPermissions
     public function hasRole(string ... $roles): bool
     {
         foreach ($roles as $role)
-            if($this->role()->first()->slug === Str::slug($role)) return true;
+            if($this->role()->where('slug', Str::slug($role))->exists()) return true;
 
         return false;
     }
@@ -39,21 +39,12 @@ trait HasRolesAndPermissions
      * @param string $permission
      * @return bool
      */
-    public function hasPermission(string $permission): bool
+    public function hasRolePermission(string $permission): bool
     {
         $result = ($permission and $this->permissions()) ?
             $this->permissions()->where('slug', Str::slug($permission))->exists() :
             true;
         return $result;
-    }
-
-    /** Метод проверяет, содержат ли права пользователя заданное право
-     * @param string $permission
-     * @return bool
-     */
-    public function hasPermissionTo(string $permission): bool
-    {
-        return $this->hasPermission($permission);
     }
 
     /** Первый метод получает все Права на основе переданного массива.

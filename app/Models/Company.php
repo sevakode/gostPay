@@ -43,7 +43,8 @@ class Company extends Model
 
     public function permissions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'companies_permissions');
+        return $this->belongsToMany(Permission::class, 'companies_permissions')
+            ->withPivot('role_id as role_id');
     }
 
     public function invoices(): \Illuminate\Database\Eloquent\Relations\HasMany

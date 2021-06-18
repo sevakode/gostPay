@@ -74,6 +74,20 @@ class User extends Authenticatable
         return $this->company->projects()->first()->users()->get();
     }
 
+    public function hasPermission(string $permission): bool
+    {
+        return ($this->hasRolePermission($permission) or $this->hasCompanyPermissionWithRole($permission));
+    }
+
+    /** Метод проверяет, содержат ли права пользователя заданное право
+     * @param string $permission
+     * @return bool
+     */
+    public function hasPermissionTo(string $permission): bool
+    {
+        return $this->hasPermission($permission);
+    }
+
     /**
      * @param $value
      * @return string

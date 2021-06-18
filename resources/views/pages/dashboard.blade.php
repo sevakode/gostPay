@@ -4,7 +4,7 @@
 {{-- Content --}}
 @section('content')
     {{-- Dashboard 1 --}}
-    <div class="row" >
+    <div class="row">
         @if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
             <div class="col-lg-6 col-xxl-6">
                 @include('pages.widgets._widget-3', ['class' => 'card-stretch gutter-b'])

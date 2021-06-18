@@ -125,10 +125,11 @@ return [
                         'title' => 'Добавить проект',
                         'page' => 'projects/create',
                         'icon' => 'media/svg/icons/Navigation/Plus.svg',
+                        'permission' => OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY['slug']
                     ],
                 ]
             ],
-            'permission' => OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY['slug']
+            'permission' => OptionsPermissions::ACCESS_TO_SHOW_PROJECTS_COMPANY['slug']
         ],
         [
             'title' => 'Admin',
