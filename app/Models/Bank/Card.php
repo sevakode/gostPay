@@ -181,7 +181,6 @@ class Card extends Model
         return $query;
     }
 
-
     public function scopePayments($query)
     {
         $cardIds = $query->select('id')->get()->pluck('id');
@@ -376,9 +375,11 @@ class Card extends Model
             $cards->toArray(),
             [
                 'number',
-                'card_description',
                 'head',
                 'tail',
+            ],
+            [
+                'card_description',
                 'card_type',
                 'expiredAt',
                 'state',
@@ -437,9 +438,11 @@ class Card extends Model
                 $collect,
                 [
                     'number',
-                    'card_description',
                     'head',
                     'tail',
+                ],
+                [
+                    'card_description',
                     'card_type',
                     'expiredAt',
                     'state',

@@ -55,13 +55,15 @@ class Payment extends Model
                 $payments->toArray(),
                 [
                     'transaction_id',
+                ],
+                [
                     'description',
                     'account_id',
                     'card_id',
                     'status',
                     'amount',
                     'currency',
-                    'operationAt',
+                    'operationAt'
                 ]
             );
         }
