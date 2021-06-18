@@ -181,6 +181,9 @@ class CardController extends Controller
             return DataNotification::sendErrors(["Для данного банка нельзя изменить лимит!"], $request->user());
 
         $bank = $card->bank()->first();
+
+        if(is_null($card->ucid)) Card::refreshUcidApi();
+
         $response = $bank->api()->editCardLimits($card->ucid, TinkoffAPI::$LIMIT_TYPE_DAY, $card->limit);
 
         if(isset($response->errorMessage) or isset($response['errorMessage']))

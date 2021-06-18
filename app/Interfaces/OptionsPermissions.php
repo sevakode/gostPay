@@ -28,7 +28,7 @@ interface OptionsPermissions
         'slug' => 'access-to-manager'
     ],
         ACCESS_TO_ADD_CARDS = [
-        'title' => 'Доступ к добавлению карт',
+        'title' => 'Доступ к привязке карт',
         'slug' => 'access-to-add-credit-cards'
     ],
         ACCESS_TO_CREATE_CARDS = [
