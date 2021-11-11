@@ -21,7 +21,7 @@ class CreateImagesTable extends Migration
             $table->string('large')->nullable();
             $table->string('original')->nullable();
             $table->string('imageable_type')->nullable();
-            $table->string('imageable_id')->unique()->nullable();
+            $table->string('imageable_id')->nullable();
             $table->timestamps();
         });
     }

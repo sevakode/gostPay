@@ -33,7 +33,9 @@
                     <div class="d-flex justify-content-between pt-6">
                         <div class="d-flex flex-column flex-root">
                             <span class="font-weight-bolder mb-2">Дата создания</span>
-                            <span class="opacity-70">{{ $invoice->created_at->format('M d, Y') }}</span>
+                            <span class="opacity-70">
+        {{ $invoice->updated_at ? $invoice->updated_at->format('M d, Y') : $invoice->created_at->format('M d, Y') }}
+                            </span>
                         </div>
                         <div class="d-flex flex-column flex-root">
                             <span class="font-weight-bolder mb-2">Компания</span>

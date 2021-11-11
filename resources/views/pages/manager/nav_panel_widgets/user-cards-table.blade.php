@@ -65,7 +65,7 @@
             </div>
             <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
                 <div id="checkbox-parameter" class="dropdown dropdown-inline d-none">
-                <a href="javascript:;" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2" data-toggle="dropdown">
+                    <a href="javascript:;" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2" data-toggle="dropdown">
                     <span class="svg-icon svg-icon-md">
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="svg-icon">
                             <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -75,44 +75,44 @@
                             </g>
                         </svg>
                     </span>
-                </a>
-                <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
-                    <ul class="navi flex-column navi-hover py-2">
-                        <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">
-                            Выберите действие:
-                        </li>
-                        @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']))
-                            <li class="navi-item">
-                                <a href="#" id="remove-cards" class="navi-link disabled">
-                                    <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
-                                    <span class="navi-text">Отвязать</span>
-                                </a>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-right">
+                        <ul class="navi flex-column navi-hover py-2">
+                            <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">
+                                Выберите действие:
                             </li>
-                            <li class="navi-item">
-                                <a href="#" id="close-cards" class="navi-link disabled">
-                                    <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
-                                    <span class="navi-text">Подать заявку на закрытие</span>
-                                </a>
-                            </li>
-                        @endif
-                        @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
-\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
-                            <li class="navi-item">
-                                <a href="#" id="close-cards-remove" class="navi-link disabled">
-                                    <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
-                                    <span class="navi-text">Закрыть</span>
-                                </a>
-                            </li>
-                            <li class="navi-item">
-                                <a href="#" id="download-cards-txt" class="navi-link disabled">
-                                    <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>
-                                    <span class="navi-text">Скачать</span>
-                                </a>
-                            </li>
-                        @endif
-                    </ul>
+                            @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']))
+                                <li class="navi-item">
+                                    <a href="#" id="remove-cards" class="navi-link disabled">
+                                        <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
+                                        <span class="navi-text">Отвязать</span>
+                                    </a>
+                                </li>
+                                <li class="navi-item">
+                                    <a href="#" id="close-cards-remove" class="navi-link disabled">
+                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
+                                        <span class="navi-text">Закрыть</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
+                                <li class="navi-item">
+                                    <a href="#" id="close-cards" class="navi-link disabled">
+                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
+                                        <span class="navi-text">Подать заявку на закрытие</span>
+                                    </a>
+                                </li>
+                                <li class="navi-item">
+                                    <a href="#" id="download-cards-txt" class="navi-link disabled">
+                                        <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>
+                                        <span class="navi-text">Скачать</span>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
@@ -395,28 +395,28 @@
             rightArrow: '<i class="la la-angle-right"></i>'
         }
         var demos = function () {
-                $('#kt_datepicker_5').datepicker({
-                    rtl: KTUtil.isRTL(),
-                    todayHighlight: true,
-                    templates: arrows
-                });
-            };
+            $('#kt_datepicker_5').datepicker({
+                rtl: KTUtil.isRTL(),
+                todayHighlight: true,
+                templates: arrows
+            });
+        };
     </script>
     <script>
-            $('.event_click_checkbox').on('click', function () {
-                var status_check = 0;
-                $('input[name="checkboxes"]').each(function () {
-                    //if($(this).is(":checked")) {
-                    if (this.checked) {
-                        status_check = 1;
-                    }
-                });
-                if (status_check) {
-                    $('#checkbox-parameter').removeClass('d-none');
-                } else {
-                    $('#checkbox-parameter').addClass('d-none');
+        $('.event_click_checkbox').on('click', function () {
+            var status_check = 0;
+            $('input[name="checkboxes"]').each(function () {
+                //if($(this).is(":checked")) {
+                if (this.checked) {
+                    status_check = 1;
                 }
             });
+            if (status_check) {
+                $('#checkbox-parameter').removeClass('d-none');
+            } else {
+                $('#checkbox-parameter').addClass('d-none');
+            }
+        });
     </script>
 @endsection
 

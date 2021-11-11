@@ -66,7 +66,10 @@ class User extends Authenticatable
 
     public function cards()
     {
-        return $this->company->cards()->where('user_id', $this->id);
+        if ($this->company) {
+            return $this->company->cards()->where('user_id', $this->id);
+        }
+        return collect();
     }
 
     public function projects()
