@@ -4,228 +4,197 @@
 {{-- Content --}}
 @section('content')
     {{-- Dashboard 1 --}}
-{{--    <div class="row">--}}
-{{--        @if(request()->user()->company and request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))--}}
-{{--            <div class="col-lg-6 col-xxl-6">--}}
-{{--                @include('pages.widgets._widget-3', ['class' => 'card-stretch gutter-b'])--}}
-{{--            </div>--}}
-{{--            <div class="col-lg-6 col-xxl-6">--}}
-{{--                @include('pages.widgets._widget-2', ['class' => 'card-stretch gutter-b'])--}}
-{{--            </div>--}}
 
-{{--            <div class="col-lg-6 col-xxl-6">--}}
-{{--                @include('pages.widgets.chart_user_payments', ['class' => 'card-stretch gutter-b'])--}}
-{{--            </div>--}}
-{{--            <div class="col-lg-6 col-xxl-6">--}}
-{{--                @include('pages.widgets._widget-2', ['class' => 'card-stretch gutter-b'])--}}
-{{--            </div>--}}
-{{--        @endif--}}
-{{--        <div class="col-lg-12 col-xxl-6 row">--}}
-{{--            <div class="col-12">--}}
-{{--                @include('pages.widgets._widget-1', ['class' => 'card-stretch gutter-b'])--}}
-{{--            </div>--}}
 
-{{--            <div class="col-12">--}}
-{{--            </div>--}}
-
-{{--            <div class="col-4">--}}
-{{--                @include('pages.widgets._widget-4', ['class' => 'bg-light-info card-stretch gutter-b'])--}}
-{{--            </div>--}}
-{{--            --}}{{--                <div class="col-4">--}}
-{{--            --}}{{--                    @include('pages.widgets._widget-5', ['class' => 'bg-light-white card-stretch gutter-b'])--}}
-{{--            --}}{{--                </div>--}}
-{{--            <div class="col-8">--}}
-{{--                @include('pages.widgets.carousel-invoice', [--}}
-{{--                        'class' => 'bg-light-white card-stretch gutter-b',--}}
-{{--                        'invoices' => request()->user()->company->invoices(),--}}
-{{--                    ])--}}
-{{--            </div>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="card card-custom gutter-b">
+        <div class="card-header flex-wrap border-0 pt-6 pb-0">
+            <div class="card-title">
+                <h3 class="card-label">Последние транзакции
+                    <div class="text-muted pt-2 font-size-sm">{{ \Illuminate\Support\Facades\Auth::user()->company->name }}</div>
+                </h3>
+            </div>
+        </div>
+        <div class="card-body">
+            <!--begin: Search Form-->
+            <!--begin::Search Form-->
+            <div class="mb-7">
+                <div class="row align-items-center">
+                    <div class="col-lg-9 col-xl-10">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 my-2 my-md-0">
+                                <div class="input-icon">
+                                    <input type="text" class="form-control" placeholder="Search..." id="payments_datatable_search_query"/>
+                                    <span><i class="flaticon2-search-1 text-muted"></i></span>
+                                </div>
+                            </div>
+                            @if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+                                <div id="users" class="col-md-4 my-2 my-md-0">
+                                    <div class="d-flex align-items-center">
+                                        <label class="mr-3 mb-0 d-none d-md-block">Пользователь:</label>
+                                        <select class="form-control" id="payments_datatable_search_type">
+                                            <option value="">Все пользователи</option>
+                                            <option value="null">Без пользователей</option>
+                                            @foreach(\Illuminate\Support\Facades\Auth::user()->company->usersAll()->get() as $user)
+                                                <option value="{{ $user->id }}">{{ $user->fullname }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end::Search Form-->
+            <!--end: Search Form-->
+            <!--begin: Datatable-->
+            <table class="datatable datatable-bordered datatable-head-custom" id="payments_datatable">
+            </table>
+            <!--end: Datatable-->
+        </div>
+    </div>
 
 @endsection
 
 {{-- Scripts Section --}}
 @section('scripts')
     <script>
-        var chart = {};
-        var getOptions = function (data) {
-            return  {
-                series: [{
-                    name: 'Расход по всем картам',
-                    data: data['amount']
-                }],
-                    chart: {
-                type: 'area',
-                    height: 300,
-                    toolbar: {
-                    show: false
-                },
-                zoom: {
-                    enabled: false
-                },
-                sparkline: {
-                    enabled: true
-                }
-            },
-                plotOptions: {},
-                legend: {
-                    show: false
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                fill: {
-                    type: 'solid',
-                        opacity: 1
-                },
-                stroke: {
-                    curve: 'smooth',
-                        show: true,
-                        width: 3,
-                        colors: [data['colors'][0]]
-                },
-                xaxis: {
-                    categories: data['users'],
-                        axisBorder: {
-                        show: false,
-                    },
-                    axisTicks: {
-                        show: false
-                    },
-                    labels: {
-                        show: false,
-                            style: {
-                            colors: KTApp.getSettings()['colors']['gray']['gray-500'],
-                                fontSize: '12px',
-                                fontFamily: KTApp.getSettings()['font-family']
-                        }
-                    },
-                    crosshairs: {
-                        show: false,
-                            position: 'front',
-                            stroke: {
-                            color: KTApp.getSettings()['colors']['gray']['gray-300'],
-                                width: 1,
-                                dashArray: 3
-                        }
-                    },
-                    tooltip: {
-                        enabled: true,
-                            formatter: undefined,
-                            offsetY: 0,
-                            style: {
-                            fontSize: '12px',
-                                fontFamily: KTApp.getSettings()['font-family']
-                        }
-                    }
-                },
-                yaxis: {
-                    labels: {
-                        show: false,
-                            style: {
-                            colors: KTApp.getSettings()['colors']['gray']['gray-500'],
-                                fontSize: '12px',
-                                fontFamily: KTApp.getSettings()['font-family']
-                        }
-                    }
-                },
-                states: {
-                    normal: {
-                        filter: {
-                            type: 'none',
-                                value: 0
-                        }
-                    },
-                    hover: {
-                        filter: {
-                            type: 'none',
-                                value: 0
-                        }
-                    },
-                    active: {
-                        allowMultipleDataPointsSelection: false,
-                            filter: {
-                            type: 'none',
-                                value: 0
-                        }
-                    }
-                },
-                tooltip: {
-                    style: {
-                        fontSize: '12px',
-                            fontFamily: KTApp.getSettings()['font-family']
-                    },
-                    y: {
-                        formatter: function (val) {
-                            return "₽" + val;
-                        }
-                    }
-                },
-                colors: [data['colors'][1]],
-                    markers: {
-                colors: [KTApp.getSettings()['colors']['theme']['light']['success']],
-                    strokeColor: [KTApp.getSettings()['colors']['theme']['base']['success']],
-                    strokeWidth: 3
-            }
-            }
-        };
-        var chartArea = function (date_start = null, date_end = null){
-            $.ajax({
-                type: 'post',
-                url: '{{ route('charts.areas') }}',
-                dataType: "json",
+        window.addEventListener('load', function () {
+            var datatable = $('#payments_datatable').KTDatatable({
                 data: {
-                    '_token': $('meta[name="csrf-token"]').attr('content'),
-                    date_end: date_end,
-                    date_start: date_start
-                },
-                success: function (data) {
-                    $.each(data ,function (key, chartOptions) {
-                        var element = document.getElementById(chartOptions.title);
-                        if (!element) {
-                            return;
+                    serverPaging: true,
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: '{{ route('datatables.dashboard.payments') }}',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            timeout: 60000,
+                            map: function map(raw) {
+                                var dataSet = raw;
+                                if (typeof raw.data !== 'undefined') {
+                                    dataSet = raw.data;
+                                }
+
+                                return dataSet;
+                            }
                         }
-
-                        chart[chartOptions.title] = new ApexCharts(element, getOptions(chartOptions));
-                        chart[chartOptions.title].render();
-                    })
-                    $("#sum-cards").html(data[0].amounts)
-                },
-                error: function (data) {
-                    console.log('error')
-                }
-            })
-        };
-        jQuery(document).ready(function () {
-            chartArea($("#date-start").val(), $("#date-end").val());
-            $('#datepicker_chart').datepicker().on('changeDate', function(e) {
-                date_start = $("#date-start").val();
-                date_end = $("#date-end").val();
-
-                let a = $('#get-parameters-date');
-                a.attr('href', '{{ route('company.download.report.users.xls') }}' + '?date_start=' + date_start + '&date_end=' + date_end)
-                console.log(a.attr('href'))
-
-                $.ajax({
-                    type: 'post',
-                    url: '{{ route('charts.areas') }}',
-                    dataType: "json",
-                    data: {
-                        '_token': $('meta[name="csrf-token"]').attr('content'),
-                        date_end: date_end,
-                        date_start: date_start
                     },
-                    success: function (data) {
-                        $.each(data ,function (key, chartOptions) {
-                            chart[chartOptions.title].updateOptions(getOptions(chartOptions))
-                        });
-                        $("#sum-cards").html(data[0].amounts)
-                    }
-                });
+                    // pageSize: 10,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                layout: {
+                    height: 300,
+                    scroll: true,
+                    footer: false, // display/hide footer
+                },
+                rows: {
+                    autoHide: false,
+                },
+                sortable: true,
+
+                pagination: true,
+
+                search: {
+                    input: $('#payments_datatable_search_query'),
+                    key: 'generalSearch'
+                },
+                toolbar: {
+                    items: {
+                        info: true,
+                        default: {
+                            first: 'First',
+                            prev: 'Previous',
+                            next: 'Nexccct',
+                            last: 'Last',
+                            more: 'More pages',
+                            input: 'Page number',
+                            select: 'Select page size'
+                        },
+                        pagination: {
+                            pageSizeSelect: [10, 20, 30, 50, 100],
+                            type: 'default',
+                            pages: {
+                                desktop: {
+                                    layout: 'compact',
+                                    pagesNumber: 6
+                                },
+                                tablet: {
+                                    layout: 'compact',
+                                    pagesNumber: 6
+                                },
+                                mobile: {
+                                    layout: 'compact'
+                                },
+                                navigation: {
+                                    prev: false,
+                                    next: true,
+                                    first: true,
+                                    last: true
+                                },
+                            }
+                        }
+                    },
+                },
+                columns: [
+                    {
+                        field: 'number',
+                        title: 'Номер карты',
+                        template: function template(row) {
+                            if (row.state === '{{ \App\Models\Bank\Card::ACTIVE }}') {
+                                color = 'text-success';
+                            }
+                            else if (row.state === '{{ \App\Models\Bank\Card::PENDING }}') {
+                                color = 'text-light-danger';
+                            }
+                            else {
+                                color = 'text-danger';
+                            }
+
+                            return '<a class="text-dark" href="'+ row.numberLink +'">'+ row.number +'</a><span class="'+
+                                color +' ">*</span>';
+                        }
+                    },
+                    {
+                        field: 'description',
+                        title: 'Описание',
+                    },
+                    {
+                        field: 'amount',
+                        title: 'Сумма платежей',
+                        template: function template(row) {
+                            let color = 'text-success';
+                             if(row.type === 'expenditure') {
+                                 color = 'text-danger'
+                             }
+
+                             return '<span class=" '+color+' pr-0 pt-7 text-right align-middle">'+row.amount+row.currency+'</span>'
+                         }
+                    },
+                    {
+                        field: 'operation_at',
+                        title: 'Дата операции',
+                    },
+                ],
             });
+
+            $('#payments_datatable').on('datatable-on-goto-page', function(e, args) {
+                console.log(args.page);
+            });
+
+            $('#payments_datatable_search_type').on('change', function () {
+                datatable.search($(this).val().toLowerCase(), 'user_id');
+            });
+            // $('#payments_datatable_search_status, #payments_datatable_search_type').selectpicker();
+            //
+            // $('#adding_random_cards').on('click', function () {
+            //     datatable.search(sliderInput.value, 'countCards');
+            // });
         });
 
     </script>
-
 @endsection

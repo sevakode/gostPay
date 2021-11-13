@@ -88,6 +88,14 @@ class Company extends Model
         return User::where('company_id', $this->id);
     }
 
+    public function usersAll()
+    {
+        $users = $this->users()->whereHas('role', function ($query) {
+            $query->where('slug', '!=', Permission::OWNER['slug']);
+        });
+        return $users;
+    }
+
     public function sumCardsPayments()
     {
         $payments = 0;

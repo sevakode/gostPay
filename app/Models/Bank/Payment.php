@@ -34,6 +34,11 @@ class Payment extends Model
         return Card::find($this->card_id);
     }
 
+    public function queryCard(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Card::class, 'id', 'card_id');
+    }
+
     public static function getCollectApi($api)
     {
         $data = array();

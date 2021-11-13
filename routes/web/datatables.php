@@ -21,5 +21,8 @@ Route::post('payment-chart', [DatatablesController::class, 'paymentChart'])
 Route::post('user-cards', [DatatablesController::class, 'userCards'])
     ->name('datatables.user-cards');
 
+Route::post('payments', [DatatablesController::class, 'payments'])
+    ->name('datatables.dashboard.payments');
+
 Route::post('select-add-cards', [DatatablesController::class, 'selectAddCard'])
     ->name('datatables.select-add-cards');

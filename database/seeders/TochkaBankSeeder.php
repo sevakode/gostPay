@@ -24,7 +24,7 @@ class TochkaBankSeeder extends Seeder
         $token->accessToken = 'VyzPwrEGseq3wT2G1XHwkq9B4LAs8NDl';
         $token->refreshToken = 'Sd65IVlX2U7s77t46lIqCp2CDYbfH4SN';
 
-        $token->company_id = Company::whereName('Gost Agency')->first()->id;
+//        $token->company_id = Company::whereName('Gost Agency')->first()->id;
 
         $token->save();
     }
