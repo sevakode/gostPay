@@ -88,7 +88,7 @@
                     serverSorting: true
                 },
                 layout: {
-                    height: 300,
+                    height: 400,
                     scroll: true,
                     footer: false, // display/hide footer
                 },
@@ -168,6 +168,7 @@
                         title: 'Сумма платежей',
                         template: function template(row) {
                             let color = 'text-success';
+                            console.log(row.type)
                              if(row.type === 'expenditure') {
                                  color = 'text-danger'
                              }

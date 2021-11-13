@@ -197,6 +197,7 @@ class DatatablesController extends Controller
                 'operation_at' => $payment->operationAt->format('M d, Y H:m'),
                 'amount' => $payment->amount,
                 'currency' => $card->currencySign,
+                'type' => $payment->type,
             ];
 
         }
