@@ -173,7 +173,7 @@ class DatatablesController extends Controller
             case 'amount':
                 $paymentList->orderBy('payments.amount', $filter['sort']['sort']);
                 break;
-            case 'operationAt':
+            case 'operation_at':
                 $paymentList->orderBy('operationAt', $filter['sort']['sort']);
                 break;
             default:
