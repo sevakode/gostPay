@@ -86,7 +86,7 @@ class BankAPI extends BankMain
     {
         $countCard = 0;
         foreach ($this->bank->invoices()->get() as $account) {
-            $statement = $this->initStatement($account->account_id, '2020-01-01', now()->format('Y-m-d'));
+            $statement = $this->initStatement($account->account_id, now()->subYear()->format('Y-m-d'), now()->format('Y-m-d'));
             foreach ($statement->operation as $payment) {
                 $cardId = 0;
                 preg_match("/номер (\d{4})...(\d{4})/", $payment['paymentPurpose'] ?? '', $cards);
@@ -99,7 +99,6 @@ class BankAPI extends BankMain
 
                     if($cardId) $countCard++;
                 }
-                if (isset($cardId) and $payment['amount'] == 91000) dd('adfasf',$cards, $payment);
                 $payment = (object) $payment;
                 $data[] = [
                     'transaction_id' => $payment->operationId,
