@@ -31,7 +31,7 @@
                                 <div id="users" class="col-md-4 my-2 my-md-0">
                                     <div class="d-flex align-items-center">
                                         <label class="mr-3 mb-0 d-none d-md-block">Пользователь:</label>
-                                        <select class="form-control" id="payments_datatable_search_type">
+                                        <select class="form-control" id="payments_datatable_search_users">
                                             <option value="">Все пользователи</option>
                                             <option value="null">Без пользователей</option>
                                             @foreach(\Illuminate\Support\Facades\Auth::user()->company->usersAll()->get() as $user)
@@ -169,14 +169,9 @@
                 console.log(args.page);
             });
 
-            $('#payments_datatable_search_type').on('change', function () {
+            $('#payments_datatable_search_users').on('change', function () {
                 datatable.search($(this).val().toLowerCase(), 'user_id');
             });
-            // $('#payments_datatable_search_status, #payments_datatable_search_type').selectpicker();
-            //
-            // $('#adding_random_cards').on('click', function () {
-            //     datatable.search(sliderInput.value, 'countCards');
-            // });
         });
 
     </script>

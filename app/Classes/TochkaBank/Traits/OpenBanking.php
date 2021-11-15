@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 /**
  * Trait OpenBanking
  * @package App\Classes\TochkaBank\Traits
+ * @implements
  */
 trait OpenBanking
 {

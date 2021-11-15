@@ -15,7 +15,7 @@ abstract class BankMain
 
     protected $bank;
 
-    public function __construct($bank)
+    public function __construct(BankToken $bank)
     {
         $this->bank = $bank;
     }

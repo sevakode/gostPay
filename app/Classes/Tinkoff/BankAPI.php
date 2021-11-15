@@ -2,6 +2,7 @@
 
 
 use App\Classes\BankMain;
+use App\Classes\BankPlus;
 use App\Classes\Tinkoff\Traits\ConnectBanking;
 use App\Classes\Tinkoff\Traits\OpenBanking;
 use App\Models\Bank\Account;
@@ -9,9 +10,20 @@ use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use Illuminate\Support\Carbon;
 
-class BankAPI extends BankMain
+class BankAPI extends BankMain implements BankPlus
 {
     use OpenBanking, ConnectBanking;
+
+
+
+    public function refreshCards()
+    {
+        foreach ($this->getCards()->collect('cards') as $card)
+        {
+            $card = $this->getCardInfo($card['ucid']);
+            dd($card->json());
+        }
+    }
 
     private function currency($code)
     {
@@ -100,12 +112,18 @@ class BankAPI extends BankMain
                     if($cardId) $countCard++;
                 }
                 $payment = (object) $payment;
+
+                $type = Payment::EXPENDITURE;
+                if ($payment->recipientAccount == $account->account_id) {
+                    $type = Payment::REVENUE;
+                }
+
                 $data[] = [
                     'transaction_id' => $payment->operationId,
                     'description' => $payment->paymentPurpose,
                     'account_id' => $account->account_id ?? $payment->payerAccount,
                     'card_id' => $cardId ?? '',
-                    'type' => self::operationType($payment->operationType),
+                    'type' => $type,
                     'status' => Payment::BOOKED,
                     'amount' => $payment->amount,
                     'currency' => $account->currency ?? 'RUB',
@@ -117,5 +135,4 @@ class BankAPI extends BankMain
 
         return $data;
     }
-
 }

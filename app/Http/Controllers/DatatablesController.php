@@ -161,7 +161,6 @@ class DatatablesController extends Controller
             $paymentList->orWhere('amount', $filter['query']['generalSearch']);
         }
 
-
         switch ($filter['sort']['field'] ?? '') {
             case 'number':
                 $paymentList->orderBy('cards.tail', $filter['sort']['sort'])

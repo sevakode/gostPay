@@ -198,7 +198,24 @@ trait OpenBanking
 
         $response = Http::withHeaders($headers)->get($url, $parameters);
 
-        return (object) $response->json();
+        return (object) $response;
+    }
+    /**
+     * Метод получения списка карт
+     *
+     * @return object
+     */
+    public function getCardInfo($ucid): object
+    {
+        $url = $this->bank->url.'/api/v1/card/virtual/'.$ucid.'/requisites';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites'
+        ];
+
+        $response = Http::withHeaders($headers)->get($url);
+
+        return (object) $response;
     }
 
     /**
@@ -208,13 +225,14 @@ trait OpenBanking
      */
     public function getCardsLimits(): object
     {
-        $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/cards/limits';
+        $url = $this->bank->rsUrl.'/api/v1/cards/limits';
+        $url = $this->bank->rsUrl.'/api/v1/cards/limits';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
 
         $response = Http::withHeaders($headers)->get($url);
-
+        dd($response);
         return $response->object();
     }
 
@@ -285,10 +303,10 @@ trait OpenBanking
     {
         $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
 
-        $url = "https://secured-openapi.business.tinkoff.ru/api/v1/card/$ucid/spend-limit";
+        $url = 'https://business.tinkoff.ru//api/v1213/card/'.$ucid.'/spend-limit';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0//card/limit/set'
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set'
         ];
 
         $parameters = [
@@ -297,7 +315,7 @@ trait OpenBanking
         ];
 
         $response = Http::withHeaders($headers)->post($url, $parameters);
-
+        dd($url, $response->json(), $response);
         return (object) $response->json();
     }
 

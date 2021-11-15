@@ -447,22 +447,24 @@ class Card extends Model
         }
     }
 
-    public static function getCollectUcidApi($api)
+    public static function getCollectUcidApi(BankToken $api)
     {
         $cards = array();
         foreach ($api->invoices()->get() as $account) {
-            $cardsApi = $api->api()->getCards($account->account_id);
-
-            if(!isset($cardsApi->totalNumber) and !isset($cardsApi->Data)) {
+            dd($api->api()->refreshCards());
+            $cardsApi = $api->api()->getCards($account->account_id)->json();
+            $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
+            $isBankTinkoff = isset($cardsApi['cards']);
+            if(!$isBank1 and !$isBankTinkoff) {
                 continue;
             }
+            $cardsApi = (object)$cardsApi;
 
             $cards = array_merge(
                 $cards,
                 self::getCollectUcidParse($cardsApi->Data->cards ?? $cardsApi->cards)->toArray()
             );
         }
-
         return $cards;
     }
 
