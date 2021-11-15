@@ -7,14 +7,14 @@ return [
     'items' => [
         [],
         [
-            'title' => 'Dashboard',
+            'title' => 'Панель',
             'root' => true,
             'redirect' => true,
             'page' => '/',
             'new-tab' => false,
         ],
         [
-            'title' => 'Company',
+            'title' => 'Компания',
             'root' => true,
             'toggle' => 'click',
             'submenu' => [
@@ -51,7 +51,7 @@ return [
 
         ],
         [
-            'title' => 'Manager',
+            'title' => 'Пользователи',
             'root' => true,
             'toggle' => 'click',
             'submenu' => [
@@ -68,25 +68,23 @@ return [
                         'page' => 'manager/user/add',
                         'icon' => 'media/svg/icons/Communication/Add-user.svg',
                     ],
-                    [
-                        'title' => 'Карты на закрытие',
-                        'description' => 'Список карт в ожидании на закрытие',
-                        'page' => 'manager/cards/closing_list',
-                        'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
-                        'permission' => OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']
-                    ],
                 ]
             ],
             'permission' => OptionsPermissions::ACCESS_TO_MANAGER['slug']
         ],
         [
-            'title' => 'Bank',
+            'title' => 'Карты',
             'root' => true,
             'toggle' => 'click',
             'submenu' => [
                 'type' => 'classic',
                 'alignment' => 'left',
                 'items' => [
+                    [
+                        'title' => 'Мои карты',
+                        'page' => 'profile/cards',
+                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                    ],
                     [
                         'title' => 'Карты компании',
                         'page' => 'bank/cards',
@@ -100,15 +98,17 @@ return [
                         'permission' => OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']
                     ],
                     [
-                        'title' => 'Мои карты',
-                        'page' => 'profile/cards',
-                        'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
+                        'title' => 'Карты на закрытие',
+                        'description' => 'Список карт в ожидании на закрытие',
+                        'page' => 'manager/cards/closing_list',
+                        'icon' => 'media/svg/icons/Communication/Clipboard-list.svg',
+                        'permission' => OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']
                     ],
                 ]
             ],
         ],
         [
-            'title' => 'Projects',
+            'title' => 'Проекты',
             'root' => true,
             'toggle' => 'click',
             'submenu' => [

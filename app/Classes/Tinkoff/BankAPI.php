@@ -18,11 +18,16 @@ class BankAPI extends BankMain implements BankPlus
 
     public function refreshCards()
     {
+//        dd($this->getCards()->collect('cards'));
+        $count = 0;
         foreach ($this->getCards()->collect('cards') as $card)
         {
-            $card = $this->getCardInfo($card['ucid']);
-            dd($card->json());
+            if($count > 100) continue;
+            $cards[] = $this->getCardInfo($card['ucid']);
+            $count++;
+        dd($cards);
         }
+//        dd($cards);
     }
 
     private function currency($code)

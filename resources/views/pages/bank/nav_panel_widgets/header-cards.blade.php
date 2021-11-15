@@ -4,7 +4,7 @@
         <!--begin::Info-->
         <div class="d-flex align-items-center mr-2 py-2">
             <!--begin::Title-->
-            <h3 class="font-weight-bold mb-0 mr-10">Bank Cards</h3>
+            <h3 class="font-weight-bold mb-0 mr-10">Карты</h3>
             <!--end::Title-->
             <!--begin::Navigation-->
             <div class="d-flex mr-3">

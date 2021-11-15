@@ -114,10 +114,10 @@ class Card extends Model
 
     public function scopeClosed($query)
     {
-        $cardsNoUcid = $query->where('ucid', null);
+        $isCardsNoUcid = $query->where('ucid', null);
         $cards = $query->where('ucid', '!=', null);
 
-        if ($cardsNoUcid->exists()) self::refreshUcidApi();
+        if ($isCardsNoUcid->exists()) self::refreshUcidApi();
 
         foreach ($cards->get() as $card) {
             $card->close();
@@ -451,7 +451,6 @@ class Card extends Model
     {
         $cards = array();
         foreach ($api->invoices()->get() as $account) {
-            dd($api->api()->refreshCards());
             $cardsApi = $api->api()->getCards($account->account_id)->json();
             $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
             $isBankTinkoff = isset($cardsApi['cards']);

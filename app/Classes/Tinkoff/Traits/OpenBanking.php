@@ -207,7 +207,8 @@ trait OpenBanking
      */
     public function getCardInfo($ucid): object
     {
-        $url = $this->bank->url.'/api/v1/card/virtual/'.$ucid.'/requisites';
+        $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
+
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
             'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites'
@@ -303,7 +304,8 @@ trait OpenBanking
     {
         $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
 
-        $url = 'https://business.tinkoff.ru//api/v1213/card/'.$ucid.'/spend-limit';
+        $url = $this->bank->rsUrl.'/api/v1/card/'.$ucid.'/spend-limit';
+        $url = 'https://business.tinkoff.ru/api/v1/card/'.$ucid.'/spend-limit';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
             'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set'
@@ -315,7 +317,7 @@ trait OpenBanking
         ];
 
         $response = Http::withHeaders($headers)->post($url, $parameters);
-        dd($url, $response->json(), $response);
+
         return (object) $response->json();
     }
 

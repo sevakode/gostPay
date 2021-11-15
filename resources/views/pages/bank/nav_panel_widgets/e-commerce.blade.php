@@ -20,7 +20,7 @@
     <!--end::Symbol-->
     <!--begin::Text-->
     <div class="d-flex flex-column flex-grow-1">
-        <a href="{{ route('cards') }}" class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">Bank Cards</a>
+        <a href="{{ route('cards') }}" class="text-dark-75 text-hover-primary mb-1 font-size-lg font-weight-bolder">Карты</a>
         <span class="text-muted font-weight-bold">Работа с банком</span>
     </div>
     <!--end::Text-->

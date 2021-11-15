@@ -96,7 +96,11 @@
                     autoHide: false,
                 },
                 sortable: true,
-
+                translate: {
+                    records:{
+                        noRecords: "Ничего не найдено."
+                    }
+                },
                 pagination: true,
 
                 search: {
