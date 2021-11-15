@@ -87,19 +87,19 @@ class BankAPI extends BankMain
         $countCard = 0;
         foreach ($this->bank->invoices()->get() as $account) {
             $statement = $this->initStatement($account->account_id, '2020-01-01', now()->format('Y-m-d'));
-
             foreach ($statement->operation as $payment) {
+                $cardId = 0;
                 preg_match("/номер (\d{4})...(\d{4})/", $payment['paymentPurpose'] ?? '', $cards);
                 if(isset($cards[1], $cards[2])) {
-                    $cardId = Card::where('head', $cards[1])->where('tail', $cards[2])->first() ?
-                        Card::where('head', $cards[1])->where('tail', $cards[2])->first()->id :
-                        null;
+                    $card = Card::query()->where('head', $cards[1])->where('tail', $cards[2])->first(['id']);
+                    $cardId = $card ? $card->id : null;
 
                     if (Payment::where('transaction_id', $payment['operationId'])->where('card_id', $cardId)->exists())
                         continue;
 
                     if($cardId) $countCard++;
                 }
+                if (isset($cardId) and $payment['amount'] == 91000) dd('adfasf',$cards, $payment);
                 $payment = (object) $payment;
                 $data[] = [
                     'transaction_id' => $payment->operationId,

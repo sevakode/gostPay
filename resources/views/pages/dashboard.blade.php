@@ -116,27 +116,9 @@
                             select: 'Select page size'
                         },
                         pagination: {
-                            pageSizeSelect: [10, 20, 30, 50, 100],
+                            pageSizeSelect: [10, 20, 30, 50, 100, 500],
                             type: 'default',
-                            pages: {
-                                desktop: {
-                                    layout: 'compact',
-                                    pagesNumber: 6
-                                },
-                                tablet: {
-                                    layout: 'compact',
-                                    pagesNumber: 6
-                                },
-                                mobile: {
-                                    layout: 'compact'
-                                },
-                                navigation: {
-                                    prev: false,
-                                    next: true,
-                                    first: true,
-                                    last: true
-                                },
-                            }
+                            pages: {}
                         }
                     },
                 },

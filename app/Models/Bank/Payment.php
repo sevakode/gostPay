@@ -53,24 +53,26 @@ class Payment extends Model
         $countCards = 0;
         foreach (BankToken::all() as $bank)
         {
-            $payments = self::getCollectApi($bank->api());
-            if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
-            unset($payments['countCard']);
-            self::upsert(
-                $payments->toArray(),
-                [
-                    'transaction_id',
-                ],
-                [
-                    'description',
-                    'account_id',
-                    'card_id',
-                    'status',
-                    'amount',
-                    'currency',
-                    'operationAt'
-                ]
-            );
+            if($bank->api()) {
+                $d[] = $payments = self::getCollectApi($bank->api());
+                if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
+                unset($payments['countCard']);
+                self::upsert(
+                    $payments->toArray(),
+                    [
+                        'transaction_id',
+                    ],
+                    [
+                        'description',
+                        'account_id',
+                        'card_id',
+                        'status',
+                        'amount',
+                        'currency',
+                        'operationAt'
+                    ]
+                );
+            }
         }
 
         if($command) $command->info('Обновленные карты: '. $countCards);
