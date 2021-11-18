@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\OptionsPermissions;
+use App\Models\Bank\TransactionBalance;
 use App\Models\Bank\Account;
 use App\Notifications\DataNotification;
 use Illuminate\Http\Request;
@@ -92,7 +93,7 @@ class InvoiceController extends Controller
             }
         }
 
-        if($accounts[0] != null) {
+        if(isset($accounts) and $accounts[0] != null) {
             if($request->user()->hasPermission(OptionsPermissions::ACCESS_TO_ALL_COMPANY['slug'])) {
                 Account::where('company_id', $company->id)
                     ->whereNotIn('account_id', array_column($accounts, 'account_id'))

@@ -452,6 +452,8 @@ class Card extends Model
         $cards = array();
         foreach ($api->invoices()->get() as $account) {
             $cardsApi = $api->api()->getCards($account->account_id)->json();
+            $info = $api->api()->getCardInfo($cardsApi['cards'][1]['ucid']);
+            dd($info, $info->json());
             $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
             $isBankTinkoff = isset($cardsApi['cards']);
             if(!$isBank1 and !$isBankTinkoff) {

@@ -205,18 +205,23 @@ trait OpenBanking
      *
      * @return object
      */
-    public function getCardInfo($ucid): object
+    public function getCardInfo($ucid)
     {
         $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
+        $url =  $this->bank->rsUrl.'/api/v1/card/virtual/'.$ucid.'/requisites';
+        $url =  $this->bank->rsUrl.'/open-banking/v1/card/virtual/'.$ucid.'/requisites';
+        $url =  $this->bank->url.'/open-banking/v1/card/virtual/'.$ucid.'/requisites';
+        $url =  'https://business.tinkoff.ru/api/v1/card/virtual/'.$ucid.'/requisites';
 
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
             'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites'
         ];
+        $parameters = [];
 
-        $response = Http::withHeaders($headers)->get($url);
+        $response = Http::withHeaders($headers)->get($url, $parameters);
 
-        return (object) $response;
+        return $response;
     }
 
     /**

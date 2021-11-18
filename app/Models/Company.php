@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Bank\TransactionBalance;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
@@ -16,6 +17,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
+/**
+ * @property $id
+ * @property $name
+ * @property $slug
+ * @property $bank_id
+ */
 class Company extends Model
 {
     use HasFactory, SoftDeletes, Imageable, HasProjects;
@@ -30,6 +37,21 @@ class Company extends Model
         'slug',
         'bank_id'
     ];
+
+    public function balance($account_id = null): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        $belongsToMany = $this->belongsToMany(TransactionBalance::class, 'transaction_balances_companies_users',
+            'company_id', 'transaction_id');
+
+        if ($account_id) $belongsToMany->where('bank_account_id', $account_id);
+
+        return $belongsToMany;
+    }
+
+    public function companyBalance($account_id = null): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->balance($account_id)->where('user_id', null);
+    }
 
     public function bank()
     {

@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Interfaces\OptionsPermissions;
+use App\Models\Bank\TransactionBalance;
 use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
 use App\Traits\HasRolesAndPermissions;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +17,7 @@ use Illuminate\Notifications\Notifiable;
 /**
  * Class User
  * @package App\Models
+ * @property $id
  * @property $first_name
  * @property $last_name
  * @property $email
@@ -63,6 +66,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function balance($account_id = null): BelongsToMany
+    {
+        $belongsToMany = $this
+            ->belongsToMany(TransactionBalance::class, 'transaction_balances_companies_users',
+                'user_id', 'transaction_id')
+            ->where('company_id', $this->company->id);
+
+        if ($account_id) $belongsToMany->where('bank_account_id', $account_id);
+
+        return $belongsToMany;
+    }
 
     public function cards()
     {

@@ -5,6 +5,7 @@ namespace App\Models\Bank;
 use App\Classes\TochkaBank\BankAPI;
 use App\Interfaces\ApiGostPayment;
 use App\Interfaces\ListBank;
+use App\Models\Bank\TransactionBalance;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,16 @@ class Account extends Model
     protected $fillable = ['account_id', 'avail', 'current', 'bank_token_id'];
 
     protected $table = 'bank_account';
+
+    public function balance(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        $belongsToMany = $this
+            ->belongsToMany(TransactionBalance::class, 'transaction_balances_companies_users',
+                'bank_account_id', 'transaction_id')
+            ->where('company_id', $this->company_id);
+
+        return $belongsToMany;
+    }
 
     public function payment()
     {
