@@ -1,5 +1,6 @@
 <?php namespace App\Classes\TochkaBank\Traits;
 
+use App\Classes\BankConnectContract;
 use App\Classes\TochkaBank\BankAPI;
 use App\Models\Bank\BankToken;
 use Illuminate\Support\Facades\Http;
@@ -7,16 +8,15 @@ use Illuminate\Support\Facades\Http;
 /**
  * Trait OpenBanking
  * @package App\Classes\TochkaBank\Traits
+ *
+ * @implements BankConnectContract
  */
 trait ConnectBanking
 {
     /**
-     * @param BankToken $token
      * @return mixed
-     * @var BankAPI $this
-     * @var BankToken $bank
      */
-    public function connectTokenCredentials()
+    public function connectTokenCredentials(): mixed
     {
         $bank = $this->bank;
 
@@ -42,7 +42,7 @@ trait ConnectBanking
         return $response;
     }
 
-    public function connectTokenRefresh()
+    public function connectTokenRefresh(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
     {
         $url = $this->bank->url.'/connect/token';
         $headers = [
@@ -56,12 +56,9 @@ trait ConnectBanking
             'refresh_token' => $this->bank->refreshToken,
         ];
 
-        $response = Http::asForm()->post($url, $data)
-            ->object();
+        //        if(isset($response->error)) dd($response);
 
-//        if(isset($response->error)) dd($response);
-
-        return (object) $response;
+        return Http::asForm()->post($url, $data);
     }
 
     public function connectAuthorize()

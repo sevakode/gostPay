@@ -152,7 +152,7 @@ class BankToken extends Model
 
     public function refresh()
     {
-        $api = BankAPI::make()->connectTokenRefresh();
+        $api = BankAPI::make()->connectTokenRefresh()->object();
         $this->accessToken = $api->access_token;
         $this->refreshToken = $api->refresh_token;
 
@@ -167,7 +167,7 @@ class BankToken extends Model
     {
         foreach (self::all() as $token)
         {
-            $api = (new BankAPI($token))->connectTokenRefresh();
+            $api = (new BankAPI($token))->connectTokenRefresh()->object();
             try{
                 $token->accessToken = $api->access_token;
                 $token->refreshToken = $api->refresh_token;

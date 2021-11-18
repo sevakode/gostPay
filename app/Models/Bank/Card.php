@@ -89,8 +89,8 @@ class Card extends Model
         $bank = $this->invoice->bank()->first();
         if (!$bank->isBank(BankMain::TINKOFF_BIN)) return false;
 
-        $correlationId = $bank->api()->deleteCard($this->ucid)->correlationId;
-        $cardState = $bank->api()->getCardState($correlationId);
+        $correlationId = $bank->api()->deleteCard($this->ucid)->json()->correlationId;
+        $cardState = $bank->api()->getCardState($correlationId)->object();
 
         $this->correlation_id = $correlationId;
 
@@ -390,7 +390,7 @@ class Card extends Model
 
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
-        $cardsApi = (new BankAPI(BankToken::first()))->getCards();
+        $cardsApi = (new BankAPI(BankToken::first()))->getCards()->object();
         if(!isset($cardsApi->Data)) {
             dd($cardsApi);
         }

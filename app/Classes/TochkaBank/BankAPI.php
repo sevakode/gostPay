@@ -1,15 +1,18 @@
 <?php namespace App\Classes\TochkaBank;
 
+use App\Classes\BankConnectContract;
 use App\Classes\BankMain;
+use App\Classes\BaseContracts;
 use App\Classes\TochkaBank\Traits\ConnectBanking;
 use App\Classes\TochkaBank\Traits\OpenBanking;
-use App\Models\Bank\Account;
 use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use App\Models\Bank\Statement;
 use Carbon\Carbon;
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\Response;
 
-class BankAPI extends BankMain
+class BankAPI extends BankMain implements BankConnectContract, BaseContracts
 {
     use OpenBanking, ConnectBanking;
 
@@ -26,7 +29,7 @@ class BankAPI extends BankMain
 
             $accountId = "$account->account_id/044525999";
             try {
-                $balanceTypeList = $this->getBalanceInfo($accountId)->Data->Balance;
+                $balanceTypeList = $this->getBalanceInfo($accountId)->object()->Data->Balance;
             } catch (\Exception $e) {
                 continue;
             }
@@ -53,7 +56,7 @@ class BankAPI extends BankMain
         $data = array();
         $countCard = 0;
         foreach (Statement::all() as $statement) {
-            $statement = $this->getStatement($statement->accountId, $statement->statementId);
+            $statement = $this->getStatement($statement->accountId, $statement->statementId)->object();
             foreach ($statement->Data->Statement[0]->Transaction as $payment)
             {
                 preg_match("/карта (\d{4})\**(\d{4})/", $payment->description, $cards);
@@ -97,15 +100,16 @@ class BankAPI extends BankMain
 
     public function getStatementsData(array &$data): array
     {
-        $accountList = $this->getAccountsList();
+        $accountList = $this->getAccountsList()->object();
 
         if(!isset($accountList->Data)) {
-            $this->connectTokenRefresh();
+            $this->connectTokenRefresh()->object();
             return  $data;
         }
         foreach ($accountList->Data->Account as $account)
         {
-            $statement = $this->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'));
+            $statement = $this
+                ->initStatement($account->accountId, '2020-08-01', now()->format('Y-m-d'))->json();
 
             $data[] = [
                 'accountId' => $statement->Data->Statement->accountId,
@@ -114,5 +118,15 @@ class BankAPI extends BankMain
         }
 
         return $data;
+    }
+
+    public function getCardInfo(int $ucid): PromiseInterface|Response
+    {
+        // TODO: Implement getCardInfo() method.
+    }
+
+    public function getCardState(string $correlationId): PromiseInterface|Response
+    {
+        // TODO: Implement getCardState() method.
     }
 }

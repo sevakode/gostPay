@@ -1,6 +1,8 @@
 <?php
 namespace App\Classes\Tinkoff\Traits;
 
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -22,9 +24,8 @@ trait OpenBanking
     /**
      * Метод получения списка доступных счетов
      *
-     * @return object
      */
-    public function getAccountsList(): object
+    public function getAccountsList(): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-accounts';
         $headers = [
@@ -32,9 +33,7 @@ trait OpenBanking
             'scope' => 'opensme/inn/246525853385/kpp/0/bank-accounts/get'
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-
-        return (object) $response->object();
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
@@ -66,9 +65,9 @@ trait OpenBanking
     /**
      * Метод получения баланса по нескольким счетам
      *
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getBalancesList(): object
+    public function getBalancesList(): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/balances';
         $headers = [
@@ -77,16 +76,16 @@ trait OpenBanking
 
         $response = Http::withHeaders($headers)->get($url);
 
-        return $response->object();
+        return $response;
     }
 
     /**
      * Метод получения информации о балансе конкретного счета
      *
      * @param string $accountId
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getBalanceInfo(string $accountId)
+    public function getBalanceInfo(string $accountId): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/balances';
         $headers = [
@@ -95,7 +94,7 @@ trait OpenBanking
 
         $response = Http::withHeaders($headers)->get($url);
 
-        return $response->object();
+        return $response;
     }
 
 
@@ -108,18 +107,16 @@ trait OpenBanking
     /**
      * Метод получения списка доступных выписок
      *
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getStatementsList(): object
+    public function getStatementsList(): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/statements';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-
-        return $response->object();
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
@@ -127,9 +124,9 @@ trait OpenBanking
      *
      * @param string $accountId
      * @param string|null $statementId
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): object
+    public function getStatement(string $accountId, string $statementId = null): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-statement';
         $headers = [
@@ -141,19 +138,17 @@ trait OpenBanking
             'accountNumber' => $accountId
         ];
 
-        $response = Http::withHeaders($headers)->get($url, $parameters);
-
-        return (object) $response->json();
+        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
     /**
      * Метод создания выписки по конкретному счету
-     * @return object
+     * @return PromiseInterface|Response
      * @var string $accountId
      * @var string $startDateTime
      * @var string $endDateTime
      */
-    public function initStatement(string $accountId, $startDateTime, $endDateTime): object
+    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/api/v1/bank-statement';
         $headers = [
@@ -167,9 +162,7 @@ trait OpenBanking
             'till' => $endDateTime
         ];
 
-        $response = Http::withHeaders($headers)->get($url, $parameters);
-
-        return (object) $response->json();
+        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
 
@@ -182,9 +175,10 @@ trait OpenBanking
     /**
      * Метод получения списка карт
      *
-     * @return object
+     * @param null $accountNumber
+     * @return PromiseInterface|Response
      */
-    public function getCards($accountNumber = null): object
+    public function getCards($accountNumber = null): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/api/v1/card';
         $headers = [
@@ -196,16 +190,16 @@ trait OpenBanking
             'accountNumber' => $accountNumber,
         ] : [];
 
-        $response = Http::withHeaders($headers)->get($url, $parameters);
-
-        return (object) $response;
+        return Http::withHeaders($headers)->get($url, $parameters);
     }
+
     /**
      * Метод получения списка карт
      *
-     * @return object
+     * @param int $ucid
+     * @return PromiseInterface|Response
      */
-    public function getCardInfo($ucid): object
+    public function getCardInfo(int $ucid): PromiseInterface|Response
     {
         $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
 
@@ -214,17 +208,15 @@ trait OpenBanking
             'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites'
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-
-        return (object) $response;
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
      * Метод получения лимитов по картам
      *
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getCardsLimits(): object
+    public function getCardsLimits(): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/api/v1/cards/limits';
         $url = $this->bank->rsUrl.'/api/v1/cards/limits';
@@ -232,36 +224,33 @@ trait OpenBanking
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-        dd($response);
-        return $response->object();
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
      * Показывает действующие лимиты по карте
      *
-     * @return object
+     * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardLimits(string $cardCode): object
+    public function getCardLimits(string $cardCode): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode.'/limits';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-
-        return $response->object();
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
      * Показывает действующие лимиты по карте
-     *https://enter.tochka.com/uapi/card/{apiVersion}/card/{cardCode}
-     * @return object
-     * @var string $cardCode
+     *
+     * @param string $cardCode
+     * @param string $newName
+     * @return PromiseInterface|Response
      */
-    public function editCard(string $cardCode, string $newName): object
+    public function editCard(string $cardCode, string $newName): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode;
         $headers = [
@@ -274,33 +263,18 @@ trait OpenBanking
             }
         }';
 
-        $response = Http::withHeaders($headers)->post($url, $data);
-
-        return $response->object();
+        return Http::withHeaders($headers)->post($url, $data);
     }
 
     /**
      * Метод позволяет изменить следующие лимиты по карте:
-     * MaxAtmOperationSumPerDay - Максимальная сумма операций за день через банкоматы и ПВН
-     * MaxAtmOperationSumPerMonth - Максимальная сумма операций за месяц через банкоматы и ПВН
-     * MaxTspOperationSumPerDay - Максимальная сумма операций за день в ТСП
-     * MaxTspOperationSumPerMonth - Максимальная сумма операций за месяц в ТСП
-     * MaxInternetOperationSumPerDay - Максимальная сумма операций за день, приобретаемых в Internet
-     * MaxInternetOperationSumPerMonth - Максимальная сумма операций за месяц, приобретаемых в Internet
-     * CommonSpendingLimitCard - Накопительный лимит всех трат за все время
-     * Zagranica - Разрешены или нет операции за рубежом по карте
      *
-     * Особенности:
-     * CommonSpendingLimitCard - является накопительным и никогда не сбрасывается.
-     * Zagranica - принимает только два значения: 0/1 (нельзя/можно использловать карту в других странах.
-     * Лимиты изменяются в течение 0,2 секунды.
-     * Дневной лимит обновляется в 23:59 мск.
-     * Месячный лимит обновляется в последний день месяца в 23:59 мск.
-     *
-     * @return object
-     * @var string $cardCode
+     * @param string $ucid
+     * @param null $limitType
+     * @param string $limitPeriod
+     * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, $limitPeriod = '1666'): object
+    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): PromiseInterface|Response
     {
         $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
 
@@ -316,22 +290,16 @@ trait OpenBanking
             'limitPeriod' => $limitPeriod
         ];
 
-        $response = Http::withHeaders($headers)->post($url, $parameters);
-
-        return (object) $response->json();
+        return Http::withHeaders($headers)->post($url, $parameters);
     }
 
     /**
      * Метод получения состояния карты
-     * string (Новый статус карты)
-    Enum:
-    "lockedCard"
-    "unlockedCard"
      *
-     * @return object
+     * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardState(string $correlationId): object
+    public function getCardState(string $correlationId): PromiseInterface|Response
     {
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue/result';
         $headers = [
@@ -343,22 +311,17 @@ trait OpenBanking
             'correlationId' => $correlationId,
         ];
 
-        $response = Http::withHeaders($headers)->get($url, $parameters);
-
-        return (object) $response->json();
+        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
     /**
      * Метод смены состояния карты
-     * string (Новый статус карты)
-    Enum:
-    "lockedCard"
-    "unlockedCard"
      *
-     * @return object
-     * @var string $cardCode
+     * @param string $cardCode
+     * @param string $newState
+     * @return PromiseInterface|Response
      */
-    public function editCardState(string $cardCode, string $newState = 'lockedCard'): object
+    public function editCardState(string $cardCode, string $newState = 'lockedCard'): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/card/' . $cardCode . '/limits';
         $headers = [
@@ -371,9 +334,7 @@ trait OpenBanking
                 }
         }';
 
-        $response = Http::withHeaders($headers)->post($url, [$data]);
-
-        return $response->object();
+        return Http::withHeaders($headers)->post($url, [$data]);
     }
 
     /**
@@ -381,9 +342,9 @@ trait OpenBanking
      *
      * @var string $cardCode
      * @var string $message
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function deleteCard(string $cardCode, string $message = ''): object
+    public function deleteCard(string $cardCode, string $message = ''): PromiseInterface|Response
     {
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue';
         $headers = [
@@ -395,9 +356,7 @@ trait OpenBanking
             'ucid' => $cardCode,
         ];
 
-        $response = Http::withHeaders($headers)->post($url, $parameters);
-
-        return (object) $response->json();
+        return Http::withHeaders($headers)->post($url, $parameters);
     }
 
 
@@ -410,51 +369,48 @@ trait OpenBanking
     /**
      * Метод получения списка доступных клиентов
      *
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getCustomersList(): object
+    public function getCustomersList(): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/customers';
         $headers = [
             'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
-        $response = Http::withHeaders($headers)->delete($url);
-
-        return $response->object();
+        return Http::withHeaders($headers)->delete($url);
     }
 
     /**
      * Метод получения списка доступных клиентов
      * @var string $customerCode
-     * @return object
+     * @return PromiseInterface|Response
      */
-    public function getCustomerInfo(string $customerCode): object
+    public function getCustomerInfo(string $customerCode): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/customers/'.$customerCode;
         $headers = [
             'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
-        $response = Http::withHeaders($headers)->delete($url);
-
-        return $response->object();
+        return Http::withHeaders($headers)->delete($url);
     }
 
 
 
     /**
      * ----------------------------------------------------------------------------------------------------------------
-     * Работа с клиентамиРабота с платежами
+     * Работа с платежами
      * ----------------------------------------------------------------------------------------------------------------
      */
 
     /**
      * Метод получения статуса платежа
      *
-     * @return object
+     * @param string $requestId
+     * @return PromiseInterface|Response
      */
-    public function getPaymentStatus(string $requestId): object
+    public function getPaymentStatus(string $requestId): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl . '/api/v1/payment/'.$requestId;
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/payment/' . $requestId;
@@ -463,14 +419,12 @@ trait OpenBanking
             'scope' => 'opensme/inn/246525853385/kpp/0/payments/rub-pay'
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-
-        return (object) $response->json();
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
      * Метод получения статуса платежа
-     *https://enter.tochka.com/uapi/payment/{apiVersion}/for-sign
+     *
      * @param string $requestId
      * @param $accountCode
      * @param $bankCode
@@ -492,32 +446,32 @@ trait OpenBanking
      * @param string $taxInfoPeriod
      * @param string $taxInfoReasonCode
      * @param string $taxInfoStatus
-     * @return object
+     * @return PromiseInterface|Response
      */
     public function createPaymentForSign(
         string $requestId,
-        $accountCode,
-        $bankCode,
-        $counterpartyBankBic,
-        $counterpartyAccountNumber,
-        $counterpartyINN,
-        $counterpartyName,
-        $paymentAmount,
-        $paymentDate,
-        $paymentNumber,
-        $paymentPurpose,
+               $accountCode,
+               $bankCode,
+               $counterpartyBankBic,
+               $counterpartyAccountNumber,
+               $counterpartyINN,
+               $counterpartyName,
+               $paymentAmount,
+               $paymentDate,
+               $paymentNumber,
+               $paymentPurpose,
 
-        $counterpartyKPP='',
-        $paymentPriority='',
-        $supplierBillId='',
-        $taxInfoDocumentDate='',
-        $taxInfoDocumentNumber='',
-        $taxInfoKBK='',
-        $taxInfoOKATO='',
-        $taxInfoPeriod='',
-        $taxInfoReasonCode='',
-        $taxInfoStatus=''
-    ): object
+               $counterpartyKPP='',
+               $paymentPriority='',
+               $supplierBillId='',
+               $taxInfoDocumentDate='',
+               $taxInfoDocumentNumber='',
+               $taxInfoKBK='',
+               $taxInfoOKATO='',
+               $taxInfoPeriod='',
+               $taxInfoReasonCode='',
+               $taxInfoStatus=''
+    ): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl . '/payment/' . $this->bank->apiVersion . '/for-sign';
         $headers = [
@@ -549,8 +503,6 @@ trait OpenBanking
             }
         }';
 
-        $response = Http::withHeaders($headers)->post($url, [$data]);
-
-        return $response->object();
+        return Http::withHeaders($headers)->post($url, [$data]);
     }
 }
