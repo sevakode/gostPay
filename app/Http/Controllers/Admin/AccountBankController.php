@@ -77,7 +77,7 @@ class AccountBankController extends Controller
         $page_title = 'Аккаунты';
         $page_description = $page_title;
 
-        $accounts = BankToken::select('id', 'url', 'refreshTokenDate');
+        $accounts = BankToken::select('id', 'url', 'refreshTokenDate', 'accessTokenDate', 'updated_at');
 
         return view('pages.account_bank.widgets.list',
             compact('page_title', 'page_description', 'accounts'));

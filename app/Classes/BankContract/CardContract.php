@@ -17,7 +17,7 @@ interface CardContract
      * @param null $accountNumber
      * @return PromiseInterface|Response
      */
-    public function getCards($accountNumber = null): PromiseInterface|Response;
+    public function getCards($accountNumber = null): Response;
 
     /**
      * Метод получения списка карт
@@ -25,7 +25,7 @@ interface CardContract
      * @param int $ucid
      * @return PromiseInterface|Response
      */
-    public function getCardInfo(int $ucid): PromiseInterface|Response;
+    public function getCardInfo(int $ucid): Response;
 
     /**
      * Метод получения состояния карты
@@ -33,7 +33,7 @@ interface CardContract
      * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardState(string $correlationId): PromiseInterface|Response;
+    public function getCardState(string $correlationId): Response;
 
     /**
      * Метод смены состояния карты
@@ -42,7 +42,7 @@ interface CardContract
      * @param string $newState
      * @return PromiseInterface|Response
      */
-    public function editCardState(string $cardCode, string $newState = 'lockedCard'): PromiseInterface|Response;
+    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response;
 
     /**
      * Метод закрытия карты
@@ -51,5 +51,5 @@ interface CardContract
      * @var string $message
      * @return PromiseInterface|Response
      */
-    public function deleteCard(string $cardCode, string $message = ''): PromiseInterface|Response;
+    public function deleteCard(string $cardCode, string $message = ''): Response;
 }

@@ -120,12 +120,12 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts
         return $data;
     }
 
-    public function getCardInfo(int $ucid): PromiseInterface|Response
+    public function getCardInfo(int $ucid): Response
     {
         // TODO: Implement getCardInfo() method.
     }
 
-    public function getCardState(string $correlationId): PromiseInterface|Response
+    public function getCardState(string $correlationId): Response
     {
         // TODO: Implement getCardState() method.
     }

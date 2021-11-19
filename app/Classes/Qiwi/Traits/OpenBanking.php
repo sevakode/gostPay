@@ -1,9 +1,10 @@
 <?php
-namespace App\Classes\Tinkoff\Traits;
+namespace App\Classes\Qiwi\Traits;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 /**
  * Trait OpenBanking
@@ -11,9 +12,6 @@ use Illuminate\Support\Facades\Http;
  */
 trait OpenBanking
 {
-    public static string $LIMIT_TYPE_DAY = 'DAY';
-    public static string $LIMIT_TYPE_MONTH = 'MONTH';
-    public static string $LIMIT_TYPE_IRREGULAR = 'IRREGULAR';
 
     /**
      * ----------------------------------------------------------------------------------------------------------------
@@ -27,33 +25,26 @@ trait OpenBanking
      */
     public function getAccountsList($accounts = []): Response
     {
-        $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-accounts';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/bank-accounts/get'
-        ];
 
-        return Http::withHeaders($headers)->get($url);
     }
 
     /**
      * Метод получения информации по конкретному счёту
      *
-     * @param string $accountId
-     * @return object
+     * @param string|null $accountId
+     * @return Response
      */
-//    public function getAccountInfo(string $accountId): object
-//    {
-//        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId;
-//        $headers = [
-//
-//            'Authorization' => 'Bearer '. $this->bank->accessToken
-//        ];
-//
-//        $response = Http::withHeaders($headers)->get($url);
-//
-//        return $response->object();
-//    }
+    public function getAccountInfo(string $accountId = null): Response
+    {
+        $url = $this->bank->rsUrl.'/person-profile/'.$this->bank->apiVersion.'/profile/current';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken
+        ];
+
+        $response = Http::withHeaders($headers)->get($url);
+
+        return $response;
+    }
 
 
     /**
@@ -68,9 +59,9 @@ trait OpenBanking
      * @param string|null $accountId
      * @return Response
      */
-    public function getBalancesList(?string $accountId = null): Response
+    public function getBalancesList(?string $accountId = '79221032748'): Response
     {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/balances';
+        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts/';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
@@ -86,14 +77,12 @@ trait OpenBanking
      */
     public function getBalanceInfo(string $accountId): Response
     {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/balances';
+        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts/';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
 
-        $response = Http::withHeaders($headers)->get($url);
-
-        return $response;
+        return Http::withHeaders($headers)->get($url);
     }
 
 
@@ -110,12 +99,7 @@ trait OpenBanking
      */
     public function getStatementsList(): Response
     {
-        $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/statements';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
-        ];
 
-        return Http::withHeaders($headers)->get($url);
     }
 
     /**
@@ -127,17 +111,12 @@ trait OpenBanking
      */
     public function getStatement(string $accountId, string $statementId = null): Response
     {
-        $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-statement';
+        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/cards/'.$statementId.'/statement';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/bank-statements/get'
         ];
 
-        $parameters = [
-            'accountNumber' => $accountId
-        ];
-
-        return Http::withHeaders($headers)->get($url, $parameters);
+        return Http::withHeaders($headers)->get($url);
     }
 
     /**
@@ -149,19 +128,7 @@ trait OpenBanking
      */
     public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
     {
-        $url = $this->bank->rsUrl.'/api/v1/bank-statement';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/bank-statements/get'
-        ];
 
-        $parameters = [
-            'accountNumber' => $accountId,
-            'from' => $startDateTime,
-            'till' => $endDateTime
-        ];
-
-        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
 
@@ -179,15 +146,14 @@ trait OpenBanking
      */
     public function getCards($accountNumber = null): Response
     {
-        $url = $this->bank->rsUrl.'/api/v1/card';
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/cards';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/get'
         ];
 
-        $parameters = $accountNumber ? [
-            'accountNumber' => $accountNumber,
-        ] : [];
+        $parameters = [
+            'vas-alias' => 'qvc-master',
+        ];
 
         return Http::withHeaders($headers)->get($url, $parameters);
     }
@@ -200,14 +166,17 @@ trait OpenBanking
      */
     public function getCardInfo(int $ucid): Response
     {
-        $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
+        $url =  $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/cards/'.$ucid.'/details';
 
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites'
         ];
 
-        return Http::withHeaders($headers)->get($url);
+        $parameters = [
+            'operationId' => Str::uuid()->toString()
+        ];
+
+        return Http::withHeaders($headers)->put($url, $parameters);
     }
 
     /**
@@ -217,13 +186,7 @@ trait OpenBanking
      */
     public function getCardsLimits(): Response
     {
-        $url = $this->bank->rsUrl.'/api/v1/cards/limits';
-        $url = $this->bank->rsUrl.'/api/v1/cards/limits';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
-        ];
 
-        return Http::withHeaders($headers)->get($url);
     }
 
     /**
@@ -251,18 +214,7 @@ trait OpenBanking
      */
     public function editCard(string $cardCode, string $newName): Response
     {
-        $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode;
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
-        ];
 
-        $data = '{
-            "Data": {
-                "newName": "'.$newName.'"
-            }
-        }';
-
-        return Http::withHeaders($headers)->post($url, $data);
     }
 
     /**
@@ -275,21 +227,7 @@ trait OpenBanking
      */
     public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response
     {
-        $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
 
-        $url = $this->bank->rsUrl.'/api/v1/card/'.$ucid.'/spend-limit';
-        $url = 'https://business.tinkoff.ru/api/v1/card/'.$ucid.'/spend-limit';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set'
-        ];
-
-        $parameters = [
-            'limitValue' => $limitType,
-            'limitPeriod' => $limitPeriod
-        ];
-
-        return Http::withHeaders($headers)->post($url, $parameters);
     }
 
     /**
@@ -300,17 +238,7 @@ trait OpenBanking
      */
     public function getCardState(string $correlationId): Response
     {
-        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue/result';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
-        ];
 
-        $parameters = [
-            'correlationId' => $correlationId,
-        ];
-
-        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
     /**
@@ -322,18 +250,7 @@ trait OpenBanking
      */
     public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response
     {
-        $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/card/' . $cardCode . '/limits';
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->bank->accessToken
-        ];
 
-        $data = '{
-            "Data": {
-                "newState": "'.$newState.'"
-                }
-        }';
-
-        return Http::withHeaders($headers)->post($url, [$data]);
     }
 
     /**
@@ -345,17 +262,29 @@ trait OpenBanking
      */
     public function deleteCard(string $cardCode, string $message = ''): Response
     {
-        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue';
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/persons/'.$cardCode.'/cards/'.$message.'/block';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
         ];
 
-        $parameters = [
-            'ucid' => $cardCode,
+        return Http::withHeaders($headers)->put($url);
+    }
+
+    /**
+     * Метод закрытия карты
+     *
+     * @var string $cardCode
+     * @var string $message
+     * @return PromiseInterface|Response
+     */
+    public function openCard(string $cardCode, string $message = ''): Response
+    {
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/persons/'.$cardCode.'/cards/'.$message.'/unblock';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
         ];
 
-        return Http::withHeaders($headers)->post($url, $parameters);
+        return Http::withHeaders($headers)->put($url);
     }
 
 
@@ -411,14 +340,7 @@ trait OpenBanking
      */
     public function getPaymentStatus(string $requestId): Response
     {
-        $url = $this->bank->rsUrl . '/api/v1/payment/'.$requestId;
-        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/payment/' . $requestId;
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/payments/rub-pay'
-        ];
 
-        return Http::withHeaders($headers)->get($url);
     }
 
     /**
@@ -472,36 +394,6 @@ trait OpenBanking
                $taxInfoStatus=''
     ): Response
     {
-        $url = $this->bank->rsUrl . '/payment/' . $this->bank->apiVersion . '/for-sign';
-        $headers = [
-            'Authorization' => 'Bearer ' . $this->bank->accessToken
-        ];
 
-        $data = '{
-            "Data": {
-                "accountCode": "'.$accountCode.'",
-                "bankCode": "'.$bankCode.'",
-                "counterpartyBankBic": "'.$counterpartyBankBic.'",
-                "counterpartyAccountNumber": "'.$counterpartyAccountNumber.'",
-                "counterpartyINN": "'.$counterpartyINN.'",
-                "counterpartyKPP": "'.$counterpartyKPP.'",
-                "counterpartyName": "'.$counterpartyName.'",
-                "paymentAmount": "'.$paymentAmount.'",
-                "paymentDate": "'.$paymentDate.'",
-                "paymentNumber": "'.$paymentNumber.'",
-                "paymentPriority": "'.$paymentPriority.'",
-                "paymentPurpose": "'.$paymentPurpose.'",
-                "supplierBillId": "'.$supplierBillId.'",
-                "taxInfoDocumentDate": "'.$taxInfoDocumentDate.'",
-                "taxInfoDocumentNumber": "'.$taxInfoDocumentNumber.'",
-                "taxInfoKBK": "'.$taxInfoKBK.'",
-                "taxInfoOKATO": "'.$taxInfoOKATO.'",
-                "taxInfoPeriod": "'.$taxInfoPeriod.'",
-                "taxInfoReasonCode": "'.$taxInfoReasonCode.'",
-                "taxInfoStatus": "'.$taxInfoStatus.'",
-            }
-        }';
-
-        return Http::withHeaders($headers)->post($url, [$data]);
     }
 }

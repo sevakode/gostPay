@@ -14,15 +14,15 @@ interface AccountContract
     /**
      * Метод получения списка доступных счетов
      */
-    public function getAccountsList(): PromiseInterface|Response;
+    public function getAccountsList($accounts = []): Response;
 
     /**
      * Метод получения информации по конкретному счёту
      *
-     * @param string $accountId
-     * @return object
+     * @param string|null $accountId
+     * @return Response
      */
-//    public function getAccountInfo(string $accountId): object
+    public function getAccountInfo(string $accountId = null): Response;
 
 
 }

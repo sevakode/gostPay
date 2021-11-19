@@ -16,7 +16,7 @@ interface BalanceContract
      *
      * @return PromiseInterface|Response
      */
-    public function getBalancesList(): PromiseInterface|Response;
+    public function getBalancesList(?string $accountId = null): Response;
 
     /**
      * Метод получения информации о балансе конкретного счета
@@ -24,6 +24,6 @@ interface BalanceContract
      * @param string $accountId
      * @return object
      */
-    public function getBalanceInfo(string $accountId): PromiseInterface|Response;
+    public function getBalanceInfo(string $accountId): Response;
 
 }

@@ -17,7 +17,7 @@ interface PaymentContract
      * @param string $requestId
      * @return PromiseInterface|Response
      */
-    public function getPaymentStatus(string $requestId): PromiseInterface|Response;
+    public function getPaymentStatus(string $requestId): Response;
 
     /**
      * Метод получения статуса платежа
@@ -68,5 +68,5 @@ interface PaymentContract
                $taxInfoPeriod='',
                $taxInfoReasonCode='',
                $taxInfoStatus=''
-    ): PromiseInterface|Response;
+    ): Response;
 }

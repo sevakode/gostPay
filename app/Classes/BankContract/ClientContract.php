@@ -18,12 +18,12 @@ interface ClientContract
      *
      * @return PromiseInterface|Response
      */
-    public function getCustomersList(): PromiseInterface|Response;
+    public function getCustomersList(): Response;
 
     /**
      * Метод получения списка доступных клиентов
      * @var string $customerCode
      * @return PromiseInterface|Response
      */
-    public function getCustomerInfo(string $customerCode): PromiseInterface|Response;
+    public function getCustomerInfo(string $customerCode): Response;
 }
