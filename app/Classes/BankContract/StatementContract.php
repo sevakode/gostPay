@@ -17,7 +17,7 @@ interface StatementContract
      *
      * @return PromiseInterface|Response
      */
-    public function getStatementsList(): PromiseInterface|Response;
+    public function getStatementsList(): Response;
 
     /**
      * Метод получения конкретной выписки
@@ -26,7 +26,7 @@ interface StatementContract
      * @param string|null $statementId
      * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): PromiseInterface|Response;
+    public function getStatement(string $accountId, string $statementId = null): Response;
 
     /**
      * Метод создания выписки по конкретному счету
@@ -35,6 +35,6 @@ interface StatementContract
      * @var string $startDateTime
      * @var string $endDateTime
      */
-    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): PromiseInterface|Response;
+    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response;
 
 }

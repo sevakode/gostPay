@@ -14,7 +14,7 @@ interface AccountContract
     /**
      * Метод получения списка доступных счетов
      */
-    public function getAccountsList(): PromiseInterface|Response;
+    public function getAccountsList(): Response;
 
     /**
      * Метод получения информации по конкретному счёту

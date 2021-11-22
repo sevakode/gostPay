@@ -25,7 +25,7 @@ trait OpenBanking
      * Метод получения списка доступных счетов
      *
      */
-    public function getAccountsList(): PromiseInterface|Response
+    public function getAccountsList(): Response
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-accounts';
         $headers = [
@@ -67,7 +67,7 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getBalancesList(): PromiseInterface|Response
+    public function getBalancesList(): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/balances';
         $headers = [
@@ -85,7 +85,7 @@ trait OpenBanking
      * @param string $accountId
      * @return PromiseInterface|Response
      */
-    public function getBalanceInfo(string $accountId): PromiseInterface|Response
+    public function getBalanceInfo(string $accountId): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/balances';
         $headers = [
@@ -109,7 +109,7 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getStatementsList(): PromiseInterface|Response
+    public function getStatementsList(): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/statements';
         $headers = [
@@ -126,7 +126,7 @@ trait OpenBanking
      * @param string|null $statementId
      * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): PromiseInterface|Response
+    public function getStatement(string $accountId, string $statementId = null): Response
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-statement';
         $headers = [
@@ -148,7 +148,7 @@ trait OpenBanking
      * @var string $startDateTime
      * @var string $endDateTime
      */
-    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): PromiseInterface|Response
+    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
     {
         $url = $this->bank->rsUrl.'/api/v1/bank-statement';
         $headers = [
@@ -178,7 +178,7 @@ trait OpenBanking
      * @param null $accountNumber
      * @return PromiseInterface|Response
      */
-    public function getCards($accountNumber = null): PromiseInterface|Response
+    public function getCards($accountNumber = null): Response
     {
         $url = $this->bank->rsUrl.'/api/v1/card';
         $headers = [
@@ -199,7 +199,7 @@ trait OpenBanking
      * @param int $ucid
      * @return PromiseInterface|Response
      */
-    public function getCardInfo(int $ucid): PromiseInterface|Response
+    public function getCardInfo(int $ucid): Response
     {
         $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
 
@@ -216,7 +216,7 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getCardsLimits(): PromiseInterface|Response
+    public function getCardsLimits(): Response
     {
         $url = $this->bank->rsUrl.'/api/v1/cards/limits';
         $url = $this->bank->rsUrl.'/api/v1/cards/limits';
@@ -233,7 +233,7 @@ trait OpenBanking
      * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardLimits(string $cardCode): PromiseInterface|Response
+    public function getCardLimits(string $cardCode): Response
     {
         $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode.'/limits';
         $headers = [
@@ -250,7 +250,7 @@ trait OpenBanking
      * @param string $newName
      * @return PromiseInterface|Response
      */
-    public function editCard(string $cardCode, string $newName): PromiseInterface|Response
+    public function editCard(string $cardCode, string $newName): Response
     {
         $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode;
         $headers = [
@@ -274,7 +274,7 @@ trait OpenBanking
      * @param string $limitPeriod
      * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): PromiseInterface|Response
+    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response
     {
         $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
 
@@ -299,7 +299,7 @@ trait OpenBanking
      * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardState(string $correlationId): PromiseInterface|Response
+    public function getCardState(string $correlationId): Response
     {
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue/result';
         $headers = [
@@ -321,7 +321,7 @@ trait OpenBanking
      * @param string $newState
      * @return PromiseInterface|Response
      */
-    public function editCardState(string $cardCode, string $newState = 'lockedCard'): PromiseInterface|Response
+    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/card/' . $cardCode . '/limits';
         $headers = [
@@ -344,7 +344,7 @@ trait OpenBanking
      * @var string $message
      * @return PromiseInterface|Response
      */
-    public function deleteCard(string $cardCode, string $message = ''): PromiseInterface|Response
+    public function deleteCard(string $cardCode, string $message = ''): Response
     {
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue';
         $headers = [
@@ -371,7 +371,7 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getCustomersList(): PromiseInterface|Response
+    public function getCustomersList(): Response
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/customers';
         $headers = [
@@ -386,7 +386,7 @@ trait OpenBanking
      * @var string $customerCode
      * @return PromiseInterface|Response
      */
-    public function getCustomerInfo(string $customerCode): PromiseInterface|Response
+    public function getCustomerInfo(string $customerCode): Response
     {
         $url = $this->bank->rsUrl . '/card/' . $this->bank->apiVersion . '/customers/'.$customerCode;
         $headers = [
@@ -410,7 +410,7 @@ trait OpenBanking
      * @param string $requestId
      * @return PromiseInterface|Response
      */
-    public function getPaymentStatus(string $requestId): PromiseInterface|Response
+    public function getPaymentStatus(string $requestId): Response
     {
         $url = $this->bank->rsUrl . '/api/v1/payment/'.$requestId;
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/payment/' . $requestId;
@@ -471,7 +471,7 @@ trait OpenBanking
                $taxInfoPeriod='',
                $taxInfoReasonCode='',
                $taxInfoStatus=''
-    ): PromiseInterface|Response
+    ): Response
     {
         $url = $this->bank->rsUrl . '/payment/' . $this->bank->apiVersion . '/for-sign';
         $headers = [

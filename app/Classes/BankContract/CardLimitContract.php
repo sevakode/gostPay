@@ -12,7 +12,7 @@ interface CardLimitContract
      *
      * @return PromiseInterface|Response
      */
-    public function getCardsLimits(): PromiseInterface|Response;
+    public function getCardsLimits(): Response;
 
     /**
      * Показывает действующие лимиты по карте
@@ -20,7 +20,7 @@ interface CardLimitContract
      * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardLimits(string $cardCode): PromiseInterface|Response;
+    public function getCardLimits(string $cardCode): Response;
 
     /**
      * Показывает действующие лимиты по карте
@@ -29,7 +29,7 @@ interface CardLimitContract
      * @param string $newName
      * @return PromiseInterface|Response
      */
-    public function editCard(string $cardCode, string $newName): PromiseInterface|Response;
+    public function editCard(string $cardCode, string $newName): Response;
 
     /**
      * Метод позволяет изменить следующие лимиты по карте:
@@ -54,5 +54,5 @@ interface CardLimitContract
      * @param string $limitPeriod
      * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): PromiseInterface|Response;
+    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response;
 }
