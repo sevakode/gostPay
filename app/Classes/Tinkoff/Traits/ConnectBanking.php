@@ -1,8 +1,9 @@
 <?php namespace App\Classes\Tinkoff\Traits;
 
-use App\Classes\BankConnectContract;
+use App\Classes\BankContract\BankConnectContract;
 use App\Classes\TochkaBank\BankAPI;
 use App\Models\Bank\BankToken;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -44,7 +45,7 @@ trait ConnectBanking
         return $response;
     }
 
-    public function connectTokenRefresh(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    public function connectTokenRefresh(): Response
     {
         $url = $this->bank->url.'/connect/token';
         $headers = [
