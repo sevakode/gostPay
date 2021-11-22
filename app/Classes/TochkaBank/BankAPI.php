@@ -1,15 +1,14 @@
 <?php namespace App\Classes\TochkaBank;
 
-use App\Classes\BankConnectContract;
+use App\Classes\BankContract\BankConnectContract;
 use App\Classes\BankMain;
-use App\Classes\BaseContracts;
+use App\Classes\BankContract\BaseContracts;
 use App\Classes\TochkaBank\Traits\ConnectBanking;
 use App\Classes\TochkaBank\Traits\OpenBanking;
 use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use App\Models\Bank\Statement;
 use Carbon\Carbon;
-use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 
 class BankAPI extends BankMain implements BankConnectContract, BaseContracts

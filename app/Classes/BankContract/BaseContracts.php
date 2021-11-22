@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes;
+namespace App\Classes\BankContract;
 
 interface BaseContracts extends
     AccountContract,
