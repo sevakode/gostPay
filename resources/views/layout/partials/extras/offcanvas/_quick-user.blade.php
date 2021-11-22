@@ -125,10 +125,12 @@
             <!--begin::Item-->
             @isset(request()->user()->company)
                 @foreach(request()->user()->company->invoices()->get() as $invoice)
+                    @if(isset($invoice->bank->icon))
                     <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
                                 <span class="svg-icon svg-icon-warning mr-5">
                                     <span class="svg-icon svg-icon-lg">
                                         <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+
                                         {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
                                         <!--end::Svg Icon-->
                                     </span>
@@ -138,13 +140,14 @@
                                class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
                                 {{ $invoice->bank->title }}
 
-                                <span class="text-muted font-size-sm">{{ $invoice->account_id }}</span>
+                                <span class="text-muted font-size-sm">{{ $invoice->bank->bin }}</span>
                             </a>
                         </div>
                         <span class="font-weight-bolder py-1 font-size-lg">
                             {{ $invoice->currencySign }}{{ (int) $invoice->balance()->whereNull('user_id')->getSum() }}
                         </span>
                     </div>
+                    @endif
                 @endforeach
             @endisset
             <!--end::Item-->
@@ -172,7 +175,7 @@
                                    class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
                                     {{ $invoice->bank->title }}
 
-                                    <span class="text-muted font-size-sm">{{ $invoice->account_id }}</span>
+                                    <span class="text-muted font-size-sm">{{ $invoice->bank->bin }}</span>
                                 </a>
                             </div>
                             <span class="font-weight-bolder py-1 font-size-lg">

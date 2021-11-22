@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\OptionsPermissions;
+use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use App\Notifications\DataNotification;
@@ -119,6 +120,92 @@ class DatatablesController extends Controller
     }
 
     public function payments(Request $request)
+    {
+        mb_parse_str(urldecode($request->getContent()), $filter);
+        $request->offsetSet('page', $filter['pagination']['page']);
+        $data['data'] = [];
+        $data['meta'] = [
+            "perpage"=> $filter['pagination']['perpage'] ?? 10,
+            "total"=> 350,
+        ];
+
+        $user = $request->user();
+        $isAdmin = $user->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']);
+
+        if ($isAdmin) {
+            $company = $user->company()->first();
+            $cards = $company->cards();
+        }
+        else{
+            $cards = $user->cards();
+        }
+        if(isset($filter['query']['generalSearch'])) {
+            $this->filterSearch($cards, $filter);
+            $cards->orWhereHas('user', function (Builder $query) use($filter) {
+                $query->where('first_name', $filter['query']['generalSearch']);
+                $query->orWhere('last_name', $filter['query']['generalSearch']);
+                $query->orWhereRaw('first_name + last_name', $filter['query']['generalSearch']);
+            });
+        }
+        if(isset($filter['query']['user_id'])) {
+            $cards->where('user_id', $filter['query']['user_id']);
+        }
+
+        $paymentList = Payment::query()
+            ->whereIn('card_id', $cards->get(['id'])->pluck('id'))
+            ->join('cards', 'payments.card_id', '=', 'cards.id')
+            ->with('queryCard', function($query) {
+                $query->select(['id','state','user_id', 'number', 'head', 'tail']);
+            });
+
+        if(isset($filter['query']['generalSearch'])) {
+            $paymentList->orWhere('amount', $filter['query']['generalSearch']);
+        }
+
+        switch ($filter['sort']['field'] ?? '') {
+            case 'number':
+                $paymentList->orderBy('cards.tail', $filter['sort']['sort'])
+                    ->orderBy('cards.head', $filter['sort']['sort']);
+                break;
+            case 'description':
+                $paymentList->orderBy('payments.description', $filter['sort']['sort']);
+                break;
+            case 'amount':
+                $paymentList->orderBy('payments.amount', $filter['sort']['sort']);
+                break;
+            case 'operation_at':
+                $paymentList->orderBy('operationAt', $filter['sort']['sort']);
+                break;
+            default:
+                $paymentList->orderBy('operationAt');
+                break;
+        }
+        $paymentList = $paymentList->paginate($data['meta']['perpage']);
+        $data['pages'] = $paymentList;
+
+        $data['meta']['page'] = $paymentList->currentPage();
+        foreach ($paymentList as $payment) {
+            $card = $payment->queryCard;
+            $data['data'][] = [
+                'number' => $card->number,
+                'numberLink' => route('card', $card->id),
+                'user' => isset($card->user) ? $card->user->fullname : 'none',
+                'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
+                'state' => $card->state,
+
+                'description' => $payment->description,
+                'operation_at' => $payment->operationAt->format('M d, Y H:m'),
+                'amount' => $payment->amount,
+                'currency' => $card->currencySign,
+                'type' => $payment->type,
+            ];
+
+        }
+
+        return new JsonResponse($data);
+    }
+
+    public function AccountPayments(Request $request, BankToken $bank)
     {
         mb_parse_str(urldecode($request->getContent()), $filter);
         $request->offsetSet('page', $filter['pagination']['page']);

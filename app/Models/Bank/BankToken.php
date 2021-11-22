@@ -186,6 +186,7 @@ class BankToken extends Model
 
     public function getDateRefresh(): string
     {
-        return $this->refreshTokenDate->format('M d, Y H:m');
+        $date = $this->refreshTokenDate ?? $this->accessTokenDate ?? $this->created_at;
+        return $date->format('M d, Y H:m');
     }
 }
