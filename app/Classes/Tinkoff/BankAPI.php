@@ -102,8 +102,8 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts
         foreach ($this->bank->invoices()->get() as $account) {
             $statement = $this
                 ->initStatement($account->account_id, now()->subYear()->format('Y-m-d'), now()->format('Y-m-d'))
-                ->object();
-            foreach ($statement->operation as $payment) {
+                ->json();
+            foreach ($statement['operation'] as $payment) {
                 $cardId = 0;
                 preg_match("/номер (\d{4})...(\d{4})/", $payment['paymentPurpose'] ?? '', $cards);
                 if (isset($cards[1], $cards[2])) {
