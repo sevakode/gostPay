@@ -31,7 +31,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Modal -->
         <div class="modal fade" id="AddCardsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -79,6 +78,7 @@
                 </div>
             </div>
         </div>
+
         <div class="card card-custom gutter-b">
             <div class="card-body">
                 <div class="form-group row mb-6">

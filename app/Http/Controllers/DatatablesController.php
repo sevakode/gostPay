@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Interfaces\OptionsPermissions;
+use App\Models\Bank\Account;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
+use App\Models\Bank\TransactionBalance;
+use App\Models\Company;
+use App\Models\User;
 use App\Notifications\DataNotification;
 use App\Notifications\TelegramNotification;
 use App\Providers\RouteServiceProvider;
@@ -205,9 +209,42 @@ class DatatablesController extends Controller
         return new JsonResponse($data);
     }
 
-    public function AccountPayments(Request $request, BankToken $bank)
+    public function accountTransactions(Request $request, $bank)
     {
         mb_parse_str(urldecode($request->getContent()), $filter);
+        if(isset($filter['query']) and isset($filter['query']['eventPayCompany'])) {
+            $pay = (object) $filter['query']['eventPayCompany'];
+            $company = Company::find($pay->company[0]['id']);
+            if ($company) {
+                $transactionObject = TransactionBalance::query()->create(['amount'=>$pay->amount]);
+                $withPivot = [
+                    'bank_account_id' => $pay->account[0]['id'],
+                    'user_id' => 2
+                ];
+                $company->balance()->attach($transactionObject, $withPivot);
+                DataNotification::sendSuccess(['Транзакция прошла успешно']);
+            }
+            else {
+                DataNotification::sendErrors(['Компания не найдена'], $request->user());
+            }
+        }
+
+        $bank = BankToken::query()->find($bank);
+        $invoices = $bank->invoices()->has('balance')->get();
+        $transactions = collect();
+        foreach ($invoices as $invoice) {
+
+            $invoiceTransactions = $invoice->balance()->select('amount', 'message','transaction_balances.created_at','message', 'user_id as user_id')->get();
+
+            if(isset($filter['query']['generalSearch'])) {
+                $invoiceTransactions = $invoiceTransactions->whereHas('user', function (Builder $query) use($filter) {
+                    $query->where('first_name', $filter['query']['generalSearch']);
+                    $query->orWhere('last_name', $filter['query']['generalSearch']);
+                    $query->orWhereRaw('first_name + last_name', $filter['query']['generalSearch']);
+                });
+            }
+            $transactions = $transactions->merge($invoiceTransactions);
+        }
         $request->offsetSet('page', $filter['pagination']['page']);
         $data['data'] = [];
         $data['meta'] = [
@@ -216,76 +253,87 @@ class DatatablesController extends Controller
         ];
 
         $user = $request->user();
-        $isAdmin = $user->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']);
 
-        if ($isAdmin) {
-            $company = $user->company()->first();
-            $cards = $company->cards();
-        }
-        else{
-            $cards = $user->cards();
-        }
-        if(isset($filter['query']['generalSearch'])) {
-            $this->filterSearch($cards, $filter);
-            $cards->orWhereHas('user', function (Builder $query) use($filter) {
-                $query->where('first_name', $filter['query']['generalSearch']);
-                $query->orWhere('last_name', $filter['query']['generalSearch']);
-                $query->orWhereRaw('first_name + last_name', $filter['query']['generalSearch']);
-            });
-        }
-        if(isset($filter['query']['user_id'])) {
-            $cards->where('user_id', $filter['query']['user_id']);
+        if(isset($filter['query']['company_id'])) {
+            $transactions->where('company_id', $filter['query']['company_id']);
         }
 
-        $paymentList = Payment::query()
-            ->whereIn('card_id', $cards->get(['id'])->pluck('id'))
-            ->join('cards', 'payments.card_id', '=', 'cards.id')
-            ->with('queryCard', function($query) {
-                $query->select(['id','state','user_id', 'number', 'head', 'tail']);
-            });
-
-        if(isset($filter['query']['generalSearch'])) {
-            $paymentList->orWhere('amount', $filter['query']['generalSearch']);
-        }
-
+        $page = $filter['pagination']['page'] -1 ?? 0;
         switch ($filter['sort']['field'] ?? '') {
-            case 'number':
-                $paymentList->orderBy('cards.tail', $filter['sort']['sort'])
-                    ->orderBy('cards.head', $filter['sort']['sort']);
-                break;
-            case 'description':
-                $paymentList->orderBy('payments.description', $filter['sort']['sort']);
-                break;
-            case 'amount':
-                $paymentList->orderBy('payments.amount', $filter['sort']['sort']);
-                break;
-            case 'operation_at':
-                $paymentList->orderBy('operationAt', $filter['sort']['sort']);
-                break;
-            default:
-                $paymentList->orderBy('operationAt');
-                break;
+
         }
-        $paymentList = $paymentList->paginate($data['meta']['perpage']);
-        $data['pages'] = $paymentList;
+        $page = max($request->page, 1) - 1;
+        $transactionsList = $transactions->chunk($data['meta']['perpage']);
+        $data['pages'] = $transactionsList;
 
-        $data['meta']['page'] = $paymentList->currentPage();
-        foreach ($paymentList as $payment) {
-            $card = $payment->queryCard;
+        $data['meta']['page'] = $page;
+        foreach ($transactionsList[$page] as $transaction) {
+            $account = $transaction->pivot->pivotParent;
+            $company = $account->company()->first();
+            $user = User::query()->addSelect(['first_name', 'last_name'])->find($transaction->user_id);
+
             $data['data'][] = [
-                'number' => $card->number,
-                'numberLink' => route('card', $card->id),
-                'user' => isset($card->user) ? $card->user->fullname : 'none',
-                'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
-                'state' => $card->state,
+                'company_name' => $company->name,
+                'numberLink' => '#',
+                'user' => $user->fullName ?? 'none',
+                'userLink' => $transaction->user_id,
 
-                'description' => $payment->description,
-                'operation_at' => $payment->operationAt->format('M d, Y H:m'),
-                'amount' => $payment->amount,
-                'currency' => $card->currencySign,
-                'type' => $payment->type,
+                'description' => $transaction->message ?? 'none',
+                'operation_at' => $transaction->created_at->format('M d, Y H:m'),
+                'amount' => $transaction->amount,
+                'currency' => $account->currencySign,
+                'type' => $transaction->type(),
             ];
+//
+        }
+//
+        return new JsonResponse($data);
+    }
 
+    public function accountCompanies(Request $request, $bank)
+    {
+        $bank = BankToken::query()->find($bank);
+
+        $invoices = $bank->invoices()->get();
+
+        $cards = $request->user()->company->cards()->where('user_id', null);
+        if ($request->q)
+            $cards = $cards
+                ->where('state', Card::ACTIVE)->where('number', 'like', '%' . $request->q . '%')
+                ->orWhere('tail', $request->q)->where('state', Card::ACTIVE)
+                ->orWhere('head', $request->q)->where('state', Card::ACTIVE);
+
+        $data = ['items'];
+
+        foreach ($bank->companies()->get() as $company) {
+            $data['items'][] = [
+                'id' => $company->id,
+                'text' => $company->name,
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
+
+    public function accountCompaniesInvoices(Request $request, $bank_id, $company_id)
+    {
+        $invoices = Account::where('bank_token_id', $bank_id)->where('company_id', $company_id);
+
+        $cards = $request->user()->company->cards()->where('user_id', null);
+        if ($request->q)
+            $cards = $cards
+                ->where('state', Card::ACTIVE)->where('number', 'like', '%' . $request->q . '%')
+                ->orWhere('tail', $request->q)->where('state', Card::ACTIVE)
+                ->orWhere('head', $request->q)->where('state', Card::ACTIVE);
+
+        $data = ['items'];
+
+        foreach ($invoices->get() as $invoice) {
+            $data['items'][] = [
+                'id' => $invoice->id,
+                'text' => $invoice->account_id,
+                'currency' => $invoice->getCurrencySignAttribute()
+            ];
         }
 
         return new JsonResponse($data);

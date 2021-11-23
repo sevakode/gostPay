@@ -2,6 +2,7 @@
 
 namespace App\Models\Bank;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -45,5 +46,15 @@ class TransactionBalance extends Model
     public function account(): HasOne
     {
         return $this->hasOne(Account::class, 'bank_account_id');
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class);
+    }
+
+    public function type(): string
+    {
+        return $this->amount >= 0 ? Payment::REVENUE : Payment::EXPENDITURE;
     }
 }

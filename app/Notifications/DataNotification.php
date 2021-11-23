@@ -86,6 +86,19 @@ class DataNotification extends Notification
         }
     }
 
+    public static function sendSuccess(array $messages, User $user = null, $title = '') {
+        $user = is_null($user) ? Auth::user() : $user;
+        foreach($messages as $message)
+        {
+            $data = new DataNotification(
+                'dark', $title,
+                $message, 'icon icon-xl flaticon2-check-mark text-success',
+                50000, '', self::TEMPLATE_XL
+            );
+            Notify::send($user, $data);
+        }
+    }
+
     /**
      * Get the notification's delivery channels.
      *

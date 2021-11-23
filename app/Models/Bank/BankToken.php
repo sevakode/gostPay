@@ -48,7 +48,7 @@ class BankToken extends Model
 
     public function companies()
     {
-        return $this->belongsToMany(Company::class, 'companies_bank_token');;
+        return $this->belongsToMany(Company::class, 'companies_bank_token');
     }
 
     public function invoices()

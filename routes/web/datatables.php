@@ -24,8 +24,12 @@ Route::post('user-cards', [DatatablesController::class, 'userCards'])
 Route::post('payments', [DatatablesController::class, 'payments'])
     ->name('datatables.dashboard.payments');
 
-Route::post('payments', [DatatablesController::class, 'payments'])
-    ->name('datatables.dashboard.accounts.payments');
+Route::post('account/{account_id}/transactions', [DatatablesController::class, 'accountTransactions'])
+    ->name('datatables.accounts.transactions');
+Route::get('account/{account_id}/companies/select', [DatatablesController::class, 'accountCompanies'])
+    ->name('datatables.accounts.companies');
+Route::get('account/{account_id}/companies/{company_id}/invoices/select', [DatatablesController::class, 'accountCompaniesInvoices'])
+    ->name('datatables.accounts.companies.invoices');
 
 Route::post('select-add-cards', [DatatablesController::class, 'selectAddCard'])
     ->name('datatables.select-add-cards');

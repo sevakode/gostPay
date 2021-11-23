@@ -9,6 +9,7 @@ use App\Models\Bank\TransactionBalance;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Account
@@ -31,14 +32,10 @@ class Account extends Model
 
     protected $table = 'bank_account';
 
-    public function balance(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function balance(): BelongsToMany
     {
-        $belongsToMany = $this
-            ->belongsToMany(TransactionBalance::class, 'transaction_balances_companies_users',
-                'bank_account_id', 'transaction_id')
-            ->where('company_id', $this->company_id);
-
-        return $belongsToMany;
+        return $this->belongsToMany(TransactionBalance::class, 'transaction_balances_companies_users',
+                'bank_account_id', 'transaction_id');
     }
 
     public function payment()
@@ -81,6 +78,11 @@ class Account extends Model
         };
 
         return Card::where($whereInLike);
+    }
+
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id', 'company_id');
     }
 
     public function getCompanyAttribute()
