@@ -20,12 +20,17 @@ class TransactionBalance extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'id', 'amount'
+        'id', 'amount', 'message'
     ];
 
-    public function scopeGetSum($query): int
+    public function scopeGetSum($query): float
     {
         return $query->sum('amount');
+    }
+
+    public function scopeWhereUser($query, $user_id)
+    {
+        return $query->where('transaction_balances_companies_users.user_id', $user_id);
     }
 
     public function scopeRevenue($query, int $amount)

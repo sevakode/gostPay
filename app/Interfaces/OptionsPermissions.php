@@ -4,6 +4,58 @@ use App\Models\Role;
 
 interface OptionsPermissions
 {
+    const ALL = [
+        self::OWNER,
+        self::DEMO,
+        self::ADMIN_ROLE_SET,
+        self::MANAGER_ROLE_SET,
+
+        self::ACCESS_TO_PROFILE,
+        self::ACCESS_TO_MANAGER,
+        self::ACCESS_TO_ADD_CARDS,
+        self::ACCESS_TO_CREATE_CARDS,
+        self::ACCESS_TO_REMOVE_CARDS,
+        self::ACCESS_TO_CLOSE_CARDS,
+        self::ACCESS_TO_ALL_CARDS_COMPANY,
+        self::ACCESS_TO_ALL_USERS_COMPANY,
+
+        self::ACCESS_TO_CREATE_COMPANY,
+        self::ACCESS_TO_LOGOUT_COMPANY,
+        self::ACCESS_TO_ALL_COMPANY,
+
+        self::ACCESS_TO_REMOVE_USERS,
+
+        self::ACCESS_TO_UPDATE_COMPANY,
+        self::ACCESS_TO_SHOW_COMPANY,
+        self::ACCESS_TO_INSERT_COMPANY,
+
+        self::ACCESS_TO_CREATE_PROJECTS_COMPANY,
+        self::ACCESS_TO_UPDATE_PROJECTS_COMPANY,
+        self::ACCESS_TO_SHOW_PROJECTS_COMPANY,
+        self::ACCESS_TO_ALL_PROJECTS_COMPANY,
+        self::ACCESS_TO_ADD_PROJECTS_COMPANY,
+
+        self::ACCESS_TO_EDIT_INVOICE,
+        self::ACCESS_TO_INSERT_INVOICE,
+
+        self::ACCESS_TO_INVISIBLE,
+        self::ACCESS_TO_SHOW_INVISIBLE,
+
+        self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
+        self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
+        self::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
+        self::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
+
+        self::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY ,
+        self::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS ,
+
+        self::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY ,
+        self::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY ,
+        self::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS ,
+        self::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS ,
+    ];
+
+
     const
         OWNER = [
         'title' => 'Owner',
@@ -145,7 +197,8 @@ interface OptionsPermissions
         ];
 
 
-    const ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS = [
+    const
+        ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS = [
         'title' => 'Доступ к просмотру статистики платежей пользователей компании',
         'slug' => 'access-to-show-chart-company-users-payments',
     ],
@@ -162,46 +215,31 @@ interface OptionsPermissions
         'slug' => 'access-to-show-chart-user-projects',
     ];
 
-    const ALL = [
-        self::OWNER,
-        self::DEMO,
-        self::ADMIN_ROLE_SET,
-        self::MANAGER_ROLE_SET,
+    const
+        ACCESS_TO_SHOW_BALANCE_FOR_COMPANY = [
+        'title' => 'Доступ к просмотру баланса компании',
+        'slug' => 'access-to-show-balance-company',
+    ],
+        ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS = [
+        'title' => 'Доступ к просмотру баланса пользователей компании',
+        'slug' => 'access-to-show-balance-company-users',
+    ];
 
-        self::ACCESS_TO_PROFILE,
-        self::ACCESS_TO_MANAGER,
-        self::ACCESS_TO_ADD_CARDS,
-        self::ACCESS_TO_CREATE_CARDS,
-        self::ACCESS_TO_REMOVE_CARDS,
-        self::ACCESS_TO_CLOSE_CARDS,
-        self::ACCESS_TO_ALL_CARDS_COMPANY,
-        self::ACCESS_TO_ALL_USERS_COMPANY,
-
-        self::ACCESS_TO_CREATE_COMPANY,
-        self::ACCESS_TO_LOGOUT_COMPANY,
-        self::ACCESS_TO_ALL_COMPANY,
-
-        self::ACCESS_TO_REMOVE_USERS,
-
-        self::ACCESS_TO_UPDATE_COMPANY,
-        self::ACCESS_TO_SHOW_COMPANY,
-        self::ACCESS_TO_INSERT_COMPANY,
-
-        self::ACCESS_TO_CREATE_PROJECTS_COMPANY,
-        self::ACCESS_TO_UPDATE_PROJECTS_COMPANY,
-        self::ACCESS_TO_SHOW_PROJECTS_COMPANY,
-        self::ACCESS_TO_ALL_PROJECTS_COMPANY,
-        self::ACCESS_TO_ADD_PROJECTS_COMPANY,
-
-        self::ACCESS_TO_EDIT_INVOICE,
-        self::ACCESS_TO_INSERT_INVOICE,
-
-        self::ACCESS_TO_INVISIBLE,
-        self::ACCESS_TO_SHOW_INVISIBLE,
-
-        self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PAYMENTS,
-        self::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
-        self::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
-        self::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
+    const
+        ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY = [
+        'title' => 'Доступ к пополнению баланса компании',
+        'slug' => 'access-to-revenue-balance-company',
+    ],
+        ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY = [
+        'title' => 'Доступ к вычету баланса компании',
+        'slug' => 'access-to-expenditure-balance-company',
+    ],
+        ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS = [
+        'title' => 'Доступ к пополнению баланса пользователя в компании',
+        'slug' => 'access-to-revenue-balance-company-users',
+    ],
+        ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS = [
+        'title' => 'Доступ к вычету баланса пользователя в компании',
+        'slug' => 'access-to-expenditure-balance-company-users',
     ];
 }

@@ -15,58 +15,59 @@
             </div>
         </div>
     </div>
-
-    <div class="card card-custom gutter-b">
-        <div class="card-body">
-            <div class="form-group row mb-6">
-                <label class="col-form-label text-right col-lg-3 col-sm-12">Пополнить счет для компании</label>
-                <div class="col-lg-6 col-md-12 col-sm-12">
-                    <select class="form-control select2" id="select_companies" name="param" ></select>
+    @if(request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY['slug'])
+     and request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS['slug']))
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <div class="form-group row mb-6">
+                    <label class="col-form-label text-right col-lg-3 col-sm-12">Пополнить счет для компании</label>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <select class="form-control select2" id="select_companies" name="param" ></select>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-9 ml-lg-auto">
+                            <button type="button" class="btn btn-primary" id="button-pay" data-toggle="modal" data-target="#addBalanceModal">
+                                Пополнить
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-lg-9 ml-lg-auto">
-                        <button type="button" class="btn btn-primary" id="button-pay" data-toggle="modal" data-target="#addBalanceModal">
-                            Пополнить
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="addBalanceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Пополнить баланс</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3 col-sm-12">Проект</label>
+                            <div class="col-lg-8 col-md-8 col-sm-12">
+                                    <select class="form-control select2" id="selectpicker_invoices" name="param" ></select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3 col-sm-12">Сумма</label>
+                            <div class="col-lg-6 col-md-9 col-sm-12">
+                                <input class="form-control" id="summa_mask" type="text"/>
+                                <span class="form-text text-muted">Тип оплаты <code>€ ___.__1.234,56</code></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="reset" data-dismiss="modal" id="pay_company" class="btn btn-primary mr-2">Добавить</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="addBalanceModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Пополнить баланс</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group row">
-                        <label class="col-form-label text-right col-lg-3 col-sm-12">Проект</label>
-                        <div class="col-lg-8 col-md-8 col-sm-12">
-                                <select class="form-control select2" id="selectpicker_invoices" name="param" ></select>
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label class="col-form-label text-right col-lg-3 col-sm-12">Сумма</label>
-                        <div class="col-lg-6 col-md-9 col-sm-12">
-                            <input class="form-control" id="summa_mask" type="text"/>
-                            <span class="form-text text-muted">Тип оплаты <code>€ ___.__1.234,56</code></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="reset" data-dismiss="modal" id="pay_company" class="btn btn-primary mr-2">Добавить</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="card card-custom gutter-b">
+        <div class="card card-custom gutter-b">
         <div class="card-header flex-wrap border-0 pt-6 pb-0">
             <div class="card-title">
                 <h3 class="card-label">Последние транзакции
@@ -113,6 +114,7 @@
             <!--end: Datatable-->
         </div>
     </div>
+    @endif
 @endsection
 
 @push('scripts')

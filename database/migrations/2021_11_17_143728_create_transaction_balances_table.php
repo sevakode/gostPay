@@ -15,7 +15,7 @@ class CreateTransactionBalancesTable extends Migration
     {
         Schema::create('transaction_balances', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('amount');
+            $table->float('amount');
             $table->text('message')->nullable();
             $table->softDeletes();
             $table->timestamps();

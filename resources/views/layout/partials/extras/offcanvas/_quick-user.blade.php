@@ -144,7 +144,7 @@
                             </a>
                         </div>
                         <span class="font-weight-bolder py-1 font-size-lg">
-                            {{ $invoice->currencySign }}{{ (int) $invoice->balance()->whereNull('user_id')->getSum() }}
+                            {{ $invoice->currencySign }}{{ (float) $invoice->balance()->whereUser(null)->getSum() }}
                         </span>
                     </div>
                     @endif

@@ -48,6 +48,14 @@ interface OptionsRole
             OptionsPermissions::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
+
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS ,
+
+            OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS ,
+            OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS ,
         ]
     ],
         MANAGER = [
@@ -84,6 +92,14 @@ interface OptionsRole
             OptionsPermissions::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
+
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS ,
+
+            OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS ,
+            OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS ,
         ]
     ],
         ADMIN = [
@@ -106,6 +122,12 @@ interface OptionsRole
             OptionsPermissions::ACCESS_TO_SHOW_CHART_COMPANY_USERS_PROJECTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
+
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS ,
+
+            OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS ,
+            OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS ,
         ]
     ],
         DEMO = [
@@ -140,6 +162,9 @@ interface OptionsRole
 
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PAYMENTS,
             OptionsPermissions::ACCESS_TO_SHOW_CHART_USER_PROJECTS,
+
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY ,
+            OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS ,
         ],
     ],
         USER = [

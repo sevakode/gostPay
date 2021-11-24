@@ -213,20 +213,31 @@ class DatatablesController extends Controller
     {
         mb_parse_str(urldecode($request->getContent()), $filter);
         if(isset($filter['query']) and isset($filter['query']['eventPayCompany'])) {
-            $pay = (object) $filter['query']['eventPayCompany'];
-            $company = Company::find($pay->company[0]['id']);
-            if ($company) {
-                $transactionObject = TransactionBalance::query()->create(['amount'=>$pay->amount]);
-                $withPivot = [
-                    'bank_account_id' => $pay->account[0]['id'],
-                    'user_id' => 2
-                ];
-                $company->balance()->attach($transactionObject, $withPivot);
-                DataNotification::sendSuccess(['Транзакция прошла успешно']);
+
+            if ($request->user()->hasPermissionTo(OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY['slug'])) {
+                $pay = (object) $filter['query']['eventPayCompany'];
+                $company = Company::find($pay->company[0]['id']);
+
+                $floatAmount = substr($pay->amount, -2);
+                $intAmount = substr($pay->amount,  0,strlen($pay->amount)-2);
+                $amount = (float)"$intAmount.$floatAmount";
+
+                if ($company) {
+                    $transactionObject = TransactionBalance::query()->create(['amount'=>$amount]);
+                    $withPivot = [
+                        'bank_account_id' => $pay->account[0]['id']
+                    ];
+                    $company->balance()->attach($transactionObject, $withPivot);
+                    DataNotification::sendSuccess(['Транзакция прошла успешно']);
+                }
+                else {
+                    DataNotification::sendErrors(['Компания не найдена'], $request->user());
+                }
             }
             else {
-                DataNotification::sendErrors(['Компания не найдена'], $request->user());
+                DataNotification::sendErrors(['У вас недостаточно прав для изменения баланса в компании']);
             }
+
         }
 
         $bank = BankToken::query()->find($bank);
