@@ -237,7 +237,6 @@ class DatatablesController extends Controller
             else {
                 DataNotification::sendErrors(['У вас недостаточно прав для изменения баланса в компании']);
             }
-
         }
 
         $bank = BankToken::query()->find($bank);
@@ -324,6 +323,32 @@ class DatatablesController extends Controller
         }
 
         return new JsonResponse($data);
+    }
+
+    public function accounts(Request $request)
+    {
+        $company = $request->user()->company()->first();
+        $balances = $company->ivoices()->with('balance')->get();
+        # TODO: Вывод аккаунтов компании
+//        $invoices = $bank->invoices()->get();
+
+//        $cards = $request->user()->company->cards()->where('user_id', null);
+//        if ($request->q)
+//            $cards = $cards
+//                ->where('state', Card::ACTIVE)->where('number', 'like', '%' . $request->q . '%')
+//                ->orWhere('tail', $request->q)->where('state', Card::ACTIVE)
+//                ->orWhere('head', $request->q)->where('state', Card::ACTIVE);
+//
+//        $data = ['items'];
+//
+//        foreach ($bank->companies()->get() as $company) {
+//            $data['items'][] = [
+//                'id' => $company->id,
+//                'text' => $company->name,
+//            ];
+//        }
+//
+//        return new JsonResponse($data);
     }
 
     public function accountCompaniesInvoices(Request $request, $bank_id, $company_id)

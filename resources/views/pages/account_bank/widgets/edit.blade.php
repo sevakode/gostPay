@@ -46,9 +46,9 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label class="col-form-label text-right col-lg-3 col-sm-12">Проект</label>
+                            <label class="col-form-label text-right col-lg-3 col-sm-12">Счет</label>
                             <div class="col-lg-8 col-md-8 col-sm-12">
-                                    <select class="form-control select2" id="selectpicker_invoices" name="param" ></select>
+                                <select class="form-control select2" id="selectpicker_invoices" name="param" ></select>
                             </div>
                         </div>
                         <div class="form-group row">

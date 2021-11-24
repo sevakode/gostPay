@@ -4,7 +4,11 @@
     @include('pages.profile.navbar.show')
 @endsection
 
+
+
+
 @section('asides_end')
+    @include('pages.widgets.navbar.transaction')
     @include('pages.manager.navbar')
 @endsection
 
