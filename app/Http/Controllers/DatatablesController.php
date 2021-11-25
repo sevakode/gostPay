@@ -302,20 +302,17 @@ class DatatablesController extends Controller
 
     public function accountCompanies(Request $request, $bank)
     {
+        mb_parse_str(urldecode($request->getContent()), $filter);
         $bank = BankToken::query()->find($bank);
 
-        $invoices = $bank->invoices()->get();
-
-        $cards = $request->user()->company->cards()->where('user_id', null);
-        if ($request->q)
-            $cards = $cards
-                ->where('state', Card::ACTIVE)->where('number', 'like', '%' . $request->q . '%')
-                ->orWhere('tail', $request->q)->where('state', Card::ACTIVE)
-                ->orWhere('head', $request->q)->where('state', Card::ACTIVE);
+        $companies = $bank->companies();
+        if($request->q) {
+            $companies->where('name', 'LIKE', '%'.$request->q.'%');
+        }
 
         $data = ['items'];
 
-        foreach ($bank->companies()->get() as $company) {
+        foreach ($companies->get() as $company) {
             $data['items'][] = [
                 'id' => $company->id,
                 'text' => $company->name,
@@ -325,30 +322,43 @@ class DatatablesController extends Controller
         return new JsonResponse($data);
     }
 
-    public function accounts(Request $request)
+    public function accounts(Request $request, $user_id)
     {
-        $company = $request->user()->company()->first();
-        $balances = $company->ivoices()->with('balance')->get();
-        # TODO: Вывод аккаунтов компании
-//        $invoices = $bank->invoices()->get();
+        $data = array();
+        $companyQuery = $request->user()->company()->whereHas('users', function ($query) use ($user_id) {
+            $query->where('id', $user_id);
+        });
+        if (! $companyQuery->exists())
+        {
+            DataNotification::sendSuccess(['Пользователь не найден в компании']);
+            return $data;
+        }
 
-//        $cards = $request->user()->company->cards()->where('user_id', null);
-//        if ($request->q)
-//            $cards = $cards
-//                ->where('state', Card::ACTIVE)->where('number', 'like', '%' . $request->q . '%')
-//                ->orWhere('tail', $request->q)->where('state', Card::ACTIVE)
-//                ->orWhere('head', $request->q)->where('state', Card::ACTIVE);
-//
-//        $data = ['items'];
-//
-//        foreach ($bank->companies()->get() as $company) {
-//            $data['items'][] = [
-//                'id' => $company->id,
-//                'text' => $company->name,
-//            ];
-//        }
-//
-//        return new JsonResponse($data);
+        $company = $companyQuery->first();
+        $invoices = $company->invoices()->has('balance')->with('balance', 'bank')->get();
+        $groupInvoices = $invoices->mapToGroups(function ($item) {
+            $bank = $item->getRelation('bank');
+            $transactions = $item->getRelation('balance');
+            $balance = $transactions->sum('amount');
+
+            return [
+                'items' => [
+                    'text' => "$bank->title - $balance$item->currencySign",
+                     'children' => [
+                         [
+                             'id' => $item->id,
+                             'text' => $item->account_id,
+                             'currency' => $item->currencySign,
+                             'balance' => (float)$balance,
+                         ]
+                     ]
+                ]
+            ];
+        });
+
+        $data = $groupInvoices->toArray();
+
+        return new JsonResponse($data);
     }
 
     public function accountCompaniesInvoices(Request $request, $bank_id, $company_id)

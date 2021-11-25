@@ -12,7 +12,7 @@
                 <div class="symbol symbol-45 symbol-light mr-4">
                     <div class="form-group row">
                         <label class="col-form-label text-right col-lg-3 col-sm-12">Счет</label>
-                        <div class="col-lg-10 col-md-10 col-sm-12">
+                        <div class="col-lg-9 col-md-9 col-sm-12">
                             <select class="form-control select2" id="selectpicker_invoices" name="param" ></select>
                         </div>
                     </div>
@@ -38,12 +38,13 @@
 
 @push('scripts_push')
     <script>
-        let div_summa_mask = $("#summa_mask").prop( "disabled", true);
+        let div_summa_mask = $("#summa_mask");
+        div_summa_mask.prop( "disabled", true);
         $('#selectpicker_invoices').select2({
             placeholder: "Select a state",
             allowClear: true,
             ajax: {
-                url: "{{ asset('') }}datatables/account/{{ $account->id }}/companies/"+ select[0].value +"/invoices/select",
+                url: "{{ route('datatables.accounts.list', $user->id) }}",
                 method: 'GET',
                 dataType: 'json',
                 delay: 250,
@@ -69,16 +70,48 @@
                 return markup;
             },
             minimumInputLength: 0,
-        })
+        });
+        $('#selectpicker_invoices').on('select2:clear', function (e) {
+            div_summa_mask.prop( 'disabled', true);
+            div_summa_mask.attr( 'placeholder', '');
+            div_summa_mask.inputmask('');
 
+        });
         $('#selectpicker_invoices').on('select2:select', function (e) {
-            currency = e.params.data.currency;
-            div_summa_mask.inputmask(currency + ' 999.999.999,99',
+            let currency = e.params.data.currency;
+            let strBalance = e.params.data.balance + '';
+
+            let balance = '';
+            let cursor = 1;
+            for (let word=strBalance.length-1; word >= 0; word--) {
+                if (cursor === 3) {
+                    balance = '.' + strBalance[word] + balance;
+                    cursor = 1;
+                }
+                balance = strBalance[word] + balance;
+                cursor = cursor + 1;
+            }
+
+
+            balance = '999.999.999.999.999';
+            cursor = 1;
+            let result = '';
+            for (let word=0; word <= balance.length-1; word++) {
+                if (cursor >= (balance.length - 1) - (strBalance.length - 1)) {
+                    result = '' + result + balance[word];
+                }
+                result = "" + result;
+                cursor = cursor + 1;
+            }
+
+
+            div_summa_mask.inputmask(currency + ' ' + result + ',99' ,
                 {
                     numericInput: true
                 }
             );
 
             div_summa_mask.prop( "disabled", false );
+        });
     </script>
 @endpush

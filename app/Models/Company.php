@@ -107,7 +107,7 @@ class Company extends Model
 
     public function users()
     {
-        return User::where('company_id', $this->id);
+        return $this->hasMany(User::class);
     }
 
     public function usersAll()

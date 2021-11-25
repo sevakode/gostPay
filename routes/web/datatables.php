@@ -31,8 +31,8 @@ Route::post('account/{account_id}/transactions', [DatatablesController::class, '
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS['slug']);
 Route::get('account/{account_id}/companies/select', [DatatablesController::class, 'accountCompanies'])
     ->name('datatables.accounts.companies');
-Route::get('user/current/accounts/select', [DatatablesController::class, 'accounts'])
-    ->name('datatables.accounts.companies');
+Route::get('user/{user_id}/accounts/select', [DatatablesController::class, 'accounts'])
+    ->name('datatables.accounts.list');
 Route::get('account/{account_id}/companies/{company_id}/invoices/select', [DatatablesController::class, 'accountCompaniesInvoices'])
     ->name('datatables.accounts.companies.invoices');
 
