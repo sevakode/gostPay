@@ -25,10 +25,19 @@ Route::post('user-cards', [DatatablesController::class, 'userCards'])
 Route::post('payments', [DatatablesController::class, 'payments'])
     ->name('datatables.dashboard.payments');
 
+Route::post('account/user/{user_id}/transactions', [DatatablesController::class, 'userTransactions'])
+    ->name('datatables.accounts.user.transactions')
+//    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS['slug'])
+//    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS['slug'])
+;
+
 Route::post('account/{account_id}/transactions', [DatatablesController::class, 'accountTransactions'])
     ->name('datatables.accounts.transactions')
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY['slug'])
     ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS['slug']);
+
+
+
 Route::get('account/{account_id}/companies/select', [DatatablesController::class, 'accountCompanies'])
     ->name('datatables.accounts.companies');
 Route::get('user/{user_id}/accounts/select', [DatatablesController::class, 'accounts'])

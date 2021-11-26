@@ -7,6 +7,10 @@
     @include('pages.profile.navbar.me')
 @endsection
 
+@section('asides_end')
+    @include('pages.widgets.navbar.transaction', ['user' => request()->user()])
+@endsection
+
 {{-- Content --}}
 @section('content_profile')
     <!--begin::Card-->
@@ -187,7 +191,7 @@
 @endsection
 
 {{-- Scripts Section --}}
-@section('scripts')
+@push('scripts_push')
     <script src="{{ asset('js/pages/widgets.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/pages/custom/profile/profile.js') }}" type="text/javascript"></script>
-@endsection
+@endpush

@@ -120,21 +120,21 @@
         @if (request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
         <div>
             <!--begin:Heading-->
-            <h5 class="mb-5">Счета:</h5>
+            <h5 class="mb-5">Баланс Компании:</h5>
             <!--end:Heading-->
             <!--begin::Item-->
             @isset(request()->user()->company)
                 @foreach(request()->user()->company->invoices()->get() as $invoice)
                     @if(isset($invoice->bank->icon))
                     <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
-                                <span class="svg-icon svg-icon-warning mr-5">
-                                    <span class="svg-icon svg-icon-lg">
-                                        <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+                        <span class="svg-icon svg-icon-warning mr-5">
+                            <span class="svg-icon svg-icon-lg">
+                                <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
 
-                                        {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
-                                        <!--end::Svg Icon-->
-                                    </span>
-                                </span>
+                                {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                                <!--end::Svg Icon-->
+                            </span>
+                        </span>
                         <div class="d-flex flex-column flex-grow-1 mr-2">
                             <a href="{{ route('invoice.show', $invoice->account_id) }}"
                                class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
@@ -153,35 +153,36 @@
             <!--end::Item-->
         </div>
         @endif
-
         @if (request()->user()->balance()->where('bank_account_id', '!=', null)->count())
         <div>
             <!--begin:Heading-->
-            <h5 class="mb-5">Счета пользователя:</h5>
+            <h5 class="mb-5">Личный баланс:</h5>
             <!--end:Heading-->
             <!--begin::Item-->
             @isset(request()->user()->company)
                 @foreach(request()->user()->company->invoices()->get() as $invoice)
-                        <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
-                                    <span class="svg-icon svg-icon-warning mr-5">
-                                        <span class="svg-icon svg-icon-lg">
-                                            <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
-                                            {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
-                                        <!--end::Svg Icon-->
-                                        </span>
-                                    </span>
-                            <div class="d-flex flex-column flex-grow-1 mr-2">
-                                <a href="{{ route('invoice.show', $invoice->account_id) }}"
-                                   class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
-                                    {{ $invoice->bank->title }}
-
-                                    <span class="text-muted font-size-sm">{{ $invoice->bank->bin }}</span>
-                                </a>
-                            </div>
-                            <span class="font-weight-bolder py-1 font-size-lg">
-                                {{ $invoice->currencySign }}{{ (int) request()->user()->balance($invoice->account_id)->getSum() }}
+                    <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
+                        <span class="svg-icon svg-icon-warning mr-5">
+                            <span class="svg-icon svg-icon-lg">
+                                <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+                                {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                            <!--end::Svg Icon-->
                             </span>
+                        </span>
+                        <div class="d-flex flex-column flex-grow-1 mr-2">
+                            <a href="{{ route('invoice.show', $invoice->account_id) }}"
+                               class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
+                                {{ $invoice->bank->title }}
+
+                                <span class="text-muted font-size-sm">{{ $invoice->bank->bin }}</span>
+                            </a>
                         </div>
+                        <span class="font-weight-bolder py-1 font-size-lg">
+                            {{ $invoice->currencySign }}{{
+                                (float) $invoice->balance(request()->user()->company->id)->whereUser(request()->user()->id)->getSum()
+                                }}
+                        </span>
+                    </div>
                 @endforeach
             @endisset
             <!--end::Item-->

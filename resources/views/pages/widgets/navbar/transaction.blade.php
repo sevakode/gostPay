@@ -1,4 +1,6 @@
 <!--begin::Nav-->
+
+@if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
 <div class="card card-custom gutter-b">
     <!--begin::Body-->
     <div class="card-body">
@@ -26,8 +28,7 @@
                 </div>
                 <div class="d-flex flex-column flex-grow-1">
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="reset" data-dismiss="modal" id="pay_company" class="btn btn-primary mr-2">Добавить</button>
+                        <button type="reset" data-dismiss="modal" id="pay_user" class="btn btn-primary mr-2">Добавить</button>
                     </div>
                 </div>
             </div>
@@ -40,6 +41,7 @@
     <script>
         let div_summa_mask = $("#summa_mask");
         div_summa_mask.prop( "disabled", true);
+
         $('#selectpicker_invoices').select2({
             placeholder: "Select a state",
             allowClear: true,
@@ -74,12 +76,12 @@
         $('#selectpicker_invoices').on('select2:clear', function (e) {
             div_summa_mask.prop( 'disabled', true);
             div_summa_mask.attr( 'placeholder', '');
-            div_summa_mask.inputmask('');
+            div_summa_mask.inputmask('').inputmask('null').inputmask('null');
 
         });
         $('#selectpicker_invoices').on('select2:select', function (e) {
             let currency = e.params.data.currency;
-            let strBalance = e.params.data.balance + '';
+            let strBalance = e.params.data.balance.toFixed() + '';
 
             let balance = '';
             let cursor = 1;
@@ -100,9 +102,9 @@
                 if (cursor >= (balance.length - 1) - (strBalance.length - 1)) {
                     result = '' + result + balance[word];
                 }
-                result = "" + result;
                 cursor = cursor + 1;
             }
+            console.log(result)
 
 
             div_summa_mask.inputmask(currency + ' ' + result + ',99' ,
@@ -113,5 +115,28 @@
 
             div_summa_mask.prop( "disabled", false );
         });
+
+        $("#pay_user").on('click', function () {
+            console.log('asdsad')
+
+            div_summa_mask.prop( "disabled", true);
+            $.ajax({
+                type:'POST',
+                url: "{{ route('datatables.accounts.user.transactions', $user->id) }}",
+                dataType: "json",
+                data:{
+                    account: $('#selectpicker_invoices')[0].innerText,
+                    amount: div_summa_mask.inputmask()[0].inputmask.unmaskedvalue(),
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function (data) {
+
+                    sendNotification()
+                },
+                error: function () {
+                    sendNotification()
+                }
+            });
+        })
     </script>
 @endpush

@@ -333,9 +333,15 @@ class DatatablesController extends Controller
             DataNotification::sendSuccess(['Пользователь не найден в компании']);
             return $data;
         }
-
         $company = $companyQuery->first();
-        $invoices = $company->invoices()->has('balance')->with('balance', 'bank')->get();
+
+        $invoices = $company->invoices();
+        if($request->q) $invoices->where('account_id', 'LIKE', "%$request->q%");
+        $invoices->has('balance')->with(['balance' => function($query) {
+            $query->where('user_id', null);
+        }]);
+        $invoices = $invoices->with('bank')->get();
+
         $groupInvoices = $invoices->mapToGroups(function ($item) {
             $bank = $item->getRelation('bank');
             $transactions = $item->getRelation('balance');
@@ -359,6 +365,28 @@ class DatatablesController extends Controller
         $data = $groupInvoices->toArray();
 
         return new JsonResponse($data);
+    }
+
+    public function userTransactions(Request $request, $user_id)
+    {
+        $data = array();
+        $companyQuery = $request->user()->company();
+
+        $floatAmount = substr($request->amount, -2);
+        $intAmount = substr($request->amount, 0, strlen($request->amount) - 2);
+        $amount = (float)"$intAmount.$floatAmount";
+
+        $isNoMoney = $companyQuery->first()->balance()->whereUser(null)->getSum() < $amount;
+        if($isNoMoney) {
+            DataNotification::sendErrors(['У вас недостаточно средств']);
+            return $data;
+        }
+
+        $isSuccessTransaction = $companyQuery->transactionUser($amount, $request->account, $user_id);
+        if (! $isSuccessTransaction)
+        {
+            DataNotification::sendErrors(['Что-то пошло не так']);
+        }
     }
 
     public function accountCompaniesInvoices(Request $request, $bank_id, $company_id)

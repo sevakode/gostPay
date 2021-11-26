@@ -25,7 +25,7 @@ class TransactionBalance extends Model
 
     public function scopeGetSum($query): float
     {
-        return $query->sum('amount');
+        return round($query->sum('amount'), 2);
     }
 
     public function scopeWhereUser($query, $user_id)

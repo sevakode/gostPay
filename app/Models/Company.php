@@ -7,6 +7,7 @@ use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
 use App\Models\Bank\Project;
+use App\Notifications\DataNotification;
 use App\Traits\HasProjects;
 use App\Traits\Imageable;
 use Carbon\Carbon;
@@ -46,6 +47,43 @@ class Company extends Model
         if ($account_id) $belongsToMany->where('bank_account_id', $account_id);
 
         return $belongsToMany;
+    }
+
+    public function scopeTransactionUser(Builder $query, $amount, $account_id, $user_id)
+    {
+        $query->whereHas('users', function ($query) use ($user_id) {
+            $query->where('id', $user_id);
+        });
+        $query->whereHas('invoices', function ($query) use ($account_id) {
+            $query->where('account_id', $account_id);
+        });
+
+        if (! $query->exists()) {
+            return false;
+        } else {
+            $company = $query->first();
+        }
+
+        $company->transaction($amount, $account_id, $user_id);
+
+        $amountExpenditureCompany = 0 - $amount;
+        $company->transaction($amountExpenditureCompany, $account_id);
+
+        return $company;
+    }
+
+    public function transaction($amount, $account_id, $user_id = null)
+    {
+        $account = Account::where('account_id', $account_id)->first(['id']);
+
+        $transactionObject = TransactionBalance::query()->create(['amount' => $amount]);
+        $withPivot = [
+            'bank_account_id' => $account->id,
+            'user_id' => $user_id
+        ];
+        $this->balance($account_id)->attach($transactionObject, $withPivot);
+
+        return $this;
     }
 
     public function companyBalance($account_id = null): \Illuminate\Database\Eloquent\Relations\BelongsToMany
