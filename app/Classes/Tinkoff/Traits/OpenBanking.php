@@ -270,7 +270,11 @@ trait OpenBanking
     {
         $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode;
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'cert' => [
+                readfile(resource_path('cert/open-api-cert.pem')),
+                readfile(resource_path('cert/private.key'))
+            ]
         ];
 
         $data = '{
