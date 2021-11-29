@@ -282,7 +282,11 @@ trait OpenBanking
         $url = 'https://business.tinkoff.ru/api/v1/card/'.$ucid.'/spend-limit';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set'
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set',
+            'cert' => [
+                file_get_contents(resource_path('cert/open-api-cert.pem')),
+                file_get_contents(resource_path('cert/private.key'))
+            ]
         ];
 
         $parameters = [
