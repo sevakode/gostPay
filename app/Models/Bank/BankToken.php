@@ -73,6 +73,7 @@ class BankToken extends Model
     public function api()
     {
         $bank = collect(config('bank_list.info'));
+
         switch ($this->url) {
             case $bank->where('title', 'Tochkabank')->first()['url']:
                 $api = new TochkaBank($this);

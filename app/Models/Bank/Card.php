@@ -431,7 +431,7 @@ class Card extends Model
 
     public static function refreshUcidApi()
     {
-        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->get() as $bank)
+        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->where('url', 'https://business.tinkoff.ru')->get() as $bank)
         {
             $collect = self::getCollectUcidApi($bank);
             self::upsert(
@@ -445,6 +445,11 @@ class Card extends Model
                 ]
             );
         }
+    }
+
+    public function isRoot(...$instanceof)
+    {
+//        return $this->bank()->first()->api() instanceof ;
     }
 
     public static function getCollectUcidApi(BankToken $api)

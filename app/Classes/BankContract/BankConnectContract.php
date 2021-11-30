@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Classes;
+namespace App\Classes\BankContract;
 
 interface BankConnectContract
 {
-    public function connectTokenCredentials(): mixed;
+    public function connectTokenCredentials();
     public function connectTokenRefresh(): \Illuminate\Http\Client\Response;
 }

@@ -1,8 +1,6 @@
 <?php namespace App\Classes\TochkaBank\Traits;
 
-use App\Classes\BankConnectContract;
-use App\Classes\TochkaBank\BankAPI;
-use App\Models\Bank\BankToken;
+use App\Classes\BankContract\BankConnectContract;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -16,7 +14,7 @@ trait ConnectBanking
     /**
      * @return mixed
      */
-    public function connectTokenCredentials(): mixed
+    public function connectTokenCredentials()
     {
         $bank = $this->bank;
 

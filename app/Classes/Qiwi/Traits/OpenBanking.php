@@ -77,7 +77,7 @@ trait OpenBanking
      */
     public function getBalanceInfo(string $accountId): Response
     {
-        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts/';
+        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];

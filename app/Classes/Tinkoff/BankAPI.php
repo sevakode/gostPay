@@ -1,10 +1,9 @@
 <?php namespace App\Classes\Tinkoff;
 
 
-use App\Classes\AccountContract;
-use App\Classes\BankConnectContract;
+use App\Classes\BankContract\BankConnectContract;
 use App\Classes\BankMain;
-use App\Classes\BaseContracts;
+use App\Classes\BankContract\BaseContracts;
 use App\Classes\Tinkoff\Traits\ConnectBanking;
 use App\Classes\Tinkoff\Traits\OpenBanking;
 use App\Models\Bank\Card;

@@ -139,7 +139,7 @@
     </div>
 </div>
 
-
+@dd($card->isRoot([]))
 @if($card->isBank(\App\Classes\BankMain::TINKOFF_BIN) and \Illuminate\Support\Facades\Auth::user()
         ->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
 

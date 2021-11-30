@@ -1,6 +1,6 @@
 <?php namespace App\Classes\Tinkoff\Traits;
 
-use App\Classes\BankConnectContract;
+use App\Classes\BankContract\BankConnectContract;
 use App\Classes\TochkaBank\BankAPI;
 use App\Models\Bank\BankToken;
 use Illuminate\Support\Facades\Http;
