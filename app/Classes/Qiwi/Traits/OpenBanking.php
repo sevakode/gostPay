@@ -23,10 +23,10 @@ trait OpenBanking
      * Метод получения списка доступных счетов
      *
      */
-    public function getAccountsList($accounts = []): Response
-    {
-
-    }
+//    public function getAccountsList(): Response
+//    {
+//
+//    }
 
     /**
      * Метод получения информации по конкретному счёту
@@ -97,10 +97,10 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getStatementsList(): Response
-    {
-
-    }
+//    public function getStatementsList(): Response
+//    {
+//
+//    }
 
     /**
      * Метод получения конкретной выписки
@@ -126,10 +126,10 @@ trait OpenBanking
      * @var string $startDateTime
      * @var string $endDateTime
      */
-    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
-    {
-
-    }
+//    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
+//    {
+//
+//    }
 
 
     /**
@@ -184,10 +184,10 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getCardsLimits(): Response
-    {
-
-    }
+//    public function getCardsLimits(): Response
+//    {
+//
+//    }
 
     /**
      * Показывает действующие лимиты по карте
@@ -212,10 +212,10 @@ trait OpenBanking
      * @param string $newName
      * @return PromiseInterface|Response
      */
-    public function editCard(string $cardCode, string $newName): Response
-    {
-
-    }
+//    public function editCard(string $cardCode, string $newName): Response
+//    {
+//
+//    }
 
     /**
      * Метод позволяет изменить следующие лимиты по карте:
@@ -225,10 +225,10 @@ trait OpenBanking
      * @param string $limitPeriod
      * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response
-    {
-
-    }
+//    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response
+//    {
+//
+//    }
 
     /**
      * Метод получения состояния карты
@@ -236,10 +236,10 @@ trait OpenBanking
      * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardState(string $correlationId): Response
-    {
-
-    }
+//    public function getCardState(string $correlationId): Response
+//    {
+//
+//    }
 
     /**
      * Метод смены состояния карты
@@ -248,10 +248,10 @@ trait OpenBanking
      * @param string $newState
      * @return PromiseInterface|Response
      */
-    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response
-    {
-
-    }
+//    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response
+//    {
+//
+//    }
 
     /**
      * Метод закрытия карты
@@ -338,10 +338,10 @@ trait OpenBanking
      * @param string $requestId
      * @return PromiseInterface|Response
      */
-    public function getPaymentStatus(string $requestId): Response
-    {
-
-    }
+//    public function getPaymentStatus(string $requestId): Response
+//    {
+//
+//    }
 
     /**
      * Метод получения статуса платежа
@@ -369,31 +369,31 @@ trait OpenBanking
      * @param string $taxInfoStatus
      * @return PromiseInterface|Response
      */
-    public function createPaymentForSign(
-        string $requestId,
-               $accountCode,
-               $bankCode,
-               $counterpartyBankBic,
-               $counterpartyAccountNumber,
-               $counterpartyINN,
-               $counterpartyName,
-               $paymentAmount,
-               $paymentDate,
-               $paymentNumber,
-               $paymentPurpose,
-
-               $counterpartyKPP='',
-               $paymentPriority='',
-               $supplierBillId='',
-               $taxInfoDocumentDate='',
-               $taxInfoDocumentNumber='',
-               $taxInfoKBK='',
-               $taxInfoOKATO='',
-               $taxInfoPeriod='',
-               $taxInfoReasonCode='',
-               $taxInfoStatus=''
-    ): Response
-    {
-
-    }
+//    public function createPaymentForSign(
+//        string $requestId,
+//               $accountCode,
+//               $bankCode,
+//               $counterpartyBankBic,
+//               $counterpartyAccountNumber,
+//               $counterpartyINN,
+//               $counterpartyName,
+//               $paymentAmount,
+//               $paymentDate,
+//               $paymentNumber,
+//               $paymentPurpose,
+//
+//               $counterpartyKPP='',
+//               $paymentPriority='',
+//               $supplierBillId='',
+//               $taxInfoDocumentDate='',
+//               $taxInfoDocumentNumber='',
+//               $taxInfoKBK='',
+//               $taxInfoOKATO='',
+//               $taxInfoPeriod='',
+//               $taxInfoReasonCode='',
+//               $taxInfoStatus=''
+//    ): Response
+//    {
+//
+//    }
 }

@@ -25,7 +25,7 @@ trait OpenBanking
      * Метод получения списка доступных счетов
      *
      */
-    public function getAccountsList($accounts = []): Response
+    public function getAccountsList(): Response
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-accounts';
         $headers = [

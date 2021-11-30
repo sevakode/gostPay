@@ -42,7 +42,7 @@ trait ConnectBanking
         return $response;
     }
 
-    public function connectTokenRefresh(): \GuzzleHttp\Promise\PromiseInterface|\Illuminate\Http\Client\Response
+    public function connectTokenRefresh(): \Illuminate\Http\Client\Response
     {
         $url = $this->bank->url.'/connect/token';
         $headers = [

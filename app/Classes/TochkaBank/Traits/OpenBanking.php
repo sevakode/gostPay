@@ -23,7 +23,7 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
      */
-    public function getAccountsList($accounts = []): Response
+    public function getAccountsList(): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts';
         $headers = [

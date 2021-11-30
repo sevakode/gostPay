@@ -14,7 +14,7 @@ interface AccountContract
     /**
      * Метод получения списка доступных счетов
      */
-    public function getAccountsList($accounts = []): Response;
+    public function getAccountsList(): Response;
 
     /**
      * Метод получения информации по конкретному счёту
@@ -22,7 +22,7 @@ interface AccountContract
      * @param string|null $accountId
      * @return Response
      */
-    public function getAccountInfo(string $accountId = null): Response;
+//    public function getAccountInfo(string $accountId = null): Response;
 
 
 }
