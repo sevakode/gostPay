@@ -1,6 +1,7 @@
 <?php namespace App\Classes\Tinkoff;
 
 use App\Classes\BankContract\BankConnectContract;
+use App\Classes\BankContract\CardLimitContract;
 use App\Classes\BankMain;
 use App\Classes\BankContract\BaseContracts;
 use App\Classes\Tinkoff\Traits\ConnectBanking;
@@ -9,7 +10,7 @@ use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use Illuminate\Support\Carbon;
 
-class BankAPI extends BankMain implements BankConnectContract, BaseContracts
+class BankAPI extends BankMain implements BankConnectContract, BaseContracts, CardLimitContract
 {
     use OpenBanking, ConnectBanking;
 

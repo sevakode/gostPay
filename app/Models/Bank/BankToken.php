@@ -79,6 +79,19 @@ class BankToken extends Model
         return $api;
     }
 
+    public function isApiOfContract(...$instances): bool
+    {
+        $isInstancesOfContract = true;
+        foreach ($instances as $instance) {
+            if ($this->api() instanceof $instance) {}
+            else {
+                $isInstancesOfContract = false;
+            }
+        }
+
+        return $isInstancesOfContract;
+    }
+
     public function getTitleAttribute()
     {
         return $this->attributes['title'] ?? 'Неизвестный банк';
