@@ -138,11 +138,8 @@
         </div>
     </div>
 </div>
-
-
-@if($card->isBank(\App\Classes\BankMain::TINKOFF_BIN) and \Illuminate\Support\Facades\Auth::user()
-        ->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
-
+@if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class)
+    and \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
     <div class="card card-custom gutter-b">
         <div class="card-body">
             <div class="form-group row mb-6">
@@ -170,7 +167,8 @@
 @endif
 
     @section('scripts_next')
-        @if($card->isBank(\App\Classes\BankMain::TINKOFF_BIN) and \Illuminate\Support\Facades\Auth::user()
+        @if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class)
+            and \Illuminate\Support\Facades\Auth::user()
                 ->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
             <script>
                 var slider = document.getElementById('kt_nouislider_1');
