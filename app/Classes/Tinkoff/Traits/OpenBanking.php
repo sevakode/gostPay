@@ -3,8 +3,8 @@ namespace App\Classes\Tinkoff\Traits;
 
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Cache\Repository   ;
 
 /**
  * Trait OpenBanking
@@ -15,6 +15,14 @@ trait OpenBanking
     public static string $LIMIT_TYPE_DAY = 'DAY';
     public static string $LIMIT_TYPE_MONTH = 'MONTH';
     public static string $LIMIT_TYPE_IRREGULAR = 'IRREGULAR';
+
+    public function getCert(): array
+    {
+        return [
+            'cert'    => new File(resource_path('cert/open-api-cert.pem')),
+            'ssl_key' => new File(resource_path('cert/private.key'))
+        ];
+    }
 
     /**
      * ----------------------------------------------------------------------------------------------------------------
@@ -202,17 +210,18 @@ trait OpenBanking
      */
     public function getCardInfo(int $ucid): Response
     {
-        $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
         $url =  'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/'.$ucid.'/requisites';
 
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
             'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites',
-            'cert'  => file_get_contents(resource_path('cert/open-api-cert.pem')),
-            'key'   => file_get_contents(resource_path('cert/private.key'))
         ];
 
-        return Http::withHeaders($headers)->get($url);
+        $options = $this->getCert();
+
+        return Http::withHeaders($headers)
+            ->withOptions($options)
+            ->get($url);
     }
 
     /**
@@ -278,25 +287,27 @@ trait OpenBanking
      * @param string $limitPeriod
      * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response
+    public function editCardLimits(string $ucid, $limitType = null, string $limitValue = '1666'): Response
     {
-        $limitType = $limitType ?? self::$LIMIT_TYPE_DAY;
+        $limitType = $limitType ?? self::$LIMIT_TYPE_IRREGULAR;
+        $limitType = self::$LIMIT_TYPE_IRREGULAR;
 
-        $url = $this->bank->rsUrl.'/api/v1/card/'.$ucid.'/spend-limit';
-        $url = 'https://business.tinkoff.ru/api/v1/card/'.$ucid.'/spend-limit';
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/'.$ucid.'/spend-limit';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
             'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set',
-            'cert'  => file_get_contents(resource_path('cert/open-api-cert.pem')),
-            'key'   => file_get_contents(resource_path('cert/private.key'))
         ];
 
         $parameters = [
-            'limitValue' => $limitType,
-            'limitPeriod' => $limitPeriod
+            'limitValue' => (int) $limitValue,
+            'limitPeriod' => $limitType,
         ];
 
-        return Http::withHeaders($headers)->post($url, $parameters);
+        $options = $this->getCert();
+
+        return Http::withHeaders($headers)
+            ->withOptions($options)
+            ->post($url, $parameters);
     }
 
     /**
@@ -317,7 +328,7 @@ trait OpenBanking
             'correlationId' => $correlationId,
         ];
 
-        return Http::withHeaders($headers)->get($url, $parameters);
+        return Http::withHeaders($headers)->withOptions($this->getCert())->get($url, $parameters);
     }
 
     /**
@@ -362,7 +373,7 @@ trait OpenBanking
             'ucid' => $cardCode,
         ];
 
-        return Http::withHeaders($headers)->post($url, $parameters);
+        return Http::withHeaders($headers)->withOptions($this->getCert())->post($url, $parameters);
     }
 
 
@@ -425,7 +436,7 @@ trait OpenBanking
             'scope' => 'opensme/inn/246525853385/kpp/0/payments/rub-pay'
         ];
 
-        return Http::withHeaders($headers)->get($url);
+        return Http::withHeaders($headers)->withOptions($this->getCert())->get($url);
     }
 
     /**
