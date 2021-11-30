@@ -4,6 +4,7 @@ namespace App\Classes\Tinkoff\Traits;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Cache\Repository   ;
 
 /**
  * Trait OpenBanking
@@ -202,10 +203,13 @@ trait OpenBanking
     public function getCardInfo(int $ucid): Response
     {
         $url =  $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/card/virtual/'.$ucid.'/requisites';
+        $url =  'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/'.$ucid.'/requisites';
 
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
-            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites'
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/requisites',
+            'cert'  => file_get_contents(resource_path('cert/open-api-cert.pem')),
+            'key'   => file_get_contents(resource_path('cert/private.key'))
         ];
 
         return Http::withHeaders($headers)->get($url);
@@ -283,10 +287,8 @@ trait OpenBanking
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
             'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/set',
-            'cert' => [
-                file_get_contents(resource_path('cert/open-api-cert.pem')),
-                file_get_contents(resource_path('cert/private.key'))
-            ]
+            'cert'  => file_get_contents(resource_path('cert/open-api-cert.pem')),
+            'key'   => file_get_contents(resource_path('cert/private.key'))
         ];
 
         $parameters = [
