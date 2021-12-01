@@ -3,6 +3,10 @@
 
 use App\Classes\BankMain;
 use App\Classes\Qiwi\Traits\OpenBanking;
+use App\Models\Bank\Card;
+use Carbon\Carbon;
+use DateTimeInterface;
+use Illuminate\Support\Str;
 
 class BankAPI extends BankMain
 {
@@ -40,7 +44,22 @@ class BankAPI extends BankMain
 
     public function getPaymentsData(array &$data): array
     {
-        return [];
+
+
+//        $data[] = [
+//            'transaction_id' => $payment->operationId,
+//            'description' => $payment->paymentPurpose,
+//            'account_id' => $account->account_id ?? $payment->payerAccount,
+//            'card_id' => $cardId ?? '',
+//            'type' => $type,
+//            'status' => Payment::BOOKED,
+//            'amount' => $payment->amount,
+//            'currency' => $account->currency ?? 'RUB',
+//            'operationAt' => \Illuminate\Support\Carbon::createFromFormat('Y-m-d H', $payment->date . ' 00'),
+//        ];
+
+
+        return $data;
     }
 
     public function getStatementsData(array &$data): array
@@ -50,15 +69,31 @@ class BankAPI extends BankMain
 
     public function refreshCards()
     {
-//        dd($this->getCards()->collect('cards'));
-        $count = 0;
-        foreach ($this->getCards()->collect('cards') as $card) {
-            if ($count > 100) continue;
-            $cards[] = $this->getCardInfo($card['ucid'])->json();
-            $count++;
-            dd($cards);
-        }
-//        dd($cards);
+        $cards = $this->getCards()->collect();
+
+        $cards->each(function ($card) {
+            $qvx = (object) $card['qvx'];
+            $info = (object) $card['info'];
+            $requisites = $this->getCardInfo($qvx->id)->object();
+
+            $number = Card::getNumberSplit($requisites->pan);
+            $queryCard = Card::query()->where('head', $number[0])->where('tail', $number[3]);
+
+            $modelCard = $queryCard->get(['id', 'number'])->map(function (Card $card) use($requisites) {
+                if ($card->numberFull == $requisites->pan)
+                    return $card->refresh();
+                return null;
+            })->filter()->first();
+
+            $modelCard->ucid = $qvx->id;
+            $modelCard->expiredAt = Carbon::createFromFormat(DateTimeInterface::W3C ,$qvx->cardExpire);
+            $modelCard->state = Str::lower($qvx->status) == 'active' ? Str::lower($qvx->status) : 'close';
+            $modelCard->card_description = $info->name;
+            $modelCard->card_type = $info->type;
+            $modelCard->bank_code = $info->alias;
+
+            $modelCard->save();
+        });
     }
 //
 //    public function getCardState(string $correlationId): Response

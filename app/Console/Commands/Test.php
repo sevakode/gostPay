@@ -40,7 +40,11 @@ class Test extends Command
      */
     public function handle()
     {
-        dd(BankToken::all());
+        foreach (BankToken::where('url', 'https://edge.qiwi.com')->get() as $bank)
+        {
+            $re = $bank->api()->getPaymentsData();
+            dd($re);
+        }
 
         return true;
     }

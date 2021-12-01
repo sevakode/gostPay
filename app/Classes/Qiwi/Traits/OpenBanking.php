@@ -146,7 +146,7 @@ trait OpenBanking
      */
     public function getCards($accountNumber = null): Response
     {
-        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/cards';
+        $url = $this->bank->rsUrl.'/cards/'.'v1'.'/cards';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
         ];
@@ -166,7 +166,7 @@ trait OpenBanking
      */
     public function getCardInfo(int $ucid): Response
     {
-        $url =  $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/cards/'.$ucid.'/details';
+        $url =  $this->bank->rsUrl.'/cards/'.'v1'.'/cards/'.$ucid.'/details';
 
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
