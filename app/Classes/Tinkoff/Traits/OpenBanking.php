@@ -77,7 +77,7 @@ trait OpenBanking
      * @param string|null $accountId
      * @return Response
      */
-    public function getBalancesList(): PromiseInterface|Response
+    public function getBalancesList(): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/balances';
         $headers = [
