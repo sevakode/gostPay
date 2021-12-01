@@ -21,6 +21,14 @@ return [
             'apiVersion' => 'v3',
         ],
         [
+            'title' => 'Qiwi',
+            'icon' => 'media/gp/bank/qiwi.svg',
+            'bin' => BankMain::QIWI_BIN,
+            'url' => 'https://edge.qiwi.com',
+            'rsUrl' => 'https://edge.qiwi.com',
+            'apiVersion' => 'v2',
+        ],
+        [
             'title' => 'Gost',
             'icon' => 'media/logos/logo-light.svg',
             'bin' => '000001',

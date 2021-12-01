@@ -74,9 +74,10 @@ trait OpenBanking
     /**
      * Метод получения баланса по нескольким счетам
      *
-     * @return PromiseInterface|Response
+     * @param string|null $accountId
+     * @return Response
      */
-    public function getBalancesList(): Response
+    public function getBalancesList(): PromiseInterface|Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/balances';
         $headers = [

@@ -16,7 +16,7 @@ class CompanySeeder extends Seeder
      */
     public function run()
     {
-        $company = Company::create([
+        $company = Company::updateOrCreate([
             'name' => 'Gost Agency'
         ]);
     }

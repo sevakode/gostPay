@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Classes\BankContract;
+namespace App\Classes;
 
 interface BankConnectContract
 {

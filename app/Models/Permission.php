@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
+/**
+ * @property $id
+ * @property $name
+ * @property $slug
+ */
 class Permission extends Model implements OptionsPermissions
 {
     use HasFactory;
@@ -22,6 +27,9 @@ class Permission extends Model implements OptionsPermissions
         'name',
         'slug'
     ];
+    /**
+     * @var mixed|null
+     */
 
     public static function getSlug($array)
     {

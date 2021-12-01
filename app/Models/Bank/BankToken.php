@@ -6,9 +6,11 @@ namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI as TochkaBank;
 use App\Classes\Tinkoff\BankAPI as TinkOff;
+use App\Classes\Qiwi\BankAPI as Qiwi;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -56,20 +58,31 @@ class BankToken extends Model
         return $this->hasMany(Account::class);
     }
 
-    public function companyInvoices()
+    public function companyInvoices(): HasMany
     {
-        return $this->invoices()->where('company_id', request()->user()->company->id);
+        if (request()->user()) {
+            $company = request()->user()->company()->first(['id']);
+            $companyId = $company ? $company->id : null;
+        }
+        else {
+            $companyId = null;
+        }
+        return $this->invoices()->where('company_id', $companyId);
     }
 
     public function api()
     {
         $bank = collect(config('bank_list.info'));
+
         switch ($this->url) {
             case $bank->where('title', 'Tochkabank')->first()['url']:
                 $api = new TochkaBank($this);
                 break;
             case $bank->where('title', 'Tinkoff')->first()['url']:
                 $api = new TinkOff($this);
+                break;
+            case $bank->where('title', 'Qiwi')->first()['url']:
+                $api = new Qiwi($this);
                 break;
             default :
                 $api = null;
@@ -197,8 +210,13 @@ class BankToken extends Model
         return self::all();
     }
 
-    public function getDateRefresh(): string
+    public function getDateRefresh(): ?string
     {
-        return $this->refreshTokenDate->format('M d, Y H:m');
+        $date = $this->refreshTokenDate ?? $this->accessTokenDate ?? $this->updated_at;
+
+//        if(!$date) dd($this);
+
+        return $date->format('M d, Y H:m') ?? null;
+
     }
 }
