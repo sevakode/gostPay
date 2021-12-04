@@ -81,6 +81,8 @@ class BankAPI extends BankMain
                                     ->addMinute()->setSecond(0);
                                 $dateStart = $dateEnd->clone()->subMinute();
 
+                                if (is_null($card->ucid)) $this->refreshCards();
+
                                 $response = $this
                                     ->initStatement($account->account_id, $dateStart, $dateEnd, $card->ucid);
 
@@ -135,9 +137,7 @@ class BankAPI extends BankMain
 
     public function refreshCards()
     {
-        $cards = $this->getCards()->collect();
-
-        $cards->each(function ($card) {
+        $this->getCards()->collect()->each(function ($card) {
             $qvx = (object) $card['qvx'];
             $info = (object) $card['info'];
             $requisites = $this->getCardInfo($qvx->id)->object();
