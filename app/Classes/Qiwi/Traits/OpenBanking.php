@@ -1,7 +1,9 @@
 <?php
+
 namespace App\Classes\Qiwi\Traits;
 
 use Carbon\Carbon;
+use Faker\Provider\ru_RU\Payment;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -37,9 +39,9 @@ trait OpenBanking
      */
     public function getAccountInfo(string $accountId = null): Response
     {
-        $url = $this->bank->rsUrl.'/person-profile/'.$this->bank->apiVersion.'/profile/current';
+        $url = $this->bank->rsUrl . '/person-profile/' . $this->bank->apiVersion . '/profile/current';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
         $response = Http::withHeaders($headers)->get($url);
@@ -62,9 +64,9 @@ trait OpenBanking
      */
     public function getBalancesList(?string $accountId = '79221032748'): Response
     {
-        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts/';
+        $url = $this->bank->rsUrl . '/funding-sources/v2/persons/' . $accountId . '/accounts/';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
         return Http::withHeaders($headers)->get($url);
@@ -78,9 +80,9 @@ trait OpenBanking
      */
     public function getBalanceInfo(string $accountId): Response
     {
-        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts';
+        $url = $this->bank->rsUrl . '/funding-sources/v2/persons/' . $accountId . '/accounts';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
         return Http::withHeaders($headers)->get($url);
@@ -122,7 +124,7 @@ trait OpenBanking
     {
         $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/payments';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'Authorization' => 'Bearer ' . $this->bank->accessToken,
         ];
 
         $parameters = [
@@ -163,6 +165,58 @@ trait OpenBanking
      * Работа с картами
      * ----------------------------------------------------------------------------------------------------------------
      */
+
+    public function createOrderCard($accountNumber): Response
+    {
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/persons/'.$accountNumber.'/orders';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
+
+        $parameters = [
+            'cardAlias' => 'qvc-cpa-debit',
+        ];
+
+        return Http::withHeaders($headers)->post($url, $parameters);
+    }
+
+    public function submitOrderCard($accountNumber, $orderId): Response
+    {
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/persons/'.$accountNumber.'/orders/'.$orderId.'/submit';
+
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
+
+        return Http::withHeaders($headers)->put($url);
+    }
+
+    public function payOrderCard($accountNumber, $orderId, $number = null, $currency = '643'): Response
+    {
+        $number = $number ?? Payment::numerify('160088429####');
+        $url = $this->bank->rsUrl.'/sinap/api/'.$this->bank->apiVersion.'/terms/32064/payments';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
+
+        $parameters = [
+            "id" => $number,
+            "sum" => [
+                "amount" => 99,
+                "currency" => $currency
+            ],
+            "paymentMethod" => [
+                "type" => "Account",
+                "accountId" => $currency
+            ],
+            "fields" => [
+                "account" => $accountNumber,
+                "order_id" => $orderId
+            ]
+        ];
+
+        return Http::withHeaders($headers)->post($url, $parameters);
+    }
 
     /**
      * Метод получения списка карт

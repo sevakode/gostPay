@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Bank\Account;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
+use Faker\Provider\ru_RU\Payment;
 use Illuminate\Console\Command;
 
 class Test extends Command
@@ -42,8 +43,10 @@ class Test extends Command
     {
         foreach (BankToken::where('url', 'https://edge.qiwi.com')->get() as $bank)
         {
-            $re = $bank->api()->refreshCards();
-            dd($re);
+            $bank->invoices()->get()->each(function (Account $account) use($bank) {
+                $re = $bank->api()->createCards($account, 2);
+                dd($re);
+            });
         }
 
         return true;

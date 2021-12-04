@@ -8,12 +8,51 @@ use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Smalot\PdfParser\Parser;
 
 class BankAPI extends BankMain
 {
     use OpenBanking;
+
+    public function createCards(Account $account, int $count = 1): Collection
+    {
+        /**
+         * @throws RequestException
+         */
+        $onError = function (Response $response) {
+            return $response->throw();
+        };
+
+        $data = [];
+
+        for ($i=1; $i<=$count; $i++) {
+            try {
+                $createOrder = $this
+                    ->createOrderCard($account->account_id)
+                    ->onError($onError)->object();
+
+                $submitOrder =  $this
+                    ->submitOrderCard($account->account_id, $createOrder->id)
+                    ->onError($onError)
+                    ->json();
+
+                $payOrder = $this
+                    ->payOrderCard($account->account_id, $createOrder->id)
+                    ->onError($onError);
+
+                $data['success'][] = $payOrder->collect();
+            }
+            catch (RequestException $e) {
+                $data['error'][] = collect($e);
+            }
+        }
+
+        return collect($data);
+    }
 
     public function getAccountsData(&$data)
     {
