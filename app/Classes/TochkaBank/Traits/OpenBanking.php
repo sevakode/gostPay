@@ -116,7 +116,7 @@ trait OpenBanking
      * @param string $statementId
      * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): Response
+    public function getStatement(string $accountId, string $statementId = null, $dateStart = null, $dateEnd = null): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/accounts/'.$accountId.'/statements/'.$statementId;
         $headers = [
@@ -133,7 +133,7 @@ trait OpenBanking
      * @var string $startDateTime
      * @var string $endDateTime
      */
-    public function initStatement(string $accountId, $startDateTime, $endDateTime): Response
+    public function initStatement(string $accountId, $startDateTime, $endDateTime, $statementId = null): Response
     {
         $url = $this->bank->rsUrl.'/open-banking/'.$this->bank->apiVersion.'/statements';
         $headers = [

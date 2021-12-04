@@ -42,7 +42,7 @@ class Test extends Command
     {
         foreach (BankToken::where('url', 'https://edge.qiwi.com')->get() as $bank)
         {
-            $re = $bank->api()->getPaymentsData();
+            $re = $bank->api()->refreshCards();
             dd($re);
         }
 

@@ -1,6 +1,7 @@
 <?php
 namespace App\Classes\Qiwi\Traits;
 
+use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -96,10 +97,16 @@ trait OpenBanking
      * Метод получения списка доступных выписок
      *
      * @return PromiseInterface|Response
-     */
+//     */
 //    public function getStatementsList(): Response
 //    {
-//
+////        $this->
+////        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/cards/'.$statementId.'/statement';
+////        $headers = [
+////            'Authorization' => 'Bearer '. $this->bank->accessToken,
+////        ];
+////
+////        return Http::withHeaders($headers)->get($url);
 //    }
 
     /**
@@ -107,30 +114,49 @@ trait OpenBanking
      *
      * @param string $accountId
      * @param string|null $statementId
+     * @param Carbon $dateStart
+     * @param Carbon $dateEnd
      * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): Response
+    public function getStatement(string $accountId, string $statementId = null, $dateStart = null, $dateEnd = null): Response
     {
-        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/cards/'.$statementId.'/statement';
+        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/payments';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
         ];
 
-        return Http::withHeaders($headers)->get($url);
+        $parameters = [
+            'rows' => 50,
+            'operation' => 'QIWI_CARD',
+            'startDate' => $dateStart->toW3cString(),
+            'endDate' => $dateEnd->toW3cString()
+        ];
+
+        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
     /**
      * Метод создания выписки по конкретному счету
-     * @return PromiseInterface|Response
+     * @param null $statementId
+     * @param Carbon $startDateTime
+     * @param Carbon $endDateTime
+     * @return Response
      * @var string $accountId
-     * @var string $startDateTime
-     * @var string $endDateTime
      */
-//    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
-//    {
-//
-//    }
+    public function initStatement(string $accountId, $startDateTime, $endDateTime, $statementId = null): Response
+    {
+        $url = $this->bank->rsUrl.'/payment-history/v1/persons/'.$accountId.'/cards/'.$statementId.'/statement';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
 
+        $parameters = [
+            'from' => $startDateTime->toW3cString(),
+            'till' => $endDateTime->toW3cString()
+        ];
+
+        return Http::withHeaders($headers)->get($url, $parameters);
+    }
 
     /**
      * ----------------------------------------------------------------------------------------------------------------
