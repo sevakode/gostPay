@@ -23,7 +23,7 @@ return [
         [
             'title' => 'Qiwi',
             'icon' => 'media/gp/bank/qiwi.svg',
-            'bin' => BankMain::QIWI,
+            'bin' => BankMain::QIWI_BIN,
             'url' => 'https://edge.qiwi.com',
             'rsUrl' => 'https://edge.qiwi.com',
             'apiVersion' => 'v2',

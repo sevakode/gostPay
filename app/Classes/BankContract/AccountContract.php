@@ -1,0 +1,28 @@
+<?php
+
+namespace App\Classes\BankContract;
+
+use GuzzleHttp\Promise\PromiseInterface;
+use Illuminate\Http\Client\Response;
+/**
+ * ----------------------------------------------------------------------------------------------------------------
+ * Работа со счетами
+ * ----------------------------------------------------------------------------------------------------------------
+ */
+interface AccountContract
+{
+    /**
+     * Метод получения списка доступных счетов
+     */
+    public function getAccountsList(): Response;
+
+    /**
+     * Метод получения информации по конкретному счёту
+     *
+     * @param string|null $accountId
+     * @return Response
+     */
+//    public function getAccountInfo(string $accountId = null): Response;
+
+
+}

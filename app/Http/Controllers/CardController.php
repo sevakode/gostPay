@@ -184,7 +184,7 @@ class CardController extends Controller
 
         if(is_null($card->ucid)) Card::refreshUcidApi();
 
-        $response = $bank->api()->editCardLimits($card->ucid, TinkoffAPI::$LIMIT_TYPE_DAY, $card->limit);
+        $response = $bank->api()->editCardLimits($card->ucid, TinkoffAPI::$LIMIT_TYPE_DAY, $card->limit)->json();
 
         if(isset($response->errorMessage) or isset($response['errorMessage']))
             return DataNotification::sendErrors([$response->errorMessage ?? $response['errorMessage']], $request->user());

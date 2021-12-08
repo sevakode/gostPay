@@ -6,9 +6,11 @@ namespace App\Models\Bank;
 
 use App\Classes\TochkaBank\BankAPI as TochkaBank;
 use App\Classes\Tinkoff\BankAPI as TinkOff;
+use App\Classes\Qiwi\BankAPI as Qiwi;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -48,7 +50,7 @@ class BankToken extends Model
 
     public function companies()
     {
-        return $this->belongsToMany(Company::class, 'companies_bank_token');
+        return $this->belongsToMany(Company::class, 'companies_bank_token');;
     }
 
     public function invoices()
@@ -56,14 +58,22 @@ class BankToken extends Model
         return $this->hasMany(Account::class);
     }
 
-    public function companyInvoices()
+    public function companyInvoices(): HasMany
     {
-        return $this->invoices()->where('company_id', request()->user()->company->id);
+        if (request()->user()) {
+            $company = request()->user()->company()->first(['id']);
+            $companyId = $company ? $company->id : null;
+        }
+        else {
+            $companyId = null;
+        }
+        return $this->invoices()->where('company_id', $companyId);
     }
 
     public function api()
     {
         $bank = collect(config('bank_list.info'));
+
         switch ($this->url) {
             case $bank->where('title', 'Tochkabank')->first()['url']:
                 $api = new TochkaBank($this);
@@ -71,12 +81,28 @@ class BankToken extends Model
             case $bank->where('title', 'Tinkoff')->first()['url']:
                 $api = new TinkOff($this);
                 break;
+            case $bank->where('title', 'Qiwi')->first()['url']:
+                $api = new Qiwi($this);
+                break;
             default :
                 $api = null;
                 break;
         }
 
         return $api;
+    }
+
+    public function isApiOfContract(...$instances): bool
+    {
+        $isInstancesOfContract = true;
+        foreach ($instances as $instance) {
+            if ($this->api() instanceof $instance) {}
+            else {
+                $isInstancesOfContract = false;
+            }
+        }
+
+        return $isInstancesOfContract;
     }
 
     public function getTitleAttribute()
@@ -152,7 +178,7 @@ class BankToken extends Model
 
     public function refresh()
     {
-        $api = BankAPI::make()->connectTokenRefresh();
+        $api = BankAPI::make()->connectTokenRefresh()->object();
         $this->accessToken = $api->access_token;
         $this->refreshToken = $api->refresh_token;
 
@@ -167,7 +193,7 @@ class BankToken extends Model
     {
         foreach (self::all() as $token)
         {
-            $api = (new BankAPI($token))->connectTokenRefresh();
+            $api = (new BankAPI($token))->connectTokenRefresh()->object();
             try{
                 $token->accessToken = $api->access_token;
                 $token->refreshToken = $api->refresh_token;
@@ -184,9 +210,11 @@ class BankToken extends Model
         return self::all();
     }
 
-    public function getDateRefresh(): string
+    public function getDateRefresh(): ?string
     {
-        $date = $this->refreshTokenDate ?? $this->accessTokenDate ?? $this->created_at;
-        return $date->format('M d, Y H:m');
+        $date = $this->refreshTokenDate ?? $this->accessTokenDate ?? $this->updated_at;
+
+        return $date->format('M d, Y H:m') ?? null;
+
     }
 }

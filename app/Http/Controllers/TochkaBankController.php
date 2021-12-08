@@ -16,7 +16,7 @@ class TochkaBankController extends Controller
         $token = BankToken::all()->first();
         $bank = new BankAPI($token);
 
-        $bank->getAccountsList();
+        $bank->getAccountsList()->object();
     }
 
     public function tokenAuth($request, $key)

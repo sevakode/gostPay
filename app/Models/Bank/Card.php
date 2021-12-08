@@ -89,8 +89,8 @@ class Card extends Model
         $bank = $this->invoice->bank()->first();
         if (!$bank->isBank(BankMain::TINKOFF_BIN)) return false;
 
-        $correlationId = $bank->api()->deleteCard($this->ucid)->correlationId;
-        $cardState = $bank->api()->getCardState($correlationId);
+        $correlationId = $bank->api()->deleteCard($this->ucid)->json()->correlationId;
+        $cardState = $bank->api()->getCardState($correlationId)->object();
 
         $this->correlation_id = $correlationId;
 
@@ -390,7 +390,7 @@ class Card extends Model
 
     public static function getCollectApi(): \Illuminate\Support\Collection
     {
-        $cardsApi = (new BankAPI(BankToken::first()))->getCards();
+        $cardsApi = (new BankAPI(BankToken::first()))->getCards()->object();
         if(!isset($cardsApi->Data)) {
             dd($cardsApi);
         }
@@ -431,7 +431,7 @@ class Card extends Model
 
     public static function refreshUcidApi()
     {
-        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->get() as $bank)
+        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->where('url', 'https://business.tinkoff.ru')->get() as $bank)
         {
             $collect = self::getCollectUcidApi($bank);
             self::upsert(
@@ -445,6 +445,11 @@ class Card extends Model
                 ]
             );
         }
+    }
+
+    public function isRoot(...$instanceof)
+    {
+//        return $this->bank()->first()->api() instanceof ;
     }
 
     public static function getCollectUcidApi(BankToken $api)

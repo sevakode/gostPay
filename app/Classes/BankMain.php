@@ -12,7 +12,7 @@ abstract class BankMain
 {
     const TINKOFF_BIN = 553420;
     const TOCHKABANK_BIN = 514017;
-    const QIWI = 100001;
+    const QIWI_BIN = 100001;
 
     protected $bank;
 

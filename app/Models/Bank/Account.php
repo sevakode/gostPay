@@ -151,10 +151,8 @@ class Account extends Model
     {
         $data = array();
 
-        try {
+        if($api->api())
             $api->api()->getAccountsData($data);
-        }
-        catch (\Throwable $e) {}
 
         return collect($data);
     }

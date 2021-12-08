@@ -22,13 +22,13 @@ class PermissionSeeder extends Seeder
         foreach (Permission::ALL as $permission)
         {
             $name = $permission['title'];
-            $slug = $permission['slug'] ?? false;
+            $slug = $permission['slug'] ?? null;
 
             $permission = new Permission();
             $permission->name = $name;
+            $permission->slug = $slug;
 
-            if($slug) $permission->slug = $slug;
-            $permission->save();
+            if ($permission->refresh()->exists) $permission->save();
         }
 
     }
