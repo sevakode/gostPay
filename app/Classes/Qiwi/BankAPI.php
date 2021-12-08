@@ -50,15 +50,12 @@ class BankAPI extends BankMain
 
     public function refreshCards()
     {
-//        dd($this->getCards()->collect('cards'));
         $count = 0;
         foreach ($this->getCards()->collect('cards') as $card) {
             if ($count > 100) continue;
             $cards[] = $this->getCardInfo($card['ucid'])->json();
             $count++;
-            dd($cards);
         }
-//        dd($cards);
     }
 //
 //    public function getCardState(string $correlationId): Response
