@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Classes\Qiwi\Traits;
 
+use Carbon\Carbon;
+use Faker\Provider\ru_RU\Payment;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -36,9 +39,9 @@ trait OpenBanking
      */
     public function getAccountInfo(string $accountId = null): Response
     {
-        $url = $this->bank->rsUrl.'/person-profile/'.$this->bank->apiVersion.'/profile/current';
+        $url = $this->bank->rsUrl . '/person-profile/' . $this->bank->apiVersion . '/profile/current';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
         $response = Http::withHeaders($headers)->get($url);
@@ -61,9 +64,9 @@ trait OpenBanking
      */
     public function getBalancesList(?string $accountId = '79221032748'): Response
     {
-        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts/';
+        $url = $this->bank->rsUrl . '/funding-sources/v2/persons/' . $accountId . '/accounts/';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
         return Http::withHeaders($headers)->get($url);
@@ -77,9 +80,9 @@ trait OpenBanking
      */
     public function getBalanceInfo(string $accountId): Response
     {
-        $url = $this->bank->rsUrl.'/funding-sources/v2/persons/'.$accountId.'/accounts';
+        $url = $this->bank->rsUrl . '/funding-sources/v2/persons/' . $accountId . '/accounts';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
         ];
 
         return Http::withHeaders($headers)->get($url);
@@ -96,10 +99,16 @@ trait OpenBanking
      * Метод получения списка доступных выписок
      *
      * @return PromiseInterface|Response
-     */
+//     */
 //    public function getStatementsList(): Response
 //    {
-//
+////        $this->
+////        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/cards/'.$statementId.'/statement';
+////        $headers = [
+////            'Authorization' => 'Bearer '. $this->bank->accessToken,
+////        ];
+////
+////        return Http::withHeaders($headers)->get($url);
 //    }
 
     /**
@@ -107,36 +116,107 @@ trait OpenBanking
      *
      * @param string $accountId
      * @param string|null $statementId
+     * @param Carbon $dateStart
+     * @param Carbon $dateEnd
      * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): Response
+    public function getStatement(string $accountId, string $statementId = null, $dateStart = null, $dateEnd = null): Response
     {
-        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/cards/'.$statementId.'/statement';
+        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/payments';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'Authorization' => 'Bearer ' . $this->bank->accessToken,
         ];
 
-        return Http::withHeaders($headers)->get($url);
+        $parameters = [
+            'rows' => 50,
+            'operation' => 'QIWI_CARD',
+            'startDate' => $dateStart->toW3cString(),
+            'endDate' => $dateEnd->toW3cString()
+        ];
+
+        return Http::withHeaders($headers)->get($url, $parameters);
     }
 
     /**
      * Метод создания выписки по конкретному счету
-     * @return PromiseInterface|Response
+     * @param null $statementId
+     * @param Carbon $startDateTime
+     * @param Carbon $endDateTime
+     * @return Response
      * @var string $accountId
-     * @var string $startDateTime
-     * @var string $endDateTime
      */
-//    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
-//    {
-//
-//    }
+    public function initStatement(string $accountId, $startDateTime, $endDateTime, $statementId = null): Response
+    {
+        $url = $this->bank->rsUrl.'/payment-history/v1/persons/'.$accountId.'/cards/'.$statementId.'/statement';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
 
+        $parameters = [
+            'from' => $startDateTime->toW3cString(),
+            'till' => $endDateTime->toW3cString()
+        ];
+
+        return Http::withHeaders($headers)->get($url, $parameters);
+    }
 
     /**
      * ----------------------------------------------------------------------------------------------------------------
      * Работа с картами
      * ----------------------------------------------------------------------------------------------------------------
      */
+
+    public function createOrderCard($accountNumber): Response
+    {
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/persons/'.$accountNumber.'/orders';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
+
+        $parameters = [
+            'cardAlias' => 'qvc-cpa-debit',
+        ];
+
+        return Http::withHeaders($headers)->post($url, $parameters);
+    }
+
+    public function submitOrderCard($accountNumber, $orderId): Response
+    {
+        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/persons/'.$accountNumber.'/orders/'.$orderId.'/submit';
+
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
+
+        return Http::withHeaders($headers)->put($url);
+    }
+
+    public function payOrderCard($accountNumber, $orderId, $number = null, $currency = '643'): Response
+    {
+        $number = $number ?? Payment::numerify('160088429####');
+        $url = $this->bank->rsUrl.'/sinap/api/'.$this->bank->apiVersion.'/terms/32064/payments';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+        ];
+
+        $parameters = [
+            "id" => $number,
+            "sum" => [
+                "amount" => 99,
+                "currency" => $currency
+            ],
+            "paymentMethod" => [
+                "type" => "Account",
+                "accountId" => $currency
+            ],
+            "fields" => [
+                "account" => $accountNumber,
+                "order_id" => $orderId
+            ]
+        ];
+
+        return Http::withHeaders($headers)->post($url, $parameters);
+    }
 
     /**
      * Метод получения списка карт
@@ -146,7 +226,7 @@ trait OpenBanking
      */
     public function getCards($accountNumber = null): Response
     {
-        $url = $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/cards';
+        $url = $this->bank->rsUrl.'/cards/'.'v1'.'/cards';
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,
         ];
@@ -166,7 +246,7 @@ trait OpenBanking
      */
     public function getCardInfo(int $ucid): Response
     {
-        $url =  $this->bank->rsUrl.'/cards/'.$this->bank->apiVersion.'/cards/'.$ucid.'/details';
+        $url =  $this->bank->rsUrl.'/cards/'.'v1'.'/cards/'.$ucid.'/details';
 
         $headers = [
             'Authorization' => 'Bearer '. $this->bank->accessToken,

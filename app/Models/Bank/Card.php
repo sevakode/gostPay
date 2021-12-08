@@ -33,6 +33,9 @@ use Illuminate\Support\Facades\Crypt;
  * @property $issue_at
  * @property $account_code
  * @property $bank_code
+ * @property $ucid
+ * @property $card_description
+ * @property $card_type
  */
 class Card extends Model
 {

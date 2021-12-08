@@ -2,6 +2,7 @@
 
 namespace App\Classes\BankContract;
 
+use Carbon\Carbon;
 use GuzzleHttp\Promise\PromiseInterface;
 use Illuminate\Http\Client\Response;
 
@@ -24,17 +25,18 @@ interface StatementContract
      *
      * @param string $accountId
      * @param string|null $statementId
-     * @return PromiseInterface|Response
+     * @param null $dateStart
+     * @param null $dateEnd
+     * @return Response
      */
-    public function getStatement(string $accountId, string $statementId = null): Response;
+    public function getStatement(string $accountId, string $statementId = null,  $dateStart = null, $dateEnd = null): Response;
 
     /**
      * Метод создания выписки по конкретному счету
-     * @return PromiseInterface|Response
+     * @param null $statementId
+     * @return Response
      * @var string $accountId
-     * @var string $startDateTime
-     * @var string $endDateTime
      */
-    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response;
+    public function initStatement(string $accountId, $startDateTime, $endDateTime, $statementId = null): Response;
 
 }

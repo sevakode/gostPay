@@ -136,7 +136,7 @@ trait OpenBanking
      * @param string|null $statementId
      * @return PromiseInterface|Response
      */
-    public function getStatement(string $accountId, string $statementId = null): Response
+    public function getStatement(string $accountId, string $statementId = null,  $dateStart = null, $dateEnd = null): Response
     {
         $url = $this->bank->rsUrl.'/api/'.$this->bank->apiVersion.'/bank-statement';
         $headers = [
@@ -153,12 +153,11 @@ trait OpenBanking
 
     /**
      * Метод создания выписки по конкретному счету
-     * @return PromiseInterface|Response
+     * @param null $statementId
+     * @return Response
      * @var string $accountId
-     * @var string $startDateTime
-     * @var string $endDateTime
      */
-    public function initStatement(string $accountId, string $startDateTime, string $endDateTime): Response
+    public function initStatement(string $accountId, $startDateTime, $endDateTime, $statementId = null): Response
     {
         $url = $this->bank->rsUrl.'/api/v1/bank-statement';
         $headers = [

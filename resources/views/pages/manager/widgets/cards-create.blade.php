@@ -71,6 +71,46 @@
     </div>
 </div>
 
+<div id="block-create-cards-api" class="card card-custom gutter-b">
+    <div class="card-header flex-wrap border-0 pt-6 pb-0">
+        <div class="card-title">
+            <h3 class="card-label">Сгенерировать карты
+                <div class="text-muted pt-2 font-size-sm">{{ \Illuminate\Support\Facades\Auth::user()->company->name }}</div>
+            </h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <!--begin: Search Form-->
+        <!--begin::Search Form-->
+        <div class="mb-7">
+                <div class="form-group row mb-6">
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <div class="col-10">
+                            <input class="form-control" type="number" value="" min="0" max="100" id="example-number-input"
+                                   placeholder="Enter count card" maxlength="3"/>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-12 col-sm-12">
+                        <div class="form-group row">
+                            <select class="form-control selectpicker" id="invoice_cards_input_pdf" name="invoice" required>
+                                @isset(request()->user()->company)
+                                    <option value="">--Выберите счет--</option>
+                                    @foreach(request()->user()->company->invoices()->get() as $invoice)
+                                        <option value="{{ $invoice->account_id }}">{{ $invoice->account_id }}</option>
+                                    @endforeach
+                                @endisset
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 ml-lg-auto">
+                            <button id="create_cards_pfd" type="button" class="btn btn-primary mr-2">Добавить</button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>
 <div id="block-create-cards-pdf" class="card card-custom gutter-b">
     <div class="card-header flex-wrap border-0 pt-6 pb-0">
         <div class="card-title">
