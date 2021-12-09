@@ -20,8 +20,8 @@ use Illuminate\Support\Facades\Crypt;
 
 /**
  * Class Card
- * @package App\Models\Bank
  *
+ * @package App\Models\Bank
  * @property string $number
  * @property string $numberFull
  * @property string $cvc
@@ -448,11 +448,6 @@ class Card extends Model
                 ]
             );
         }
-    }
-
-    public function isRoot(...$instanceof)
-    {
-//        return $this->bank()->first()->api() instanceof ;
     }
 
     public static function getCollectUcidApi(BankToken $api)

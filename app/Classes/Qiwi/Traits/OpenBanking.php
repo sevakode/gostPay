@@ -26,10 +26,10 @@ trait OpenBanking
      * Метод получения списка доступных счетов
      *
      */
-//    public function getAccountsList(): Response
-//    {
-//
-//    }
+    public function getAccountsList(): Response
+    {
+        return $this->getAccountInfo();
+    }
 
     /**
      * Метод получения информации по конкретному счёту
@@ -100,16 +100,6 @@ trait OpenBanking
      *
      * @return PromiseInterface|Response
 //     */
-//    public function getStatementsList(): Response
-//    {
-////        $this->
-////        $url = $this->bank->rsUrl.'/payment-history/'.$this->bank->apiVersion.'/persons/'.$accountId.'/cards/'.$statementId.'/statement';
-////        $headers = [
-////            'Authorization' => 'Bearer '. $this->bank->accessToken,
-////        ];
-////
-////        return Http::withHeaders($headers)->get($url);
-//    }
 
     /**
      * Метод получения конкретной выписки
@@ -260,80 +250,6 @@ trait OpenBanking
     }
 
     /**
-     * Метод получения лимитов по картам
-     *
-     * @return PromiseInterface|Response
-     */
-//    public function getCardsLimits(): Response
-//    {
-//
-//    }
-
-    /**
-     * Показывает действующие лимиты по карте
-     *
-     * @return PromiseInterface|Response
-     * @var string $cardCode
-     */
-    public function getCardLimits(string $cardCode): Response
-    {
-        $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode.'/limits';
-        $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
-        ];
-
-        return Http::withHeaders($headers)->get($url);
-    }
-
-    /**
-     * Показывает действующие лимиты по карте
-     *
-     * @param string $cardCode
-     * @param string $newName
-     * @return PromiseInterface|Response
-     */
-//    public function editCard(string $cardCode, string $newName): Response
-//    {
-//
-//    }
-
-    /**
-     * Метод позволяет изменить следующие лимиты по карте:
-     *
-     * @param string $ucid
-     * @param null $limitType
-     * @param string $limitPeriod
-     * @return PromiseInterface|Response
-     */
-//    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response
-//    {
-//
-//    }
-
-    /**
-     * Метод получения состояния карты
-     *
-     * @return PromiseInterface|Response
-     * @var string $cardCode
-     */
-//    public function getCardState(string $correlationId): Response
-//    {
-//
-//    }
-
-    /**
-     * Метод смены состояния карты
-     *
-     * @param string $cardCode
-     * @param string $newState
-     * @return PromiseInterface|Response
-     */
-//    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response
-//    {
-//
-//    }
-
-    /**
      * Метод закрытия карты
      *
      * @var string $cardCode
@@ -412,68 +328,13 @@ trait OpenBanking
      * ----------------------------------------------------------------------------------------------------------------
      */
 
-    /**
-     * Метод получения статуса платежа
-     *
-     * @param string $requestId
-     * @return PromiseInterface|Response
-     */
-//    public function getPaymentStatus(string $requestId): Response
-//    {
-//
-//    }
+    public function getPaymentStatus(string $requestId): Response
+    {
+        $url = $this->bank->rsUrl . '/payment-history/'.$this->bank->apiVersion.'/transactions/'.$requestId;
+        $headers = [
+            'Authorization' => 'Bearer ' . $this->bank->accessToken
+        ];
 
-    /**
-     * Метод получения статуса платежа
-     *
-     * @param string $requestId
-     * @param $accountCode
-     * @param $bankCode
-     * @param $counterpartyBankBic
-     * @param $counterpartyAccountNumber
-     * @param $counterpartyINN
-     * @param $counterpartyName
-     * @param $paymentAmount
-     * @param $paymentDate
-     * @param $paymentNumber
-     * @param $paymentPurpose
-     * @param string $counterpartyKPP
-     * @param string $paymentPriority
-     * @param string $supplierBillId
-     * @param string $taxInfoDocumentDate
-     * @param string $taxInfoDocumentNumber
-     * @param string $taxInfoKBK
-     * @param string $taxInfoOKATO
-     * @param string $taxInfoPeriod
-     * @param string $taxInfoReasonCode
-     * @param string $taxInfoStatus
-     * @return PromiseInterface|Response
-     */
-//    public function createPaymentForSign(
-//        string $requestId,
-//               $accountCode,
-//               $bankCode,
-//               $counterpartyBankBic,
-//               $counterpartyAccountNumber,
-//               $counterpartyINN,
-//               $counterpartyName,
-//               $paymentAmount,
-//               $paymentDate,
-//               $paymentNumber,
-//               $paymentPurpose,
-//
-//               $counterpartyKPP='',
-//               $paymentPriority='',
-//               $supplierBillId='',
-//               $taxInfoDocumentDate='',
-//               $taxInfoDocumentNumber='',
-//               $taxInfoKBK='',
-//               $taxInfoOKATO='',
-//               $taxInfoPeriod='',
-//               $taxInfoReasonCode='',
-//               $taxInfoStatus=''
-//    ): Response
-//    {
-//
-//    }
+        return Http::withHeaders($headers)->get($url);
+    }
 }

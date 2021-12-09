@@ -7,7 +7,7 @@ interface BaseContracts extends
     BalanceContract,
     CardContract,
     ClientContract,
-    PaymentContract,
+//    PaymentContract,
     StatementContract
 {
 

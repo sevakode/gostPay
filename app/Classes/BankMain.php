@@ -23,7 +23,7 @@ abstract class BankMain
 
     public static function make(): BankAPI
     {
-        return new BankAPI(BankToken::make());
+        return new BankAPI(BankToken::getWhereUser());
     }
 
     protected function send($uri, $headers = null, $body = null)

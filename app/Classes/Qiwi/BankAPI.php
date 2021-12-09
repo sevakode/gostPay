@@ -1,20 +1,29 @@
 <?php namespace App\Classes\Qiwi;
 
-
+use App\Classes\BankContract\BaseContracts;
+use App\Classes\BankContract\CloseCardContract;
+use App\Classes\BankContract\GenerateCardsContract;
+use App\Classes\BankContract\OpenCardContract;
 use App\Classes\BankMain;
 use App\Classes\Qiwi\Traits\OpenBanking;
 use App\Models\Bank\Account;
 use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
+use App\Notifications\DataNotification;
 use Carbon\Carbon;
 use DateTimeInterface;
+use ErrorException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Smalot\PdfParser\Parser;
 
-class BankAPI extends BankMain
+class BankAPI extends BankMain implements
+    BaseContracts,
+    GenerateCardsContract,
+    CloseCardContract,
+    OpenCardContract
 {
     use OpenBanking;
 
@@ -34,20 +43,66 @@ class BankAPI extends BankMain
                 $createOrder = $this
                     ->createOrderCard($account->account_id)
                     ->onError($onError)->object();
-
                 $submitOrder =  $this
                     ->submitOrderCard($account->account_id, $createOrder->id)
                     ->onError($onError)
                     ->json();
-
                 $payOrder = $this
                     ->payOrderCard($account->account_id, $createOrder->id)
-                    ->onError($onError);
+                    ->onError($onError)
+                    ->json();
+                $transactionCreatedCard = $this
+                    ->getPaymentStatus($payOrder['transaction']['id'])
+                    ->onError($onError)
+                    ->object();
+                $cards = $this // получаем список всех карт на счету
+                    ->getCards()
+                    ->onError($onError)
+                    ->collect();
 
-                $data['success'][] = $payOrder->collect();
+
+//                 выводим дату создания транзакции в объект Carbon
+                $transactionDate = Carbon::createFromFormat(DateTimeInterface::W3C, $transactionCreatedCard->date);
+//                 получаем свободную карту
+                $cardAvailable = $cards->filter(function ($item) use ($transactionDate) {
+                    $activatedCardDate = Carbon::createFromFormat(DateTimeInterface::W3C, $item['qvx']['activated']);
+
+                    $where = $activatedCardDate->gt($transactionDate);
+                    return $where;
+                })->sortByDesc(function ($item) use ($transactionDate) {
+                    $activatedCardDate = Carbon::createFromFormat(DateTimeInterface::W3C, $item['qvx']['activated']);
+                    return $activatedCardDate->timestamp;
+                })->first(function ($item) use ($account, &$cardRequisite) {
+                    $cardRequisite = $this->getCardInfo($item['qvx']['id'])->object();
+                    $queryCards = Card::query()->where('account_code', $account->account_id);
+                    $queryCards = $this->searchCard($queryCards, $cardRequisite->pan);
+
+                    if ($queryCards) {
+                        $card = $queryCards->get()->filter(function (Card $card) use($cardRequisite) {
+                            return $card->numberFull == $cardRequisite->pan;
+                        });
+                    } else {
+                        throw new ErrorException('Произошла неизвестная ошибка на сервере');
+                    }
+
+                    return $card->isEmpty();
+                });
+
+                $data['success'][] = collect([
+                    'cardInfo' => $cardAvailable,
+                    'requisite' => $cardRequisite
+                ]);
             }
-            catch (RequestException $e) {
-                $data['error'][] = collect($e);
+            catch (\Exception $e) {
+                $response = $e->response->collect();
+                $message = $response->get('message', 'Произошла неизвестная ошибка');
+                $code = $response->get('code', 'server-error');
+                DataNotification::sendErrors([$message]);
+                $data['error'][] = collect([
+                    'message' => $message,
+                    'code' => $code,
+                    'error' => $e,
+                ]);
             }
         }
 
@@ -98,22 +153,13 @@ class BankAPI extends BankMain
                     $description = $payment['source']['description'] ?? $payment['source']['keys'];
 
                     preg_match('/([*]{8}\d{4})|(\d{4}[*]{8})/u', $payment['account'], $cardNumber);
-                    $cardNumberSplit = Card::getNumberSplit($cardNumber[1]);
 
                     // настраиваем поиск карт
                     $queryCardAccount = $account->cards();
-                    $statusSearchCard = false;
-                    if($cardNumberSplit[0] !== '****') {
-                        $queryCardAccount->where('head', $cardNumberSplit[0]);
-                        $statusSearchCard = true;
-                    }
-                    if ($cardNumberSplit[2] !== '****') {
-                        $queryCardAccount->where('tail', $cardNumberSplit[2]);
-                        $statusSearchCard = true;
-                    }
+                    $queryCardAccount = $this->searchCard($queryCardAccount, $cardNumber[1]);
 
                     // если поиск удался и транзакция прошла по карте, то
-                    if ($statusSearchCard) {
+                    if ($queryCardAccount) {
                         $cardAccountModel = $queryCardAccount->get(['id', 'ucid'])
                             ->map(function (Card $card) use($payment, $account, $amount) {
                                 $dateEnd = Carbon::createFromFormat(DateTimeInterface::W3C ,$payment['date'])
@@ -212,6 +258,22 @@ class BankAPI extends BankMain
 //    }
     private function isCardPdfPayment()
     {
+    }
+
+    public function searchCard($queryCardAccount, string $cardNumber)
+    {
+        $cardNumberSplit = Card::getNumberSplit($cardNumber);
+        $statusSearchCard = false;
+        if($cardNumberSplit[0] !== '****') {
+            $queryCardAccount->where('head', $cardNumberSplit[0]);
+            $statusSearchCard = true;
+        }
+        if ($cardNumberSplit[2] !== '****') {
+            $queryCardAccount->where('tail', $cardNumberSplit[2]);
+            $statusSearchCard = true;
+        }
+
+        return $statusSearchCard ? $queryCardAccount : false;
     }
 
     private function getStatus(string $status)

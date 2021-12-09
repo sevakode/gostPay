@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id
  * @property int $amount
- *
  * @method revenue($amount): self
  * @method expenditure($amount): self
  */

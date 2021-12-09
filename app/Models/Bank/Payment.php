@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class Payment
  * @package App\Models\Bank
- *
  * @property string $description
  */
 class Payment extends Model

@@ -12,10 +12,22 @@ use Illuminate\Support\Facades\Http;
  */
 trait OpenBanking
 {
+    /**
+     * @var string
+     */
     public static string $LIMIT_TYPE_DAY = 'DAY';
+    /**
+     * @var string
+     */
     public static string $LIMIT_TYPE_MONTH = 'MONTH';
+    /**
+     * @var string
+     */
     public static string $LIMIT_TYPE_IRREGULAR = 'IRREGULAR';
 
+    /**
+     * @return File[]
+     */
     public function getCert(): array
     {
         return [

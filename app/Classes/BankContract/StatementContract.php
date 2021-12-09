@@ -18,7 +18,7 @@ interface StatementContract
      *
      * @return PromiseInterface|Response
      */
-    public function getStatementsList(): Response;
+//    public function getStatementsList(): Response;
 
     /**
      * Метод получения конкретной выписки

@@ -30,6 +30,11 @@ Route::prefix('/cards')->group(function () {
         ->withoutMiddleware('auth.demo')
         ->middleware('auth.permission:' . OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
 
+    Route::post('/generate', [CardController::class, 'generateCards'])
+        ->name('cards.generate')
+        ->withoutMiddleware('auth.demo')
+        ->middleware('auth.permission:' . OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']);
+
     Route::post('/limit', [CardController::class, 'setLimit'])
         ->name('cards.limit.update')
         ->middleware('isAjax')

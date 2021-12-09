@@ -2,6 +2,7 @@
 
 namespace App\Models\Bank;
 
+use App\Classes\BankContract\GenerateCardsContract;
 use App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,8 +10,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * Class Account
- * @package App\Models\Bank
  *
+ * @package App\Models\Bank
  * @property $account_id
  * @property $company_id
  * @property $avail
@@ -37,6 +38,23 @@ class Account extends Model
         }
 
         return $belongsToMany;
+    }
+
+    public function scopeGetWhereCreateCards($query)
+    {
+        $query->with(['bank' => function($queryBank) {
+            $queryBank->select([
+                'id', 'title','url','rsUrl','apiVersion', 'bankId', 'bankSecret', 'accessToken', 'refreshToken'
+            ]);
+        }]);
+        $result = $query->get()->map(function (Account $account) {
+            if ($account->getRelation('bank')->api() instanceof GenerateCardsContract) {
+                return $account;
+            }
+            return null;
+        })->filter();
+
+        return $result;
     }
 
     public function companyBalance($company = null): BelongsToMany

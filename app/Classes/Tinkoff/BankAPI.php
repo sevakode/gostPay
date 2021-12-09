@@ -3,6 +3,8 @@
 use App\Classes\BankContract\BankConnectContract;
 use App\Classes\BankContract\BaseContracts;
 use App\Classes\BankContract\CardLimitContract;
+use App\Classes\BankContract\CloseCardContract;
+use App\Classes\BankContract\StateCardContract;
 use App\Classes\BankMain;
 use App\Classes\Tinkoff\Traits\ConnectBanking;
 use App\Classes\Tinkoff\Traits\OpenBanking;
@@ -10,7 +12,10 @@ use App\Models\Bank\Card;
 use App\Models\Bank\Payment;
 use Illuminate\Support\Carbon;
 
-class BankAPI extends BankMain implements BankConnectContract, BaseContracts, CardLimitContract
+class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
+    CardLimitContract,
+    StateCardContract,
+    CloseCardContract
 {
     use OpenBanking, ConnectBanking;
 

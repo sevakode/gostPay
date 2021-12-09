@@ -33,7 +33,7 @@ interface CardContract
      * @return PromiseInterface|Response
      * @var string $cardCode
      */
-    public function getCardState(string $correlationId): Response;
+//    public function getCardState(string $correlationId): Response;
 
     /**
      * Метод смены состояния карты
@@ -42,14 +42,5 @@ interface CardContract
      * @param string $newState
      * @return PromiseInterface|Response
      */
-    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response;
-
-    /**
-     * Метод закрытия карты
-     *
-     * @var string $cardCode
-     * @var string $message
-     * @return PromiseInterface|Response
-     */
-    public function deleteCard(string $cardCode, string $message = ''): Response;
+//    public function editCardState(string $cardCode, string $newState = 'lockedCard'): Response;
 }

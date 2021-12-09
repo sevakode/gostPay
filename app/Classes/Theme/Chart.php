@@ -20,9 +20,7 @@ class Chart
         $colors,
         $markers;
 
-    public function __construct(
-        public string $id
-    )
+    public function __construct(string $id)
     {
 
     }

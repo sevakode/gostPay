@@ -4,9 +4,10 @@
 namespace App\Models\Bank;
 
 
-use App\Classes\TochkaBank\BankAPI as TochkaBank;
-use App\Classes\Tinkoff\BankAPI as TinkOff;
+use App\Classes\BankContract\BaseContracts;
 use App\Classes\Qiwi\BankAPI as Qiwi;
+use App\Classes\Tinkoff\BankAPI as TinkOff;
+use App\Classes\TochkaBank\BankAPI as TochkaBank;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Storage;
 
 /**
  * Class BankToken
+ *
  * @package App\Models\Bank
  * @property int id
  * @property string url
@@ -40,12 +42,32 @@ class BankToken extends Model
     ];
 
     protected $fillable = [
-        'bankId', 'bankSecret','accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id', 'key', 'title'
+        'bankId', 'bankSecret', 'accessToken', 'refreshToken', 'url', 'rsUrl', 'apiVersion', 'company_id', 'key', 'title'
     ];
 
-    public function company()
+    public static function getWhereUser()
     {
-        return $this->hasOne(Company::class, 'id');
+        return request()->user()->company->bank;
+    }
+
+    public static function refreshAll()
+    {
+        foreach (self::all() as $token) {
+            $api = $token->api()->connectTokenRefresh()->object();
+            try {
+                $token->accessToken = $api->access_token;
+                $token->refreshToken = $api->refresh_token;
+            } catch (\Exception $e) {
+                dd($api);
+            }
+            $companyName = $token->company->name;
+            $txt = "$companyName\naccess_token: $api->access_token\nrefresh_token: $api->refresh_token\n\n";
+            Storage::put('token.txt', $txt);
+
+            $token->save();
+        }
+
+        return self::all();
     }
 
     public function companies()
@@ -53,21 +75,33 @@ class BankToken extends Model
         return $this->belongsToMany(Company::class, 'companies_bank_token');;
     }
 
-    public function invoices()
-    {
-        return $this->hasMany(Account::class);
-    }
-
     public function companyInvoices(): HasMany
     {
         if (request()->user()) {
             $company = request()->user()->company()->first(['id']);
             $companyId = $company ? $company->id : null;
-        }
-        else {
+        } else {
             $companyId = null;
         }
         return $this->invoices()->where('company_id', $companyId);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Account::class);
+    }
+
+    public function isApiOfContract(...$instances): bool
+    {
+        $isInstancesOfContract = true;
+        foreach ($instances as $instance) {
+            if ($this->api() instanceof $instance) {
+            } else {
+                $isInstancesOfContract = false;
+            }
+        }
+
+        return $isInstancesOfContract;
     }
 
     public function api()
@@ -92,19 +126,6 @@ class BankToken extends Model
         return $api;
     }
 
-    public function isApiOfContract(...$instances): bool
-    {
-        $isInstancesOfContract = true;
-        foreach ($instances as $instance) {
-            if ($this->api() instanceof $instance) {}
-            else {
-                $isInstancesOfContract = false;
-            }
-        }
-
-        return $isInstancesOfContract;
-    }
-
     public function getTitleAttribute()
     {
         return $this->attributes['title'] ?? 'Неизвестный банк';
@@ -115,10 +136,15 @@ class BankToken extends Model
         return $this->company()->first();
     }
 
+    public function company()
+    {
+        return $this->hasOne(Company::class, 'id');
+    }
+
     public function getBankAttribute()
     {
         $bankAr = collect(config('bank_list.info'))->where('url', $this->url)->first();
-        if(is_null($bankAr)) {
+        if (is_null($bankAr)) {
             $bankAr = [
                 'title' => '',
                 'icon' => '',
@@ -126,25 +152,21 @@ class BankToken extends Model
             ];
         }
 
-        return (object) $bankAr;
+        return (object)$bankAr;
     }
 
-    public static function make()
+    public function token()
     {
-        return request()->user()->company->bank;
+        return $this->hasMany(BankRequest::class);
     }
-
-	public function token()
-	{
-		return $this->hasMany(BankRequest::class);
-	}
 
     public function getAPIUrl(string $method)
     {
         return $this->url . $method;
     }
 
-    public function isBank($bin) {
+    public function isBank($bin)
+    {
         $url = collect(config('bank_list.info'))->where('bin', $bin)->first()['url'];
 
         return $this->url == $url;
@@ -153,16 +175,6 @@ class BankToken extends Model
     public function setAuthCodeAttribute($value)
     {
         $this->setToken('authCode', $value);
-    }
-
-    public function setAccessTokenAttribute($value)
-    {
-        $this->setToken('accessToken', $value);
-    }
-
-    public function setRefreshTokenAttribute($value)
-    {
-        $this->setToken('refreshToken', $value);
     }
 
     protected function setToken(string $attribute, $value)
@@ -176,6 +188,16 @@ class BankToken extends Model
         }
     }
 
+    public function setAccessTokenAttribute($value)
+    {
+        $this->setToken('accessToken', $value);
+    }
+
+    public function setRefreshTokenAttribute($value)
+    {
+        $this->setToken('refreshToken', $value);
+    }
+
     public function refresh()
     {
         $api = BankAPI::make()->connectTokenRefresh()->object();
@@ -187,27 +209,6 @@ class BankToken extends Model
 
         $this->save();
         return $this;
-    }
-
-    public static function refreshAll()
-    {
-        foreach (self::all() as $token)
-        {
-            $api = (new BankAPI($token))->connectTokenRefresh()->object();
-            try{
-                $token->accessToken = $api->access_token;
-                $token->refreshToken = $api->refresh_token;
-            }catch (\Exception $e) {
-                dd($api);
-            }
-            $companyName = $token->company->name;
-            $txt = "$companyName\naccess_token: $api->access_token\nrefresh_token: $api->refresh_token\n\n";
-            Storage::put('token.txt', $txt);
-
-            $token->save();
-        }
-
-        return self::all();
     }
 
     public function getDateRefresh(): ?string

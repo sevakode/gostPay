@@ -2,15 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\BankContract\GenerateCardsContract;
 use App\Classes\BankMain;
+use App\Classes\Qiwi\BankAPI;
 use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Interfaces\OptionsPermissions;
+use App\Models\Bank\Account;
+use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Notifications\DataNotification;
 use Aspera\Spreadsheet\XLSX\Reader;
 use Aspera\Spreadsheet\XLSX\SharedStringsConfiguration;
 use Carbon\Carbon;
+use DateTimeInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
@@ -45,6 +51,115 @@ class CardController extends Controller
 
         $cards = Auth::user()->company->cards()->get();
         return view('pages.manager.widgets.cards-create', compact('cards', 'page_title', 'page_description'));
+    }
+
+    public function generateCards(Request $request)
+    {
+        // проверка полей
+        $request->validate([
+            'count_card' => ['required', function($key, $count_card, $f) {
+                $limit = 100;
+                if ($count_card > $limit) {
+                    $message = "количество карт должны быть меньше $limit";
+                    DataNotification::sendErrors([$message]);
+                    $f($message);
+                }
+                if ($count_card <= 0) {
+                    $message = "Вы не указали количество карт";
+                    DataNotification::sendErrors([$message]);
+                    $f($message);
+                }
+            }],
+            'invoice' => ['required', function($key, $invoice, $f) {
+                if ($invoice <= 0) {
+                    $message = "Пожалуйста, укажите счет, для которого нужно сгенерировать карты";
+                    DataNotification::sendErrors([$message]);
+                    $f($message, 404);
+                }
+                else if (! Account::where('account_id', $invoice)->exists()) {
+                    $message = "Данного счет не существует";
+                    DataNotification::sendErrors([$message]);
+                    $f($message, 404);
+                }
+            }]
+        ]);
+
+        $account = Account::where('account_id', $request->invoice)->with('bank')->first(); //получаем аккаунт
+        $bank = $account->getRelation('bank'); // обращаемся к банку счета
+        if ($bank->api() instanceof GenerateCardsContract) { // проверяем, есть ли возможность генерировать карты
+            $cards = $bank->api()->getCards()->collect(); // получаем список всех карт на счету
+
+            $responseCards = $bank->api()->createCards($account, 1 ?? $request->count_card); // создаем карты
+            // проверяем все карты и заносим в бд
+            foreach ($responseCards->get('success', []) as $card) {
+                $cardRequisite = (object) $card->get('requisite');
+                dd($card);
+                $cardQvx = $card->get('cardInfo')['qvx'];
+                $cardInfo = $card->get('cardInfo')['info'];
+
+
+                $cardModel = new Card();
+                $cardModel->number = $cardRequisite->pan;
+                $cardModel->ucid = $cardQvx['id'];
+                $cardModel->cvc = $cardRequisite->cvv;
+                $cardModel->state = Card::ACTIVE;
+                $cardModel->expiredAt = Carbon::createFromFormat(DateTimeInterface::W3C, $cardQvx['cardExpire']);
+                $cardModel->account_code = $request->invoice;
+                $cardModel->bank_code = $cardInfo['name'];
+                $cardModel->company_id = $request->user()->company->id;
+
+                $cardModel->save();
+
+                Notify::send($request->user(), DataNotification::success());
+            }
+//            foreach ([['transaction' => ['id' => 23983282870]]] as $card) {
+//                // получаем подробную информацию о транзакции создания карты
+//                $transactionCreatedCard = $bank->api()->getPaymentStatus($card['transaction']['id'])->object();
+//                // выводим дату создания транзакции в объект Carbon
+//                $transactionDate = Carbon::createFromFormat(DateTimeInterface::W3C, $transactionCreatedCard->date);
+//                // получаем свободную карту
+//                $cardAvailable = $cards->filter(function ($item) use ($transactionDate) {
+//                    $activatedCardDate = Carbon::createFromFormat(DateTimeInterface::W3C, $item['qvx']['activated']);
+//
+//                    $where = $activatedCardDate->gt($transactionDate);
+//                    return $where;
+//                })->sortByDesc(function ($item) use ($transactionDate) {
+//                    $activatedCardDate = Carbon::createFromFormat(DateTimeInterface::W3C, $item['qvx']['activated']);
+//                    return $activatedCardDate->timestamp;
+//                })->first(function ($item) use ($account, $bank, &$cardRequisite) {
+//                    $cardRequisite = $bank->api()->getCardInfo($item['qvx']['id'])->object();
+//                    $queryCards = Card::query()->where('account_code', $account->account_id);
+//                    $queryCards = $bank->api()->searchCard($queryCards, $cardRequisite->pan);
+//
+//                    $card = collect();
+//                    if ($queryCards) {
+//                        $card = $queryCards->get()->filter(function (Card $card) use($cardRequisite) {
+//                            return $card->numberFull == $cardRequisite->pan;
+//                        });
+//                    }
+//
+//                    return $card->isEmpty();
+//                });
+//                $cardRequisite = (object) $cardRequisite;
+//                $cardQvx = $cardAvailable['qvx'];
+//                $cardInfo = $cardAvailable['info'];
+//
+//
+//                $cardModel = new Card();
+//                $cardModel->number = $cardRequisite->pan;
+//                $cardModel->ucid = $cardQvx['id'];
+//                $cardModel->cvc = $cardRequisite->cvv;
+//                $cardModel->state = Card::ACTIVE;
+//                $cardModel->expiredAt = Carbon::createFromFormat(DateTimeInterface::W3C, $cardQvx['cardExpire']);
+//                $cardModel->account_code = $request->invoice;
+//                $cardModel->bank_code = $cardInfo['name'];
+//                $cardModel->company_id = $request->user()->company->id;
+//
+//                $cardModel->save();
+//
+//                Notify::send($request->user(), DataNotification::success());
+//            }
+        }
     }
 
     public function sendCard(Request $request)
