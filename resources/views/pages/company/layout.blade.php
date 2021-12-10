@@ -8,6 +8,11 @@
         <!--begin::Nav Panel Widget 3-->
             @include('pages.company.navbar')
         <!--end::Nav Panel Widget 3-->
+        <!--begin::Nav Panel Widget 3-->
+            @isset($card_states)
+                @include('pages.company.statistic')
+            @endisset
+        <!--end::Nav Panel Widget 3-->
         </div>
 
         <div class="col-xl-9">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bank\Card;
 use App\Models\Company;
 use App\Models\User;
 use App\Notifications\DataNotification;
@@ -60,12 +61,29 @@ class CompanyController extends Controller
         return view('pages.company.widgets.create', compact('page_title', 'page_description'));
     }
 
-    public function edit()
+    public function edit(Request $request)
     {
         $page_title = 'Открытие новой компании';
         $page_description = $page_title;
 
-        return view('pages.company.widgets.edit', compact('page_title', 'page_description'));
+        $company = Company::whereHas('users', function ($query) {
+            $query->where('id', \Auth::id());
+        })->first();
+        $cards = collect();
+        $sumCardsStates = $company->cards()->count();
+        $card_states = collect([
+            'active'  => $company->cards()->where('state', Card::ACTIVE)->count() / $sumCardsStates*100,
+            'active_count' => $company->cards()->where('state', Card::ACTIVE)->count(),
+            'pending' => $company->cards()->where('state', Card::PENDING)->count() / $sumCardsStates*100,
+            'pending_count' => $company->cards()->where('state', Card::PENDING)->count(),
+            'close' => $company->cards()->where('state', Card::CLOSE)->count() / $sumCardsStates*100,
+            'close_count' => $company->cards()->where('state', Card::CLOSE)->count(),
+        ]);
+
+        return view('pages.company.widgets.edit', compact(
+            'page_title',
+            'page_description',
+            'card_states'));
     }
 
     public function creating(Request $request)

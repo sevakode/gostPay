@@ -19,13 +19,13 @@
     <div class="d-flex align-items-center pb-9">
         <!--begin::Symbol-->
         <div class="symbol symbol-45 symbol-light mr-4">
-        <span class="symbol-label">
-            <span class="svg-icon svg-icon-2x svg-icon-dark-50">
-                <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Media/Equalizer.svg-->
-                {{ \App\Classes\Theme\Metronic::getSVG('media/svg/icons/'.$svg) }}
-                <!--end::Svg Icon-->
+            <span class="symbol-label">
+                <span class="svg-icon svg-icon-2x svg-icon-dark-50">
+                    <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Media/Equalizer.svg-->
+                    {{ \App\Classes\Theme\Metronic::getSVG('media/svg/icons/'.$svg) }}
+                    <!--end::Svg Icon-->
+                </span>
             </span>
-        </span>
         </div>
         <!--end::Symbol-->
         <!--begin::Text-->
