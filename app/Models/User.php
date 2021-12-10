@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Interfaces\OptionsPermissions;
+use App\Models\Bank\Account;
 use App\Models\Bank\TransactionBalance;
 use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
@@ -66,6 +67,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function checkBalance(Account $account)
+    {
+        $balance = (integer) $this->balance($account->id)->getSum();
+        $cards = $this->cards()->where('account_code', $account->refresh()->account_id);
+
+        if ($balance <= 0) {
+            $cards->blocks();
+        }
+        else if ($balance > 0) {
+            $cards->unblocks();
+        }
+    }
 
     public function balance($account_id = null): BelongsToMany
     {

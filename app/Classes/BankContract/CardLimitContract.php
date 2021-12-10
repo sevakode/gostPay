@@ -54,5 +54,5 @@ interface CardLimitContract
      * @param string $limitPeriod
      * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, string $limitPeriod = '1666'): Response;
+    public function editCardLimits(string $ucid, $limitType = null, $limitPeriod = '1666'): Response;
 }

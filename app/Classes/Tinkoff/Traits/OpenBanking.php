@@ -265,7 +265,9 @@ trait OpenBanking
             'Authorization' => 'Bearer '. $this->bank->accessToken
         ];
 
-        return Http::withHeaders($headers)->get($url);
+        return Http::withHeaders($headers)
+            ->withOptions($this->getCert())
+            ->get($url);
     }
 
     /**
@@ -299,7 +301,7 @@ trait OpenBanking
      * @param string $limitPeriod
      * @return PromiseInterface|Response
      */
-    public function editCardLimits(string $ucid, $limitType = null, string $limitValue = '1666'): Response
+    public function editCardLimits(string $ucid, $limitType = null, $limitValue = '1666'): Response
     {
         $limitType = $limitType ?? self::$LIMIT_TYPE_IRREGULAR;
         $limitType = self::$LIMIT_TYPE_IRREGULAR;

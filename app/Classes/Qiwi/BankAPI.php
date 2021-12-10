@@ -1,7 +1,7 @@
 <?php namespace App\Classes\Qiwi;
 
 use App\Classes\BankContract\BaseContracts;
-use App\Classes\BankContract\CloseCardContract;
+use App\Classes\BankContract\BlockCardContract;
 use App\Classes\BankContract\GenerateCardsContract;
 use App\Classes\BankContract\OpenCardContract;
 use App\Classes\BankMain;
@@ -22,8 +22,8 @@ use Smalot\PdfParser\Parser;
 class BankAPI extends BankMain implements
     BaseContracts,
     GenerateCardsContract,
-    CloseCardContract,
-    OpenCardContract
+    OpenCardContract,
+    BlockCardContract
 {
     use OpenBanking;
 

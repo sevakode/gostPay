@@ -2,13 +2,12 @@
 
 namespace App\Models\Bank;
 
-use App\Interfaces\ApiGostPayment;
+use App\Classes\BankContract\CardLimitContract;
+use App\Models\Company;
 use Carbon\Carbon;
-use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Payment
@@ -50,17 +49,20 @@ class Payment extends Model
     public static function refreshApi($command = false)
     {
         $countCards = 0;
-        foreach (BankToken::all() as $bank)
+        $newPayments = collect();
+        foreach (BankToken::where('url', 'https://edge.qiwi.com')->get() as $bank)
         {
             if($bank->api()) {
-                $d[] = $payments = self::getCollectApi($bank->api());
+                $payments = self::getCollectApi($bank->api());
+                $paymentsExists = Payment::query()
+                    ->whereIn('transaction_id', $payments->pluck('transaction_id'))
+                    ->pluck('id')->toArray();
+
+                $newPayments = $newPayments->merge($payments->whereNotIn('transaction_id',  $paymentsExists));
+
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
-                self::upsert(
-                    $payments->toArray(),
-                    [
-                        'transaction_id',
-                    ],
+                self::upsert($payments->toArray(), ['transaction_id'],
                     [
                         'description',
                         'account_id',
@@ -73,8 +75,47 @@ class Payment extends Model
                 );
             }
         }
+        self::setLimit($newPayments);
+        self::setBalance($newPayments);
 
         if($command) $command->info('Обновленные карты: '. $countCards);
+    }
+
+    public static function setLimit($newPayments)
+    {
+        $newPayments->each(function ($payment) {
+            $card = Card::find($payment['card_id']);
+            $api = $card->bank()->first()->api();
+            if ($api instanceof CardLimitContract) {
+                $limitInfo = $api->getCardLimits($card->ucid)->collect('spendLimit');
+                if ($limitInfo) {
+                    $card->limit = $limitInfo->limitRemain;
+
+                    $card->save();
+                }
+            }
+        });
+    }
+    public static function setBalance($newPayments)
+    {
+        $newPayments->each(function ($payment) {
+            $company = Company::whereHas('cards', function ($query) use($payment){
+                $query->where('id', $payment['card_id'] ?? -1);
+            })->with(['cards' => function ($query) use($payment){
+                $query->where('id', $payment['card_id'] ?? -1);
+            }])->first();
+
+            if ($company->cards) {
+                $card = $company->cards->first();
+
+                if ($payment['type'] == self::EXPENDITURE) $amount = 0 - $payment['amount'];
+                else $amount = $payment['amount'];
+
+                $company->transactionBalance($amount, $card->account_code, $card->user_id);
+            }
+        });
+
+        return true;
     }
 
     public function number()

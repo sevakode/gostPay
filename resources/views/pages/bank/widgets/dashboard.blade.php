@@ -38,14 +38,6 @@
                         </span>
                     </span>
                     <!--end::Text-->
-                    <!--begin::Dropdown-->
-{{--                    <ul style="list-style-type: '+ '; color: #00b300">--}}
-{{--                        <li>adsf</li>--}}
-{{--                        <li>asdf</li>--}}
-{{--                        <li>asdf</li>--}}
-{{--                        <li>sadf</li>--}}
-{{--                        <li>asfd</li>--}}
-{{--                    </ul>--}}
                     <style>
                         .plus-permissions {
                             /*list-style-type: "+ ";*/
@@ -86,10 +78,6 @@
                                     </li>
                                 @endforeach
                                 <li class="navi-separator mt-3 opacity-70"></li>
-{{--                                <li class="navi-footer py-4">--}}
-{{--                                    <a class="btn btn-clean font-weight-bold btn-sm" href="#">--}}
-{{--                                        <i class="ki ki-plus icon-sm"></i>Add new</a>--}}
-{{--                                </li>--}}
                             </ul>
                             <!--end::Navigation-->
                         </div>

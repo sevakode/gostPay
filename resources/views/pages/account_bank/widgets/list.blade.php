@@ -35,11 +35,6 @@
                         <span class="text-dark text-hover-primary mb-1 font-size-lg">{{ $account->name }}</span>
                         <span class="text-muted">{{ $account->getDateRefresh() }}</span>
                     </div>
-{{--                    <span style="width: 122px;">--}}
-{{--                        <span class="label label-lg font-weight-bold  label-light-primary label-inline">--}}
-{{--                            {{ $account->getDateRefresh() }}--}}
-{{--                        </span>--}}
-{{--                    </span>--}}
                     <!--end::Text-->
                     <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" data-html="true" data-placement="left"
                          data-original-title="">

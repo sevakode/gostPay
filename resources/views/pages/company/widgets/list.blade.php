@@ -35,13 +35,23 @@
                         <span class="text-muted" id="user-role-id-{{ $company->id }}">{{ $company->name }}</span>
                     </div>
                     <span style="width: 122px;">
-                        <span class="label label-lg font-weight-bold  label-light-primary label-inline">
+
+                        <span class="label label-lg font-weight-bold  label-light-success label-inline"
+                              data-toggle="tooltip" data-placement="left"
+                              data-original-title="Количество используемых карт">
+                            {{ $company->cards()->withTrashed()->count() }}
+                        </span>
+                        <span class="label label-lg font-weight-bold  label-light-primary label-inline"
+                              data-toggle="tooltip" data-placement="left"
+                              data-original-title="Количество пользователей">
                             {{ $company->users()->count() }}
                         </span>
                     </span>
+
                     <!--end::Text-->
                     <!--begin::Dropdown-->
-                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title="" data-placement="left" data-original-title="Быстрые действия">
+                    <div class="dropdown dropdown-inline ml-2" data-toggle="tooltip" title=""
+                         data-placement="left" data-original-title="Быстрые действия">
                         <a href="#" class="btn btn-hover-light-primary btn-sm btn-icon" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="ki ki-bold-more-hor"></i>
                         </a>

@@ -2,7 +2,10 @@
 
 namespace App\Models\Bank;
 
-use App\Classes\BankMain;
+use App\Classes\BankContract\BlockCardContract;
+use App\Classes\BankContract\CardLimitContract;
+use App\Classes\BankContract\CloseCardContract;
+use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Classes\TochkaBank\BankAPI;
 use App\Http\Controllers\CompanyController;
 use App\Models\Company;
@@ -86,33 +89,111 @@ class Card extends Model
         return $this->invoice()->select('bank_token_id')->first()->bank();
     }
 
-    public function close() {
+    public function isBlock()
+    {
+        return is_int($this->limit) and $this->limit <= 0;
+    }
+
+    public function close()
+    {
         if (is_null($this->ucid)) return false;
 
         $bank = $this->invoice->bank()->first();
-        if (!$bank->isBank(BankMain::TINKOFF_BIN)) return false;
+        if (! ($bank->api() instanceof CloseCardContract)) return false;
 
-        $correlationId = $bank->api()->deleteCard($this->ucid)->json()->correlationId;
-        $cardState = $bank->api()->getCardState($correlationId)->object();
+        $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
 
-        $this->correlation_id = $correlationId;
+        if ($bank->api() instanceof \App\Classes\Tinkoff\BankAPI) {
+            $correlationId = $deleteCard->correlationId;
+            $cardState = $bank->api()->getCardState($correlationId)->object();
+            $this->correlation_id = $correlationId;
 
-        switch ($cardState->status) {
-            case self::STATUS_CLOSED_READY:
-                $this->ucid = $cardState->info['newUcid'];
-                $this->state = self::CLOSE;
-                $this->correlation_id = null;
-                break;
+            switch ($cardState->status) {
+                case self::STATUS_CLOSED_READY:
+                    $this->ucid = $cardState->info['newUcid'];
+                    $this->state = self::CLOSE;
+                    $this->correlation_id = null;
+                    break;
 
-            case self::STATUS_CLOSED_ERROR:
-            case self::STATUS_CLOSED_IN_PROGRESS:
-                $this->state = self::PENDING;
-                break;
+                case self::STATUS_CLOSED_ERROR:
+                case self::STATUS_CLOSED_IN_PROGRESS:
+                    $this->state = self::PENDING;
+                    break;
+            }
+        } else {
+            $this->state = self::CLOSE;
         }
 
         $this->save();
 
-        return $cardState->status;
+        return isset($cardState) ? $cardState->status : true;
+    }
+
+    public function block()
+    {
+        if (is_null($this->ucid)) return false;
+
+        $bank = $this->invoice->bank()->first();
+
+        if ($bank->api() instanceof BlockCardContract) {
+            $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
+        } elseif ($bank->api() instanceof CardLimitContract) {
+            $limitCard = $bank->api()->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_DAY, 0)->json();
+        }
+        $this->limit = 0;
+        $this->save();
+
+        return $this;
+    }
+
+
+    public function unblock()
+    {
+        if (is_null($this->ucid)) return false;
+        if (! $this->isBlock()) return false;
+        if (!($user = $this->user()->first())) return false;
+
+        $bank = $this->invoice->bank()->first();
+        $api = $bank->api();
+        if ($api instanceof BlockCardContract) {
+            $deleteCard = $api->openCard($this->ucid)->object();
+        } elseif ($api instanceof CardLimitContract) {
+            if (is_int($this->limit) and $this->limit <= 0) {
+                $limitCount = max($user->balance()->getSum(), 0);
+                $limitCard = $api
+                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $limitCount)
+                    ->json();
+            }
+        }
+
+        $this->limit = (!is_null($limitCount)) ? $limitCount : null;
+        $this->save();
+
+        return $this;
+    }
+
+    public function scopeBlocks($query)
+    {
+        $cards = $query->get();
+
+        if ($query->where('ucid', '!=', null)->exists())
+            self::refreshUcidApi();
+
+        $cards->each(function (Card $card) {
+            $card->block();
+        });
+    }
+
+    public function scopeUnblocks($query)
+    {
+        $cards = $query->get();
+
+        if ($query->where('ucid', '!=', null)->exists())
+            self::refreshUcidApi();
+
+        $cards->each(function (Card $card) {
+            $card->unblock();
+        });
     }
 
     public function scopeClosed($query)
@@ -434,7 +515,7 @@ class Card extends Model
 
     public static function refreshUcidApi()
     {
-        foreach (BankToken::where('url', 'https://business.tinkoff.ru')->where('url', 'https://business.tinkoff.ru')->get() as $bank)
+        foreach (BankToken::query()->get() as $bank)
         {
             $collect = self::getCollectUcidApi($bank);
             self::upsert(
@@ -450,13 +531,14 @@ class Card extends Model
         }
     }
 
-    public static function getCollectUcidApi(BankToken $api)
+    public static function getCollectUcidApi(BankToken $bank)
     {
         $cards = array();
-        foreach ($api->invoices()->get() as $account) {
-            $cardsApi = $api->api()->getCards($account->account_id)->json();
-            $info = $api->api()->getCardInfo($cardsApi['cards'][1]['ucid']);
-            dd($info, $info->json());
+//        if ($bank->api() instanceof )
+        foreach ($bank->invoices()->get() as $account) {
+            $cardsResponse = $bank->api()->getCards($account->account_id);
+                $cardsApi = $cardsResponse->json();
+
             $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
             $isBankTinkoff = isset($cardsApi['cards']);
             if(!$isBank1 and !$isBankTinkoff) {

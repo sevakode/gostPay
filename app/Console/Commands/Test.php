@@ -41,13 +41,8 @@ class Test extends Command
      */
     public function handle()
     {
-        foreach (BankToken::where('url', 'https://edge.qiwi.com')->get() as $bank)
-        {
-            $bank->invoices()->get()->each(function (Account $account) use($bank) {
-                $re = $bank->api()->createCards($account, 2);
-                dd($re);
-            });
-        }
+        $card = Card::whereHead(5534)->whereTail(6773)->first();
+        dd($card->unblock());
 
         return true;
     }

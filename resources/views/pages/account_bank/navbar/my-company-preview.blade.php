@@ -2,7 +2,7 @@
     <div class="d-flex flex-column flex-center">
         <!--begin::Image-->
         <div class="bgi-no-repeat bgi-size-cover rounded min-h-180px w-100"
-             style="background-image: url({{ $company->avatar }});
+             style="background-image: url({{ isset($company) ? asset( $company->avatar) : '' }});
                  background-repeat: no-repeat;
                  background-position: center;
                  background-size: contain;

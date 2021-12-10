@@ -26,10 +26,7 @@ Route::post('payments', [DatatablesController::class, 'payments'])
     ->name('datatables.dashboard.payments');
 
 Route::post('account/user/{user_id}/transactions', [DatatablesController::class, 'userTransactions'])
-    ->name('datatables.accounts.user.transactions')
-//    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_REVENUE_BALANCE_FOR_COMPANY_USERS['slug'])
-//    ->middleware('auth.permission:'.OptionsPermissions::ACCESS_TO_EXPENDITURE_BALANCE_FOR_COMPANY_USERS['slug'])
-;
+    ->name('datatables.accounts.user.transactions');
 
 Route::post('account/{account_id}/transactions', [DatatablesController::class, 'accountTransactions'])
     ->name('datatables.accounts.transactions')

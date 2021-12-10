@@ -7,7 +7,7 @@ use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
 use App\Models\Bank\Account;
 use App\Models\Bank\Project;
-use App\Notifications\DataNotification;
+use App\Models\Pivot\PivotBalancesCompaniesUsers;
 use App\Traits\HasProjects;
 use App\Traits\Imageable;
 use Carbon\Carbon;
@@ -41,7 +41,7 @@ class Company extends Model
 
     public function balance($account_id = null): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        $belongsToMany = $this->belongsToMany(TransactionBalance::class, 'transaction_balances_companies_users',
+        $belongsToMany = $this->belongsToMany(TransactionBalance::class, PivotBalancesCompaniesUsers::class,
             'company_id', 'transaction_id');
 
         if ($account_id) $belongsToMany->where('bank_account_id', $account_id);
@@ -64,15 +64,15 @@ class Company extends Model
             $company = $query->first();
         }
 
-        $company->transaction($amount, $account_id, $user_id);
+        $company->transactionBalance($amount, $account_id, $user_id);
 
         $amountExpenditureCompany = 0 - $amount;
-        $company->transaction($amountExpenditureCompany, $account_id);
+        $company->transactionBalance($amountExpenditureCompany, $account_id);
 
         return $company;
     }
 
-    public function transaction($amount, $account_id, $user_id = null)
+    public function transactionBalance($amount, $account_id, $user_id = null)
     {
         $account = Account::where('account_id', $account_id)->first(['id']);
 
@@ -83,7 +83,17 @@ class Company extends Model
         ];
         $this->balance($account_id)->attach($transactionObject, $withPivot);
 
+        if ($user = User::find($user_id)) {
+            $user->checkBalance($account);
+        }
+        $this->checkBalance($account);
+
         return $this;
+    }
+
+    public function checkBalance(Account $account)
+    {
+
     }
 
     public function companyBalance($account_id = null): \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -135,7 +145,7 @@ class Company extends Model
 
     public function cards()
     {
-        return Card::where('company_id', $this->id);
+        return $this->hasMany(Card::class);
     }
 
     public function projects()
@@ -198,7 +208,7 @@ class Company extends Model
 
     public function avatar($type)
     {
-        return $this->getImage('avatar')->attributes[$type] ?? asset('media/stock-600x400/img-70.jpg');
+        return $this->getImage('avatar')->attributes[$type] ?? 'media/stock-600x400/img-70.jpg';
     }
 
     public function getAvatarSmallAttribute(): string

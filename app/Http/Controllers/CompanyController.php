@@ -2,21 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Classes\TochkaBank\BankAPI;
-use App\Http\Controllers\Controller;
-use App\Interfaces\OptionsPermissions;
-use App\Models\Bank\BankToken;
-use App\Models\Bank\Account;
 use App\Models\Company;
 use App\Models\User;
 use App\Notifications\DataNotification;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification as Notify;
 
 class CompanyController extends Controller
 {
+
+    /** - */
+    public static function getParametersBank($title)
+    {
+        $bank = collect(config('bank_list.info'))
+            ->where('title', $title)
+            ->first();
+        if ($bank)
+            return [
+                'url' => $bank['url'],
+                'rsUrl' => $bank['rsUrl'],
+                'apiVersion' => $bank['apiVersion'],
+            ];
+
+        return null;
+    }
 
     /** CRUD */
     public function list()
@@ -37,7 +47,7 @@ class CompanyController extends Controller
             : redirect()->back();
     }
 
-    public function show($id='')
+    public function show($id = '')
     {
         return redirect(route('dashboard'));
     }
@@ -63,8 +73,10 @@ class CompanyController extends Controller
         $company = Company::create([
             'name' => $request->name,
         ]);
+        if ($request->get('company_avatar_remove', 0))
+            $company->image('avatar')->imageable->delete();
         $file = $request->file('company_avatar');
-        if(isset($file))
+        if (isset($file))
             $company->image('avatar')->make($file, 'images/company/avatar/original/');
 
         foreach ($request->bank_auth as $bank) {
@@ -82,8 +94,11 @@ class CompanyController extends Controller
         $company->name = $request->name;
         $company->save();
 
+        if ($request->get('company_avatar_remove', 0))
+            $company->image('avatar')->imageable->delete();
+
         $file = $request->file('company_avatar');
-        if(isset($file))
+        if (isset($file))
             $company->image('avatar')->make($file, 'images/company/avatar/original/');
 
         $accountList = $company->banks()->get()->pluck('id')->toArray();
@@ -101,14 +116,6 @@ class CompanyController extends Controller
         return redirect()->back();
     }
 
-
-    /** LOGIN */
-    public static function auth(User $user, int $id)
-    {
-        $user->company_id = $id;
-        $user->save();
-    }
-
     public function login(Request $request)
     {
         self::auth($request->user(), $request->id);
@@ -117,6 +124,13 @@ class CompanyController extends Controller
         return $request->wantsJson()
             ? new JsonResponse(true, 201)
             : redirect()->back();
+    }
+
+    /** LOGIN */
+    public static function auth(User $user, int $id)
+    {
+        $user->company_id = $id;
+        $user->save();
     }
 
     public function loginAndShow($id)
@@ -131,22 +145,6 @@ class CompanyController extends Controller
         $user->logoutCompany();
 
         return redirect()->back();
-    }
-
-    /** - */
-    public static function getParametersBank($title)
-    {
-        $bank = collect(config('bank_list.info'))
-            ->where('title', $title)
-            ->first();
-        if($bank)
-            return [
-                'url' => $bank['url'],
-                'rsUrl' => $bank['rsUrl'],
-                'apiVersion' => $bank['apiVersion'],
-            ];
-
-        return null;
     }
 
     public function downloadReportUsersXls(Request $request)

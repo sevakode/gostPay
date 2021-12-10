@@ -2,21 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\BankContract\CardLimitContract;
 use App\Classes\BankContract\GenerateCardsContract;
 use App\Classes\BankMain;
-use App\Classes\Qiwi\BankAPI;
 use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Account;
-use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
+use App\Models\User;
 use App\Notifications\DataNotification;
 use Aspera\Spreadsheet\XLSX\Reader;
 use Aspera\Spreadsheet\XLSX\SharedStringsConfiguration;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
@@ -284,9 +283,14 @@ class CardController extends Controller
 
     public function setLimit(Request $request)
     {
-        $user = $request->user();
-        $card = $user->company->cards()->find($request->id);
-        $maxLimit = env('CARD_LIMIT', 100000);
+        $requestUser = $request->user();
+        $card = $requestUser->company->cards()->find($request->id);
+        $user = (isset($card->user_id) and $requestUser->id == $card->user_id) ?
+            User::find($card->user_id) :
+            $requestUser;
+
+        $balanceUser = $user->balance()->getSum();
+        $maxLimit = max($balanceUser, 0);
 
         if (is_null($card))
             return DataNotification::sendErrors(['Такой карты не существует!'], $request->user());
@@ -299,15 +303,22 @@ class CardController extends Controller
 
         if(is_null($card->ucid)) Card::refreshUcidApi();
 
-        $response = $bank->api()->editCardLimits($card->ucid, TinkoffAPI::$LIMIT_TYPE_DAY, $card->limit)->json();
+        if ($bank->api() instanceof CardLimitContract) {
+            if($maxLimit) return DataNotification::sendErrors(["На вашем счету $balanceUser!"], $request->user());
 
-        if(isset($response->errorMessage) or isset($response['errorMessage']))
-            return DataNotification::sendErrors([$response->errorMessage ?? $response['errorMessage']], $request->user());
+            $response = $bank->api()->editCardLimits($card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $card->limit)->json();
 
-        $card->limit = $request->limit;
-        $card->save();
+            if(isset($response->errorMessage) or isset($response['errorMessage'])) {
+                $errorMessage = $response->errorMessage ?? $response['errorMessage'];
+                return DataNotification::sendErrors([$errorMessage], $request->user());
+            }
 
-        Notify::send($request->user(), DataNotification::success());
+
+            $card->limit = $request->limit;
+            $card->save();
+
+            Notify::send($request->user(), DataNotification::success());
+        }
 
         return new JsonResponse(['limit' => $card->limit]);
     }

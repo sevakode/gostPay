@@ -70,8 +70,14 @@
                         @endif
                     </div>
                     <div class="d-flex flex-column flex-root">
-                        <span class="font-weight-bolder mb-2">Лимит</span>
-                        <span class="opacity-70" id="limit">{{ $card->limit ?? 'Безлимит' }}</span>
+                        <span class="font-weight-bolder mb-2">Остаточный лимит</span>
+
+                        <span class="opacity-70 {{ ($card->limit === 0) ? 'text-danger': ''}}" id="limit">
+                            @if(is_null($card->limit)) Безлимит
+                            @elseif($card->limit === 0) Заблокирован
+                            @else {{ $card->currencySign.$card->limit }}
+                            @endif
+                        </span>
                     </div>
                 </div>
             </div>
