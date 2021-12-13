@@ -30,7 +30,7 @@ class RoleSeeder extends Seeder
                 $role->slug = $slug;
             }
 
-            if ($role->refresh()->exists) $role->save();
+            if (!$role->refresh()->exists) $role->save();
 
             foreach ($permissions as $permission) {
                 $permission = Permission::getSlug($permission);

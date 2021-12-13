@@ -27,8 +27,8 @@ class PermissionSeeder extends Seeder
             $permission = new Permission();
             $permission->name = $name;
             $permission->slug = $slug;
-
-            if ($permission->refresh()->exists) $permission->save();
+            if (!$permission->refresh()->exists)
+                $permission->save();
         }
 
     }
