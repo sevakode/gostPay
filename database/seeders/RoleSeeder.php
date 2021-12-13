@@ -34,7 +34,7 @@ class RoleSeeder extends Seeder
 
             foreach ($permissions as $permission) {
                 $permission = Permission::getSlug($permission);
-                if ($role->permissions()->where('slug', $permission)->exists()) {
+                if (! $role->permissions()->where('slug', $permission)->exists()) {
                     $role->permissions()->attach($permission);
                 }
             }

@@ -25,7 +25,7 @@ class RegistrationRoleAndPermissionSeeder extends Seeder
             }
         }
 
-        if(User::whereEmail('sevakode@gmail.com')->exists())
+        if (User::whereEmail('sevakode@gmail.com')->exists())
         {
             $ownerRole = Role::getSlug(Role::OWNER);
             $user1 = User::whereEmail('sevakode@gmail.com')->first();
