@@ -24,6 +24,8 @@ Route::post('user-cards', [DatatablesController::class, 'userCards'])
 
 Route::post('payments', [DatatablesController::class, 'payments'])
     ->name('datatables.dashboard.payments');
+Route::post('payments/refresh', [DatatablesController::class, 'paymentsRefresh'])
+    ->name('datatables.payments.refresh');
 
 Route::post('account/user/{user_id}/transactions', [DatatablesController::class, 'userTransactions'])
     ->name('datatables.accounts.user.transactions');

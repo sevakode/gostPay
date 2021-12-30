@@ -117,6 +117,55 @@
 		<div class="separator separator-dashed my-7"></div>
 
     </div>
+        @if (request()->user()
+        ->hasPermissionTo(App\Interfaces\OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY['slug']))
+        <div>
+            <!--begin:Heading-->
+            <span class="d-flex align-items-center bg-diagonal-white rounded">
+
+                <div class="d-flex flex-column flex-grow-1 mr-2">
+                    <h5 class="mb-5">Баланс на счетах:</h5>
+                </div>
+                <span class="font-weight-bolder py-1 font-size-lg">
+                     <span class="btn btn-light-success" id="invoice-btn-refresh">
+                         Обновить
+
+                     </span>
+                </span>
+            </span>
+            <!--end:Heading-->
+            <!--begin::Item-->
+            @isset(request()->user()->company)
+                @foreach(request()->user()->company->invoices()->get() as $invoice)
+                    @if(isset($invoice->bank->icon) and $invoice->bank->icon)
+                    <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
+                        <span class="svg-icon svg-icon-warning mr-5">
+                            <span class="svg-icon svg-icon-lg">
+                                <!--begin::Svg Icon | path:/metronic/theme/html/demo1/dist/assets/media/svg/icons/Home/Library.svg-->
+
+                                {{ \App\Classes\Theme\Metronic::getSVG( $invoice->bank->icon) }}
+                                <!--end::Svg Icon-->
+                            </span>
+                        </span>
+                        <div class="d-flex flex-column flex-grow-1 mr-2">
+                            <a href="{{ route('invoice.show', $invoice->account_id) }}"
+                               class="font-weight-normal text-dark-75 text-hover-primary font-size-lg mb-1">
+                                {{ $invoice->bank->title }}
+
+                                <span class="text-muted font-size-sm">{{ $invoice->bank->bin }}</span>
+                            </a>
+                        </div>
+                        <span class="font-weight-bolder py-1 font-size-lg"
+                              id="invoice_bank_{{$invoice->id}}">
+                            {{ $invoice->currencySign }}{{ (float) $invoice->avail }}
+                        </span>
+                    </div>
+                    @endif
+                @endforeach
+            @endisset
+            <!--end::Item-->
+        </div>
+        @endif
         @if (request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
         <div>
             <!--begin:Heading-->
@@ -125,7 +174,7 @@
             <!--begin::Item-->
             @isset(request()->user()->company)
                 @foreach(request()->user()->company->invoices()->get() as $invoice)
-                    @if(isset($invoice->bank->icon))
+                    @if(isset($invoice->bank->icon) and $invoice->bank->icon)
                     <div class="d-flex align-items-center bg-diagonal-white rounded p-5 gutter-b">
                         <span class="svg-icon svg-icon-warning mr-5">
                             <span class="svg-icon svg-icon-lg">
@@ -144,7 +193,7 @@
                             </a>
                         </div>
                         <span class="font-weight-bolder py-1 font-size-lg">
-                            {{ $invoice->currencySign }}{{ (float) $invoice->balance()->whereUser(null)->getSum() }}
+                            {{ $invoice->currencySign }}{{ (float) $invoice->balance()->whereUser(null)->getSum()}}
                         </span>
                     </div>
                     @endif
@@ -188,4 +237,49 @@
             <!--end::Item-->
         </div>
         @endif
+    </div>
 </div>
+
+@push('scripts')
+
+    <script>
+        let buttonPaymentRefresh = $('#invoice-btn-refresh');
+        let buttonPaymentRefreshBaseText = buttonPaymentRefresh.text();
+
+        buttonPaymentRefresh.on('click', function () {
+
+            loadButton(true);
+            $.ajax({
+                type:'post',
+                url:'{{ route('datatables.payments.refresh') }}',
+                dataType: "json",
+                data:{
+                    '_token':$('meta[name="csrf-token"]').attr('content'),
+                },
+                success: function (data) {
+                    $.each(data, function (index, invoice) {
+                        setInvoice(invoice);
+                    })
+                    loadButton(false);
+                },
+                error: function () {
+                    loadButton(false);
+                }
+            });
+        });
+
+        function setInvoice(invoice) {
+            let divInvoiceBank = document.getElementById("invoice_bank_" + invoice.id);
+            divInvoiceBank.textContent = invoice.currencySign + invoice.avail;
+        }
+
+        function loadButton(status) {
+            let spanLoading = '<span class="spinner-border spinner-border-sm align-middle ms-2"></span>';
+            if (status) {
+                buttonPaymentRefresh.html(buttonPaymentRefreshBaseText + spanLoading)
+            } else {
+                buttonPaymentRefresh.text(buttonPaymentRefreshBaseText)
+            }
+        }
+    </script>
+@endpush

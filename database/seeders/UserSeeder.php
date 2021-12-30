@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         $user1->password = bcrypt('Dd781993');
         $user1->role_id = $ownerRole->id;
         $user1->company_id = $testCompany->id;
-        if ($user1->refresh()->exists) $user1->save();
+        if (!$user1->refresh()->exists()) $user1->save();
 
         $demo = new User();
         $demo->first_name = 'Demo';
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         $demo->password = bcrypt('demo');
         $demo->role_id = $demoRole->id;
         $demo->company_id = $testCompany->id;
-        if ($demo->refresh()->exists) $demo->save();
+        if (!$demo->refresh()->exists()) $demo->save();
 
     }
 }

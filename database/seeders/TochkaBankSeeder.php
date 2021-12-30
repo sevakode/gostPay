@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class TochkaBankSeeder extends Seeder
 {
@@ -18,6 +19,7 @@ class TochkaBankSeeder extends Seeder
         if (!$token::query()->where('accessToken', 'VyzPwrEGseq3wT2G1XHwkq9B4LAs8NDl')->exists()) {
             $token->url = 'https://enter.tochka.com';
             $token->rsUrl = 'https://enter.tochka.com/uapi';
+            $token->key = Str::random('32');
             $token->apiVersion = 'v1.0';
             $token->bankId = '1X9kWVAQqqM5FXDXucyr8DgyDTfCDQVc';
             $token->bankSecret = 'RJB1Wbwtb9T1GQIjI3FWDUk0Xf6NVe9w';

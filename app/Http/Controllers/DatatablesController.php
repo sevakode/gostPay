@@ -38,6 +38,22 @@ class DatatablesController extends Controller
      * @return JsonResponse
      */
 
+    public function paymentsRefresh(Request $request): JsonResponse
+    {
+        Payment::refreshApi();
+
+        $user = $request->user();
+        $company = $user->company;
+        $invoices = $company->invoices()->select(['id', 'avail', 'currency'])->get();
+        $invoices = $invoices->map(function (Account $invoice) {
+            $invoice->currencySign = $invoice->getCurrencySignAttribute();
+
+            return $invoice;
+        });
+
+        return new JsonResponse($invoices);
+    }
+
     public function invoiceCards(Request $request): JsonResponse
     {
         $data = array();

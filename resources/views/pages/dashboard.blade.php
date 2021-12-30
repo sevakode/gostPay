@@ -154,7 +154,7 @@
                         title: 'Сумма платежей',
                         template: function template(row) {
                             let color = 'text-success';
-                            console.log(row.type)
+
                              if(row.type === 'expenditure') {
                                  color = 'text-danger'
                              }
@@ -170,7 +170,7 @@
             });
 
             $('#payments_datatable').on('datatable-on-goto-page', function(e, args) {
-                console.log(args.page);
+
             });
 
             $('#payments_datatable_search_users').on('change', function () {

@@ -46,11 +46,12 @@ class Payment extends Model
         return collect($data);
     }
 
-    public static function refreshApi($command = false)
+    public static function refreshApi($command = false, $banks=null)
     {
+        $banks = $banks ?? BankToken::query()->get();
         $countCards = 0;
         $newPayments = collect();
-        foreach (BankToken::where('url', 'https://edge.qiwi.com')->get() as $bank)
+        foreach ($banks as $bank)
         {
             if($bank->api()) {
                 $payments = self::getCollectApi($bank->api());
@@ -75,6 +76,7 @@ class Payment extends Model
                 );
             }
         }
+        $newPayments = $newPayments->filter();
         self::setLimit($newPayments);
         self::setBalance($newPayments);
 
@@ -85,13 +87,15 @@ class Payment extends Model
     {
         $newPayments->each(function ($payment) {
             $card = Card::find($payment['card_id']);
-            $api = $card->bank()->first()->api();
-            if ($api instanceof CardLimitContract) {
-                $limitInfo = $api->getCardLimits($card->ucid)->collect('spendLimit');
-                if ($limitInfo) {
-                    $card->limit = $limitInfo->limitRemain;
+            if ($card) {
+                $api = $card->bank()->first()->api();
+                if ($api instanceof CardLimitContract) {
+                    $limitInfo = $api->getCardLimits($card->ucid)->collect('spendLimit');
+                    if ($limitInfo) {
+                        $card->limit = $limitInfo->limitRemain;
 
-                    $card->save();
+                        $card->save();
+                    }
                 }
             }
         });
@@ -105,7 +109,7 @@ class Payment extends Model
                 $query->where('id', $payment['card_id'] ?? -1);
             }])->first();
 
-            if ($company->cards) {
+            if ($company and isset($company->cards)) {
                 $card = $company->cards->first();
 
                 if ($payment['type'] == self::EXPENDITURE) $amount = 0 - $payment['amount'];
