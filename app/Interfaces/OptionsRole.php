@@ -113,6 +113,8 @@ interface OptionsRole
             OptionsPermissions::ACCESS_TO_ALL_USERS_COMPANY,
             OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY,
 
+            OptionsPermissions::ACCESS_TO_REMOVE_USERS,
+
             OptionsPermissions::ACCESS_TO_SHOW_PROJECTS_COMPANY,
             OptionsPermissions::ACCESS_TO_CREATE_PROJECTS_COMPANY,
             OptionsPermissions::ACCESS_TO_ALL_PROJECTS_COMPANY,
