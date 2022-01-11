@@ -7,7 +7,7 @@ return [
     'items' => [
         [],
         [
-            'title' => 'Панель',
+            'title' => 'Операции',
             'root' => true,
             'redirect' => true,
             'page' => '/',

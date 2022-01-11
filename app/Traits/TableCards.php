@@ -42,8 +42,7 @@ trait TableCards
 
     public function sortUpdateAt(&$cards, $filter)
     {
-        if($filter['sort']['field'] == 'issue_at')
-            $cards = $cards->orderBy($filter['sort']['field'], $filter['sort']['sort']);
+        $cards = $cards->orderBy($filter['sort']['field'], $filter['sort']['sort']);
     }
 
     public function sortDataUpdateAt(&$data, $filter)

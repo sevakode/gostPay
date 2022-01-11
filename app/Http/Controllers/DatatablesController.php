@@ -109,8 +109,12 @@ class DatatablesController extends Controller
 
         if (isset($filter['sort']) and count($filter['sort']) == 2) {
             $this->sortNumber($cards, $filter);
-            $this->sortUpdateAt($cards, $filter);
         }
+        else {
+            $filter['sort'] = ['field' => 'created_at', 'sort' => 'desc'];
+        }
+        $this->sortUpdateAt($cards, $filter);
+
         if (isset($filter['query'])) {
             $this->filterSearch($cards, $filter);
             $this->filterStatus($cards, $filter);
@@ -197,7 +201,7 @@ class DatatablesController extends Controller
                 $paymentList->orderBy('operationAt', $filter['sort']['sort']);
                 break;
             default:
-                $paymentList->orderBy('operationAt');
+                $paymentList->orderBy('operationAt', 'desc');
                 break;
         }
         $paymentList = $paymentList->paginate($data['meta']['perpage']);
@@ -573,8 +577,11 @@ class DatatablesController extends Controller
 
         if (isset($filter['sort']) and count($filter['sort']) == 2) {
             $this->sortNumber($cards, $filter);
-            $this->sortUpdateAt($cards, $filter);
         }
+        else {
+            $filter['sort'] = ['field' => 'issue_at', 'sort' => 'desc'];
+        }
+        $this->sortUpdateAt($cards, $filter);
 
         $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->free()->count();
         $data['amountAll'] = 0;
