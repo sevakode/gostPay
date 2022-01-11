@@ -24,6 +24,7 @@
             <script src="{{ asset($script) }}" type="text/javascript"></script>
         @endforeach
 
+        <script> KTApp.block('body', {}); </script>
 
         @foreach (Metronic::initScripts() as $script) <script src="{{asset($script)}}"></script> @endforeach
 
@@ -31,6 +32,8 @@
 
         @yield('scripts')
         @stack('scripts')
+
+        <script> KTApp.unblock('body', {}); </script>
 
     </body>
 

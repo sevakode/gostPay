@@ -15,7 +15,6 @@
             </div>
         </div>
         <div class="card-body">
-            <!--begin: Search Form-->
             <!--begin::Search Form-->
             <div class="mb-7">
                 <div class="row align-items-center">
