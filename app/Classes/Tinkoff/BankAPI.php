@@ -113,7 +113,11 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
                 $cardId = 0;
                 preg_match("/номер (\d{4})...(\d{4})/", $payment['paymentPurpose'] ?? '', $cards);
                 if (isset($cards[1], $cards[2])) {
-                    $card = Card::query()->where('head', $cards[1])->where('tail', $cards[2])->first(['id']);
+                    $card = Card::query()
+                        ->where('head', $cards[1])
+                        ->where('tail', $cards[2])
+                        ->where('account_code', $account->account_id)
+                        ->first(['id']);
                     $cardId = $card ? $card->id : null;
 
                     if (Payment::where('transaction_id', $payment['operationId'])->where('card_id', $cardId)->exists())
