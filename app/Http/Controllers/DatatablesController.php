@@ -149,8 +149,7 @@ class DatatablesController extends Controller
         $request->offsetSet('page', $filter['pagination']['page']);
         $data['data'] = [];
         $data['meta'] = [
-            "perpage"=> $filter['pagination']['perpage'] ?? 10,
-            "total"=> 350,
+            "perpage"=> $filter['pagination']['perpage'] ?: 10,
         ];
 
         $user = $request->user();
@@ -205,9 +204,9 @@ class DatatablesController extends Controller
                 break;
         }
         $paymentList = $paymentList->paginate($data['meta']['perpage']);
-        $data['pages'] = $paymentList;
 
         $data['meta']['page'] = $paymentList->currentPage();
+        $data['meta']['total'] = $paymentList->total();
         foreach ($paymentList as $payment) {
             $card = $payment->queryCard;
             $data['data'][] = [

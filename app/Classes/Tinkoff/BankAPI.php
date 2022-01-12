@@ -107,7 +107,7 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
         $countCard = 0;
         foreach ($this->bank->invoices()->get() as $account) {
             $statement = $this
-                ->initStatement($account->account_id, now()->subYear()->format('Y-m-d'), now()->format('Y-m-d'))
+                ->initStatement($account->account_id, now()->subMonth()->format('Y-m-d'), now()->format('Y-m-d'))
                 ->json();
             foreach ($statement['operation'] as $payment) {
                 $cardId = 0;
