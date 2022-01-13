@@ -108,6 +108,9 @@
                                         <span class="navi-text">Подать заявку на закрытие</span>
                                     </a>
                                 </li>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug'])))
                                 <li class="navi-item">
                                     <a href="#" id="download-cards-txt" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>
