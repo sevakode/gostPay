@@ -384,7 +384,7 @@ trait OpenBanking
         ];
 
         $parameters = [
-            'ucid' => $cardCode,
+            'ucid' => (int) $cardCode,
         ];
 
         return Http::withHeaders($headers)->withOptions($this->getCert())->post($url, $parameters);

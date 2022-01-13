@@ -18,10 +18,13 @@
     <script src="{{asset('plugins/global/plugins.bundle.js')}}"></script>
     <script src="{{asset('plugins/custom/prismjs/prismjs.bundle.js')}}"></script>
     <script src="{{asset('js/scripts.bundle.js')}}"></script>
+    <script> KTApp.block('body', {}); </script>
     <!--end::Global Theme Bundle-->
     <!--begin::Page Scripts(used by this page)-->
     <script src="{{asset('js/pages/custom/login/login-general.js')}}"></script>
+
     <!--end::Page Scripts-->
     @yield('scripts')
+    <script> KTApp.unblock('body', {}); </script>
     </body>
 @endsection

@@ -81,13 +81,19 @@
                             <li class="navi-header font-weight-bolder text-uppercase font-size-xs text-primary pb-2">
                                 Выберите действие:
                             </li>
-                            @if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']))
+                            @if(\Illuminate\Support\Facades\Route::is('profile_cards') and
+        \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']) or
+        \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="remove-cards" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
                                         <span class="navi-text">Отвязать</span>
                                     </a>
                                 </li>
+                            @endif
+                            @if(\Illuminate\Support\Facades\Route::is('profile_cards') and
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="close-cards-remove" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>

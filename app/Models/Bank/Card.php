@@ -100,7 +100,6 @@ class Card extends Model
 
         $bank = $this->invoice->bank()->first();
         if (! ($bank->api() instanceof CloseCardContract)) return false;
-
         $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
 
         if ($bank->api() instanceof \App\Classes\Tinkoff\BankAPI) {
@@ -198,11 +197,10 @@ class Card extends Model
 
     public function scopeClosed($query)
     {
-        $isCardsNoUcid = $query->where('ucid', null);
-        $cards = $query->where('ucid', '!=', null);
+        $isCardsNoUcid = $query->clone()->where('ucid', null);
+        $cards = $query->clone()->where('ucid', '!=', null);
 
         if ($isCardsNoUcid->exists()) self::refreshUcidApi();
-
         foreach ($cards->get() as $card) {
             $card->close();
         }
@@ -537,7 +535,8 @@ class Card extends Model
 //        if ($bank->api() instanceof )
         foreach ($bank->invoices()->get() as $account) {
             $cardsResponse = $bank->api()->getCards($account->account_id);
-                $cardsApi = $cardsResponse->json();
+            $cardsApi = $cardsResponse->json();
+            dd($cardsApi);
 
             $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
             $isBankTinkoff = isset($cardsApi['cards']);

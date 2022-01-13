@@ -515,8 +515,11 @@ class DatatablesController extends Controller
 
                 TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
             }
-            if (isset($filter['query']['closeCardsRemove']) and
-                $request->user()->hasPermissionTo(OptionsPermissions::MANAGER_ROLE_SET['slug'])) {
+            if (isset($filter['query']['closeCardsRemove'])) {
+                if (!$request->user()->hasPermissionTo(OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug'])) {
+                    DataNotification::sendErrors(["У вас нет прав для осуществлений таких действий!"]);
+                    return [];
+                }
                 $closeCardsRemove = explode(',', $filter['query']['closeCardsRemove']);
                 $userId = $filter['id'];
                 $cardsList = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCardsRemove);
@@ -530,7 +533,7 @@ class DatatablesController extends Controller
                 }
                else DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
 
-                TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
+//                TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
             }
             if (isset($filter['query']['downloadCardsTxt'])) {
                 $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
