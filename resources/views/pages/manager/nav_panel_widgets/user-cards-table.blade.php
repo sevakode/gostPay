@@ -101,8 +101,7 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
+                            @if(false)
                                 <li class="navi-item">
                                     <a href="#" id="close-cards" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
