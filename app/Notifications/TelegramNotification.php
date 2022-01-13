@@ -75,6 +75,20 @@ class TelegramNotification extends Notification
         return self::sendMessage($chatId, $message);
     }
 
+    public static function sendMessageClosedCards($chatId, $cards)
+    {
+        $user = $cards->first()->user()->first();
+        $message = "Карты, которые были закрыты: \n";
+        foreach ($cards as $card) {
+            $message .= "$card->number \n";
+        }
+        $message .= request()->user() ? "Закрыта пользователем: ".request()->user()->fullName: '';
+        $message .= "Владелец карты: $user->fullName\n";
+        $message .= $user->telegram ? "@$user->telegram" : '';
+
+        return self::sendMessage($chatId, $message);
+    }
+
     /**
      * Get the notification's delivery channels.
      *

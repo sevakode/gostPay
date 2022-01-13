@@ -533,7 +533,7 @@ class DatatablesController extends Controller
                 }
                else DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
 
-//                TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
+                TelegramNotification::sendMessageClosedCards('-1001248516513', $cardsListGet);
             }
             if (isset($filter['query']['downloadCardsTxt'])) {
                 $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
