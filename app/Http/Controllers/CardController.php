@@ -317,9 +317,10 @@ class CardController extends Controller
         if(is_null($card->ucid)) Card::refreshUcidApi();
 
         if ($bank->api() instanceof CardLimitContract) {
+            $limit = $request->limit ?: $balanceUser;
             $response = $bank
                 ->api()
-                ->editCardLimits((string)$card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $card->limit)
+                ->editCardLimits((string)$card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, (int) $limit)
                 ->json();
 
             if(isset($response->errorMessage) or isset($response['errorMessage'])) {
@@ -333,6 +334,6 @@ class CardController extends Controller
             Notify::send($request->user(), DataNotification::success());
         }
 
-        return new JsonResponse(['limit' => $card->limit]);
+        return new JsonResponse(['limit' => $card->limit, 'response' => $response ?? []]);
     }
 }

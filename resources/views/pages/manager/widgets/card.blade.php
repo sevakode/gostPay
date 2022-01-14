@@ -185,7 +185,7 @@
                     step: 1,
                     range: {
                         'min': [ 0 ],
-                        'max': [ {{ env('CARD_LIMIT', 100000) }} ]
+                        'max': [ {{ request()->user()->balance()->getSum() }} ]
                     },
                     format: wNumb({
                         decimals: 0

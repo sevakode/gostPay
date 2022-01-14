@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Crypt;
  * @property $ucid
  * @property $card_description
  * @property $card_type
+ * @property $correlation_id
  */
 class Card extends Model
 {
@@ -101,9 +102,9 @@ class Card extends Model
         $bank = $this->invoice->bank()->first();
         if (! ($bank->api() instanceof CloseCardContract)) return false;
         $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
+        $correlationId = $deleteCard->correlationId ?? null;
+        if ($correlationId and $bank->api() instanceof \App\Classes\Tinkoff\BankAPI) {
 
-        if ($bank->api() instanceof \App\Classes\Tinkoff\BankAPI) {
-            $correlationId = $deleteCard->correlationId;
             $cardState = $bank->api()->getCardState($correlationId)->object();
             $this->correlation_id = $correlationId;
 
@@ -111,7 +112,6 @@ class Card extends Model
                 case self::STATUS_CLOSED_READY:
                     $this->ucid = $cardState->info['newUcid'];
                     $this->state = self::CLOSE;
-                    $this->correlation_id = null;
                     break;
 
                 case self::STATUS_CLOSED_ERROR:
@@ -137,7 +137,7 @@ class Card extends Model
         if ($bank->api() instanceof BlockCardContract) {
             $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
         } elseif ($bank->api() instanceof CardLimitContract) {
-            $limitCard = $bank->api()->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_DAY, 0)->json();
+            $limitCard = $bank->api()->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, 1)->json();
         }
         $this->limit = 0;
         $this->save();
@@ -148,9 +148,10 @@ class Card extends Model
 
     public function unblock()
     {
-        if (is_null($this->ucid)) return false;
-        if (! $this->isBlock()) return false;
-        if (!($user = $this->user()->first())) return false;
+        if (is_null($this->ucid) and
+            ! $this->isBlock() and
+            ! ($user = $this->user()->first()))
+            return false;
 
         $bank = $this->invoice->bank()->first();
         $api = $bank->api();
@@ -158,14 +159,14 @@ class Card extends Model
             $deleteCard = $api->openCard($this->ucid)->object();
         } elseif ($api instanceof CardLimitContract) {
             if (is_int($this->limit) and $this->limit <= 0) {
-                $limitCount = max($user->balance()->getSum(), 0);
+                $limitCount = max($user->balance()->getSum(), 1);
                 $limitCard = $api
                     ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $limitCount)
                     ->json();
             }
         }
 
-        $this->limit = (!is_null($limitCount)) ? $limitCount : null;
+        $this->limit = (isset($limitCount) and !is_null($limitCount)) ? $limitCount : null;
         $this->save();
 
         return $this;

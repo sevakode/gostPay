@@ -304,7 +304,6 @@ trait OpenBanking
     public function editCardLimits(string $ucid, $limitType = null, $limitValue = '1666'): Response
     {
         $limitType = $limitType ?? self::$LIMIT_TYPE_IRREGULAR;
-        $limitType = self::$LIMIT_TYPE_IRREGULAR;
 
         $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/'.$ucid.'/spend-limit';
         $headers = [
