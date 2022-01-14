@@ -513,7 +513,10 @@ class Card extends Model
 
     public static function refreshUcidApi()
     {
-        foreach (BankToken::query()->get() as $bank)
+        $bankList = [
+            'TochkaBank Gost',
+        ];
+        foreach (BankToken::query()->whereNotIn('title', $bankList)->get() as $bank)
         {
             $collect = self::getCollectUcidApi($bank);
             self::upsert(
@@ -536,7 +539,6 @@ class Card extends Model
         foreach ($bank->invoices()->get() as $account) {
             $cardsResponse = $bank->api()->getCards($account->account_id);
             $cardsApi = $cardsResponse->json();
-            dd($cardsApi);
 
             $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
             $isBankTinkoff = isset($cardsApi['cards']);

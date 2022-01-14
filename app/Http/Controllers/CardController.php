@@ -39,15 +39,6 @@ class CardController extends Controller
 
     public function show($id, Request $request)
     {
-        if(!$request->user()->hasPermissionTo(OptionsPermissions::MANAGER_ROLE_SET['slug'])) {
-            DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());
-
-            return response()->view('pages.errors.error-1', [
-                'code' => 500,
-                'message' => 'У вас недостаточно прав!'
-            ]);
-        };
-
         $card = Card::find($id);
         return view('pages.manager.widgets.card', compact('card'));
     }
@@ -293,10 +284,21 @@ class CardController extends Controller
     public function setLimit(Request $request)
     {
         $requestUser = $request->user();
+
         $card = $requestUser->company->cards()->find($request->id);
         $user = (isset($card->user_id) and $requestUser->id == $card->user_id) ?
             User::find($card->user_id) :
             $requestUser;
+        if(! ((isset($card->user_id) and $requestUser->id == $card->user_id) or
+            $requestUser->hasPermissionTo(OptionsPermissions::MANAGER_ROLE_SET['slug'])))
+        {
+            DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());
+
+            return response()->view('pages.errors.error-1', [
+                'code' => 500,
+                'message' => 'У вас недостаточно прав!'
+            ]);
+        }
 
         $balanceUser = $user->balance()->getSum();
         $maxLimit = max($balanceUser, 0);
@@ -321,7 +323,6 @@ class CardController extends Controller
                 $errorMessage = $response->errorMessage ?? $response['errorMessage'];
                 return DataNotification::sendErrors([$errorMessage], $request->user());
             }
-
 
             $card->limit = $request->limit;
             $card->save();

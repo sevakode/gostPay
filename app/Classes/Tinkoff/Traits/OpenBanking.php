@@ -208,7 +208,7 @@ trait OpenBanking
         ];
 
         $parameters = $accountNumber ? [
-            'accountNumber' => $accountNumber,
+            'accountNumber' => (int)$accountNumber,
         ] : [];
 
         return Http::withHeaders($headers)->get($url, $parameters);
