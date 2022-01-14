@@ -5,7 +5,8 @@ use App\Interfaces\OptionsPermissions;
 use Illuminate\Support\Facades\Route;
 
 Route::get('card/{id}', [CardController::class, 'show'])->name('card')
-    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
+//    ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug'])
+;
 
 Route::prefix('/cards')->group(function () {
     Route::get('/', [CardController::class, 'list'])->name('cards');

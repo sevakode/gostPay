@@ -21,18 +21,20 @@
 
         {{-- Global Theme JS Bundle (used by all pages)  --}}
         @foreach(config('layout.resources.js') as $script)
-            <script src="{{ asset($script) }}" type="text/javascript"></script>
+            <script src="{{ asset($script) }}" charset="ISO-8859-1" type="text/javascript"></script>
         @endforeach
-        <script> KTApp.block('body', {}); </script>
+        <script charset="ISO-8859-1" type="text/javascript"> KTApp.block('body', {}); </script>
 
-        @foreach (Metronic::initScripts() as $script) <script src="{{asset($script)}}"></script> @endforeach
+        @foreach (Metronic::initScripts() as $script)
+            <script src="{{asset($script)}}"  charset="ISO-8859-1" type="text/javascript"></script>
+        @endforeach
 
         {{-- Includable JS --}}
 
         @yield('scripts')
         @stack('scripts')
 
-        <script> KTApp.unblock('body', {}); </script>
+        <script charset="ISO-8859-1" type="text/javascript"> KTApp.unblock('body', {}); </script>
 
     </body>
 

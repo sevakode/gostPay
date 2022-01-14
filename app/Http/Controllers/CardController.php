@@ -37,8 +37,17 @@ class CardController extends Controller
         return view('pages.manager.widgets.cards', compact('cards','page_title', 'page_description'));
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
+        if(!$request->user()->hasPermissionTo(OptionsPermissions::MANAGER_ROLE_SET['slug'])) {
+            DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());
+
+            return response()->view('pages.errors.error-1', [
+                'code' => 500,
+                'message' => 'У вас недостаточно прав!'
+            ]);
+        };
+
         $card = Card::find($id);
         return view('pages.manager.widgets.card', compact('card'));
     }
