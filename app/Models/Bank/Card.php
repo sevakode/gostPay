@@ -515,6 +515,7 @@ class Card extends Model
     {
         $bankList = [
             'TochkaBank Gost',
+            'Bank GOST'
         ];
         foreach (BankToken::query()->whereNotIn('title', $bankList)->get() as $bank)
         {
@@ -542,7 +543,8 @@ class Card extends Model
 
             $isBank1 = isset($cardsApi->totalNumber) and isset($cardsApi->Data);
             $isBankTinkoff = isset($cardsApi['cards']);
-            if(!$isBank1 and !$isBankTinkoff) {
+
+            if (! ($isBank1 or $isBankTinkoff)) {
                 continue;
             }
             $cardsApi = (object)$cardsApi;
@@ -562,7 +564,10 @@ class Card extends Model
 
             $number = "$cardApi[cardBin]******$cardApi[cardLastFourDigits]";
             $matches = self::getNumberSplit($number);
-            $cardModel = Card::where('head', $matches[0])->where('tail', $matches[3]);
+            $cardModel = Card::query()
+                ->where('head', $matches[0])
+                ->where('tail', $matches[3])
+                ->where('account_code', $cardApi['accountNumber'] ?? 'kkk');
 
             if($cardModel->exists()) {
                 $cardModel = $cardModel->first();

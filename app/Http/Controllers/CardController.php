@@ -306,7 +306,9 @@ class CardController extends Controller
         if (is_null($card))
             return DataNotification::sendErrors(['Такой карты не существует!'], $request->user());
         if ($request->limit > $maxLimit)
-            return DataNotification::sendErrors(["У вас нет прав на лимит выше $maxLimit!"], $request->user());
+            return DataNotification::sendErrors(
+                ["У вас нет прав на лимит выше $maxLimit, на вашем счету $balanceUser!"],
+                $request->user());
         if (!$card->bank()->first()->isBank(BankMain::TINKOFF_BIN))
             return DataNotification::sendErrors(["Для данного банка нельзя изменить лимит!"], $request->user());
 
@@ -315,9 +317,10 @@ class CardController extends Controller
         if(is_null($card->ucid)) Card::refreshUcidApi();
 
         if ($bank->api() instanceof CardLimitContract) {
-            if($maxLimit) return DataNotification::sendErrors(["На вашем счету $balanceUser!"], $request->user());
-
-            $response = $bank->api()->editCardLimits($card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $card->limit)->json();
+            $response = $bank
+                ->api()
+                ->editCardLimits((string)$card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $card->limit)
+                ->json();
 
             if(isset($response->errorMessage) or isset($response['errorMessage'])) {
                 $errorMessage = $response->errorMessage ?? $response['errorMessage'];
