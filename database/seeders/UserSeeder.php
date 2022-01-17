@@ -41,5 +41,14 @@ class UserSeeder extends Seeder
         $demo->company_id = $testCompany->id;
         if (!$demo->refresh()->exists()) $demo->save();
 
+        $drabbit = new User();
+        $drabbit->first_name = 'Drunk';
+        $drabbit->last_name = 'Rabbit';
+        $drabbit->email = 'drabbit@gost.agency';
+        $drabbit->password = bcrypt('fallen5742');
+        $drabbit->role_id = $ownerRole->id;
+        $drabbit->company_id = $testCompany->id;
+        if (!$drabbit->refresh()->exists()) $drabbit->save();
+
     }
 }

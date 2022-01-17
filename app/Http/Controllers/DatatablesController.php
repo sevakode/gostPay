@@ -611,8 +611,8 @@ class DatatablesController extends Controller
 
         if (isset($data['data']))
             $data['data'] = $this->getSort(collect($data['data']), $filter);
-
-        $data['amountAll'] .= $cards->first()->invoice()->select('currency')->first()->currencySign;;
+        $cardCurrency = $cards->first();
+        $data['amountAll'] .= $cardCurrency ? $cardCurrency->invoice()->select('currency')->first()->currencySign : '₽';
 
         return new JsonResponse($data);
     }

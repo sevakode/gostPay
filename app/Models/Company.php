@@ -224,18 +224,18 @@ class Company extends Model
     public function exportReportXls()
     {
         $excel[] = [
+            'Номер транзакции',
             'Номер карты',
             'Детали операции',
             'Сумма в валюте счета',
             'Номер счета',
-            'Номер карты',
             'Пользователь карты',
             'Проект',
             'Дата транзакции',
         ];
 
-        $dateStart = request()->get('date_start');
-        $dateEnd = request()->get('date_end');
+        $dateStart = request()->get('date_start', now()->subMonths(6)->format('m-d-Y'));
+        $dateEnd = request()->get('date_end', now()->format('m-d-Y'));
 
         if ($dateStart and $dateEnd) {
             $dateStart = Carbon::createFromFormat('m#d#Y', $dateStart)
@@ -244,11 +244,11 @@ class Company extends Model
                 ->setTime(0,0,0);
 
             $invoices = request()->user()->company->invoices();
-            $payments = $invoices->payments()->isDate($dateStart, $dateEnd);
+            $payments = $invoices->payments()->where('card_id', '!=', 0)->isDate($dateStart, $dateEnd);
 
-            foreach ($payments->get() as $payment)
+            foreach ($payments->with('cardQuery')->get() as $payment)
             {
-                $number =  $payment->number();
+                $number =  $payment->cardQuery ? $payment->cardQuery->numberFull : null;
                 $fullname = null;
                 $project = null;
                 $amount = null;
@@ -262,17 +262,16 @@ class Company extends Model
 
                 $excel[] = array(
                     $payment->transaction_id,
+                    $number,
                     $payment->description,
                     $amount,
                     $payment->account_id,
-                    $number,
                     $fullname,
                     $project,
                     $payment->operationAt->format('M d, Y H:i:s') ?? $payment->update_at->format('M d, Y H:i:s') ?? null
                 );
             }
         }
-        dd($excel);
 
         return (new Collection($excel))->downloadExcel('report.xlsx', null, false);
     }

@@ -101,7 +101,8 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(false)
+                            @if(
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::OWNER['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="close-cards" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>

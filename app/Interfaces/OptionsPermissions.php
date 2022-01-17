@@ -173,7 +173,7 @@ interface OptionsPermissions
 
     const
         MANAGER_ROLE_SET = [
-        'title' => 'Набор выдачи прав (Админ)',
+        'title' => 'Набор выдачи прав (Менеджер)',
         'slug' => 'admin-role-set',
         'roles' => [
             Role::ADMIN,
@@ -182,7 +182,7 @@ interface OptionsPermissions
         ]
     ], //ADMIN_ROLE_SET
         ADMIN_ROLE_SET = [
-        'title' => 'Набор выдачи прав (Менеджер)',
+        'title' => 'Набор выдачи прав (Админ)',
         'slug' => 'manager-role-set',
         'roles' => [
             Role::MAIN_USER,
