@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Card;
 use App\Models\Permission;
+use App\Models\User;
 use App\Notifications\DataNotification;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\JsonResponse;
@@ -95,8 +97,9 @@ class ManagerController extends Controller
     {
         $page_title = 'Профиль пользователя компании';
         $page_description = $page_title;
+        $user = User::companyValidate($id);
+        if (! ($user instanceof User)) return $user;
 
-        $user = Auth::user()->company->users()->find($id);
         $cards = $user->cards()->get();
 
         return view('pages.manager.widgets.user',

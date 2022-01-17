@@ -8,6 +8,7 @@ use App\Classes\BankContract\CloseCardContract;
 use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Classes\TochkaBank\BankAPI;
 use App\Http\Controllers\CompanyController;
+use App\Interfaces\OptionsPermissions;
 use App\Models\Company;
 use App\Models\IMAP;
 use App\Models\User;
@@ -40,6 +41,7 @@ use Illuminate\Support\Facades\Crypt;
  * @property $card_description
  * @property $card_type
  * @property $correlation_id
+ * @method static self companyValidate(int $cardId): self
  */
 class Card extends Model
 {
@@ -58,6 +60,23 @@ class Card extends Model
     public function company()
     {
         return $this->hasOne(Company::class, 'id', 'company_id');
+    }
+
+    public function scopeCompanyValidate($query, int $cardId)
+    {
+        return $query
+            ->where('id', $cardId)
+            ->whereHas('company', function ($query) {
+                $requestUser = request()->user();
+                if (! $requestUser->hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']))
+                    $query->where('id', $requestUser->company_id);
+            })
+            ->firstOr(['*'], function () {
+                return response()->view('pages.errors.error-1', [
+                    'code' => 500,
+                    'message' => 'У вас недостаточно прав!'
+                ]);
+            });
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo

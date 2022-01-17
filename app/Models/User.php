@@ -28,6 +28,7 @@ use Illuminate\Notifications\Notifiable;
  * @property $company_id
  * @property $telegram
  * @property Company $company
+ * @method static User companyValidate(User $user): User
  */
 class User extends Authenticatable
 {
@@ -67,6 +68,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function scopeCompanyValidate($query, int $userId)
+    {
+        return $query
+            ->where('id', $userId)
+            ->whereHas('company', function ($query) {
+                $requestUser = request()->user();
+                if (! $requestUser->hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']))
+                    $query->where('id', $requestUser->company_id);
+            })
+            ->firstOr(['*'], function () {
+                return response()->view('pages.errors.error-1', [
+                    'code' => 500,
+                    'message' => 'У вас недостаточно прав!'
+                ]);
+            });
+    }
 
     public function checkBalance(Account $account)
     {

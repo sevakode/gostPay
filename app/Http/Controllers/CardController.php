@@ -9,6 +9,7 @@ use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Account;
 use App\Models\Bank\Card;
+use App\Models\Permission;
 use App\Models\User;
 use App\Notifications\DataNotification;
 use Aspera\Spreadsheet\XLSX\Reader;
@@ -39,7 +40,10 @@ class CardController extends Controller
 
     public function show($id, Request $request)
     {
-        $card = Card::find($id);
+        $card = Card::companyValidate($id);
+        if (! ($card instanceof Card)) return $card;
+
+
         return view('pages.manager.widgets.card', compact('card'));
     }
 
