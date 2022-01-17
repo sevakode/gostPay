@@ -42,8 +42,10 @@ class QiwiTest extends TestCase
 
     public function test_dsaa_test()
     {
-        $response = $this->bank()->api()->getCards('40802810200001847434');
-        dd($response->json());
+        $response = $this->bank()->api()->getStatement('40802810100002227700');
+        $response = $this->bank()->api()->initStatement('40802810100002227700', now()->subMonth()->format('Y-m-d'), now()->format('Y-m-d'))
+            ;
+        dd($response->collect('operation')->sortByDesc('id'), $response);
         dd($response->collect('cards')->where('cardLastFourDigits', 6066));
     }
 }

@@ -244,7 +244,7 @@ class Company extends Model
                 ->setTime(0,0,0);
 
             $invoices = request()->user()->company->invoices();
-            $payments = $invoices->payments()->where('card_id', '!=', 0)->isDate($dateStart, $dateEnd);
+            $payments = $invoices->payments()->isDate($dateStart, $dateEnd);
 
             foreach ($payments->with('cardQuery')->get() as $payment)
             {

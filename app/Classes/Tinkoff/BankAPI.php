@@ -110,7 +110,7 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
                 ->initStatement($account->account_id, now()->subMonth()->format('Y-m-d'), now()->format('Y-m-d'))
                 ->json();
             foreach ($statement['operation'] as $payment) {
-                $cardId = 0;
+                $cardId = null;
                 preg_match("/номер (\d{4})...(\d{4})/", $payment['paymentPurpose'] ?? '', $cards);
                 if (isset($cards[1], $cards[2])) {
                     $card = Card::query()
