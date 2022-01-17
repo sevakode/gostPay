@@ -145,7 +145,7 @@
     </div>
 </div>
 @if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class) and
-(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']) or
+(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or
 \Illuminate\Support\Facades\Route::is('card')))
     <div class="card card-custom gutter-b">
         <div class="card-body">
@@ -175,7 +175,7 @@
 
     @section('scripts_next')
         @if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class)
-            and (\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']) or
+            and (\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or
 \Illuminate\Support\Facades\Route::is('card')))
             <script>
                 var slider = document.getElementById('kt_nouislider_1');

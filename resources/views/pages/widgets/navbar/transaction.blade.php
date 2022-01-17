@@ -1,6 +1,6 @@
 <!--begin::Nav-->
 
-@if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+@if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
 <div class="card card-custom gutter-b">
     <!--begin::Body-->
     <div class="card-body">

@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -20,7 +21,7 @@ class RoleSeeder extends Seeder
         foreach (Role::ALL as $role)
         {
             $name = $role['title'];
-            $slug = $role['slug'] ?? false;
+            $slug = $role['slug'] ?? Str::slug($role['title']);
             $permissions = $role['permissions'] ?? [];
 
             $role = new Role();
@@ -29,15 +30,16 @@ class RoleSeeder extends Seeder
             if($slug) {
                 $role->slug = $slug;
             }
-            if (!$role->refresh()->exists()) $role->save();
+            if (!Role::query()->where('slug', $slug)->exists()) $role->save();
 
             foreach ($permissions as $permission) {
                 $permission = Permission::getSlug($permission);
-                $role = $role->first();
+                $role = Role::where('slug', $slug)->first();
                 if (! $role->permissions()->where('slug', $permission->slug)->exists()) {
                     $role->permissions()->attach($permission);
                 }
             }
         }
+        dd(User::first()->role);
     }
 }

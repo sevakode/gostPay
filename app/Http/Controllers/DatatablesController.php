@@ -153,7 +153,7 @@ class DatatablesController extends Controller
         ];
 
         $user = $request->user();
-        $isAdmin = $user->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']);
+        $isAdmin = $user->hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']);
 
         if ($isAdmin) {
             $company = $user->company()->first();

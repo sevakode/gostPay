@@ -37,7 +37,7 @@ return [
                         'title' => 'Моя компания    ',
                         'page' => 'company/edit',
                         'icon' => 'media/svg/icons/General/Settings-2.svg',
-                        'permission' => OptionsPermissions::ADMIN_ROLE_SET['slug'],
+                        'permission' => OptionsPermissions::MANAGER_ROLE_SET['slug'],
                     ],
                     [
                         'title' => 'Список счетов',
@@ -45,7 +45,7 @@ return [
                         'icon' => 'media/svg/icons/Shopping/Credit-card.svg',
                     ],
                 ],
-                'permission' => OptionsPermissions::ADMIN_ROLE_SET['slug'],
+                'permission' => OptionsPermissions::MANAGER_ROLE_SET['slug'],
             ],
             'permission' => OptionsPermissions::OWNER['slug'],
 

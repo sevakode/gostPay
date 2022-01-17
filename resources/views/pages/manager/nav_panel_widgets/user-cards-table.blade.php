@@ -83,7 +83,7 @@
                             </li>
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') and
         \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']) or
-        \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
+        \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="remove-cards" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
@@ -93,7 +93,7 @@
                             @endif
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') and
     \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="close-cards-remove" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
@@ -110,7 +110,7 @@
                                 </li>
                             @endif
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
+    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="download-cards-txt" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>

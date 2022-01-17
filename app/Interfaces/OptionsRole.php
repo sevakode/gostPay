@@ -14,8 +14,8 @@ interface OptionsRole
             OptionsPermissions::ACCESS_TO_INVISIBLE,
             OptionsPermissions::ACCESS_TO_SHOW_INVISIBLE,
 
-            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::MANAGER_ROLE_SET,
+            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::ACCESS_TO_PROFILE,
             OptionsPermissions::ACCESS_TO_MANAGER,
             OptionsPermissions::ACCESS_TO_ADD_CARDS,
@@ -61,8 +61,8 @@ interface OptionsRole
         MANAGER = [
         'title' => 'Менеджер',
         'permissions' => [
-            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::MANAGER_ROLE_SET,
+            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::ACCESS_TO_PROFILE,
             OptionsPermissions::ACCESS_TO_MANAGER,
 
@@ -105,7 +105,7 @@ interface OptionsRole
         ADMIN = [
         'title' => 'Админ',
         'permissions' => [
-            OptionsPermissions::MANAGER_ROLE_SET,
+            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::ACCESS_TO_PROFILE,
             OptionsPermissions::ACCESS_TO_MANAGER,
             OptionsPermissions::ACCESS_TO_ADD_CARDS,
@@ -137,8 +137,8 @@ interface OptionsRole
         'title' => 'Демо',
         'permissions' => [
             OptionsPermissions::DEMO,
-            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::MANAGER_ROLE_SET,
+            OptionsPermissions::ADMIN_ROLE_SET,
             OptionsPermissions::ACCESS_TO_PROFILE,
             OptionsPermissions::ACCESS_TO_MANAGER,
 

@@ -44,7 +44,7 @@ Route::post('/update', [CompanyController::class, 'update'])->name('company.upda
 Route::prefix('/download')->group(function () {
     Route::get('report/users/xls', [CompanyController::class, 'downloadReportUsersXls'])
         ->name('company.download.report.users.xls')
-        ->middleware('auth.permission:'.OptionsPermissions::ADMIN_ROLE_SET['slug']);
+        ->middleware('auth.permission:'.OptionsPermissions::MANAGER_ROLE_SET['slug']);
 });
 
 

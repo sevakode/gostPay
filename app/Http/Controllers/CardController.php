@@ -249,7 +249,7 @@ class CardController extends Controller
     {
         $user = $request->user();
         $isPermission = Route::is('profile_cards') or $user
-            ->hasPermission(OptionsPermissions::MANAGER_ROLE_SET['slug']);
+            ->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']);
 
         $cardsChecked = $user->company->cards()->where('user_id', $request->id);
 
@@ -290,7 +290,7 @@ class CardController extends Controller
             User::find($card->user_id) :
             $requestUser;
         if(! ((isset($card->user_id) and $requestUser->id == $card->user_id) or
-            $requestUser->hasPermissionTo(OptionsPermissions::MANAGER_ROLE_SET['slug'])))
+            $requestUser->hasPermissionTo(OptionsPermissions::ADMIN_ROLE_SET['slug'])))
         {
             DataNotification::sendErrors(['У вас недостаточно прав!'], $request->user());
 

@@ -166,7 +166,7 @@
             <!--end::Item-->
         </div>
         @endif
-        @if (request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+        @if (request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET['slug']))
         <div>
             <!--begin:Heading-->
             <h5 class="mb-5">Баланс Компании:</h5>

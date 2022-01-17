@@ -7,8 +7,8 @@ interface OptionsPermissions
     const ALL = [
         self::OWNER,
         self::DEMO,
-        self::ADMIN_ROLE_SET,
         self::MANAGER_ROLE_SET,
+        self::ADMIN_ROLE_SET,
 
         self::ACCESS_TO_PROFILE,
         self::ACCESS_TO_MANAGER,
@@ -172,7 +172,7 @@ interface OptionsPermissions
         ];
 
     const
-        ADMIN_ROLE_SET = [
+        MANAGER_ROLE_SET = [
         'title' => 'Набор выдачи прав (Админ)',
         'slug' => 'admin-role-set',
         'roles' => [
@@ -180,8 +180,8 @@ interface OptionsPermissions
             Role::MAIN_USER,
             Role::USER,
         ]
-    ],
-        MANAGER_ROLE_SET = [
+    ], //ADMIN_ROLE_SET
+        ADMIN_ROLE_SET = [
         'title' => 'Набор выдачи прав (Менеджер)',
         'slug' => 'manager-role-set',
         'roles' => [

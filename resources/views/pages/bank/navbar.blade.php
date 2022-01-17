@@ -22,7 +22,7 @@
                 'title' => 'Список карт на закрытие',
                 'description' => 'Список проектов',
                 'count' => request()->user()->company->projects()->count(),
-                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                'permission' => \App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET
                 ])
                 <!--end::Item-->
                     <!--begin::Item-->
@@ -34,7 +34,7 @@
                 'title' => 'Проекты',
                 'description' => 'Список проектов',
                 'count' => request()->user()->company->projects()->count(),
-                'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET
+                'permission' => \App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET
                 ])
                 <!--end::Item-->
                 </div>

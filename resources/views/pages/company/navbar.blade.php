@@ -36,7 +36,7 @@
                     'route' => route('company.edit'),
                     'title' => 'Моя компания',
                     'description' => 'Изменить данные Компании',
-                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET,
+                    'permission' => \App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET,
                     'scripts' => asset('js/pages/custom/profile/profile.js'),
                     ])
                 @include('pages.company.navbar.item', [
@@ -44,7 +44,7 @@
                     'route' => route('company.download.report.users.xls'),
                     'title' => 'Отчет',
                     'description' => 'Получить отчет компании в XLS',
-                    'permission' => \App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET,
+                    'permission' => \App\Interfaces\OptionsPermissions::MANAGER_ROLE_SET,
                     'scripts' => asset('js/pages/custom/profile/profile.js'),
                     ])
                 <!--end::Item-->
