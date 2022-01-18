@@ -1,4 +1,6 @@
-<div class="d-flex align-items-center pb-9">
+@if(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+
+    <div class="d-flex align-items-center pb-9">
     <!--begin::Symbol-->
     <div class="symbol symbol-45 symbol-light mr-4">
         <span class="symbol-label">
@@ -28,3 +30,5 @@
     <span class="font-weight-bolder label label-xl label-light-success label-inline px-3 py-5 min-w-45px">{{ Auth::user()->companyUsers()->count() }}</span>
     <!--end::label-->
 </div>
+@endif
+{{--@endif--}}

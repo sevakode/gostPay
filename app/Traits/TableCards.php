@@ -3,6 +3,7 @@
 
 use App\Models\Bank\Card;
 use Illuminate\Database\Eloquent\Builder;
+use Ramsey\Collection\Collection;
 
 trait TableCards
 {
@@ -19,7 +20,7 @@ trait TableCards
             $this->sortDataUsers($data, $sort);
             $this->sortDataAmount($data, $sort);
             $this->sortDataProject($data, $sort);
-            $this->sortDataUpdateAt($data, $sort);
+//            $this->sortDataUpdateAt($data, $sort);
         }
 
         $data = $data->values()->all();
@@ -36,8 +37,11 @@ trait TableCards
 
     public function sortNumber(&$cards, $filter)
     {
-        if($filter['sort']['field'] == 'number')
-            $cards = $cards->orderBy($filter['sort']['field'], $filter['sort']['sort']);
+        if(in_array($filter['sort']['field'], ['number', 'issue_at']))
+            if ($filter['sort']['sort'] == 'asc')
+            $cards = $cards->orderBy($filter['sort']['field']);
+        if ($filter['sort']['sort'] == 'desc')
+            $cards = $cards->orderByDesc($filter['sort']['field']);
     }
 
     public function sortUpdateAt(&$cards, $filter)

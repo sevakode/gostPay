@@ -95,7 +95,7 @@
     \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or
     \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
-                                    <a href="#" id="close-cards-remove" class="navi-link disabled">
+                                    <a href="#" data-toggle="modal" data-target="#close-cards-remove-modal" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
                                         <span class="navi-text">Закрыть</span>
                                     </a>
@@ -104,11 +104,13 @@
                             @if(
     \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::OWNER['slug']))
                                 <li class="navi-item">
-                                    <a href="#" id="close-cards" class="navi-link disabled">
+                                    <a href="#" data-toggle="modal" data-target="#close-cards-modal" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
                                         <span class="navi-text">Подать заявку на закрытие</span>
                                     </a>
                                 </li>
+
+
                             @endif
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
     \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
@@ -121,6 +123,52 @@
                             @endif
                         </ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="close-cards-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Подать заявку на закрытие карт</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены что хотите Подать заявку на закрытие карт?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">
+                        Закрыть
+                    </button>
+                    <button type="button" id="close-cards" class="btn btn-primary font-weight-bold" data-dismiss="modal">
+                        Да
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="close-cards-remove-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Закрытие карт</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Вы уверены что хотите закрыть карты?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">
+                        Закрыть
+                    </button>
+                    <button type="button" id="close-cards-remove" class="btn btn-primary font-weight-bold" data-dismiss="modal">
+                        Да
+                    </button>
                 </div>
             </div>
         </div>

@@ -8,7 +8,8 @@ Route::get('card/{id}', [CardController::class, 'show'])->name('card')
     ->withoutMiddleware('auth.permission:'.OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
 
 Route::prefix('/cards')->group(function () {
-    Route::get('/', [CardController::class, 'list'])->name('cards');
+    Route::get('/', [CardController::class, 'list'])->name('cards')
+        ->middleware('auth.permission:' . OptionsPermissions::ACCESS_TO_ALL_CARDS_COMPANY['slug']);
 
     Route::get('/create', [CardController::class, 'create'])
         ->withoutMiddleware('auth.demo')

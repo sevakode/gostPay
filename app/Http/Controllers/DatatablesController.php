@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification as Notify;
 use Illuminate\Support\Str;
@@ -438,8 +439,9 @@ class DatatablesController extends Controller
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
         if (!isset($filter['id'])) dd('error');
-
-        $cards = $request->user()->company->cards()->where('user_id', $filter['id']);
+        $user = User::companyValidate(Auth::id());
+        $company = $user->company;
+        $cards = $company->cards()->where('user_id', $filter['id']);
 
         if (isset($filter['query']['date'])) {
             $date = $filter['query']['date'];
@@ -457,11 +459,13 @@ class DatatablesController extends Controller
         $this->filterSearch($cards, $filter);
 
         if (!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
-            if (isset($filter['query']['countCards']) and $filter['query']['countCards'] and $filter['query']['countCards']['count']) {
+            if (isset($filter['query']['countCards'])
+                and $filter['query']['countCards']
+                and $filter['query']['countCards']['count'])
+            {
                 $countCards = $filter['query']['countCards']['count'];
                 $account_id = $filter['query']['countCards']['account_id'];
 
-                $company = $request->user()->company;
                 $project = $company->projects()->whereSlug($filter['query']['countCards']['project']);
                 $invoice = $company->invoices()->whereAccountId($account_id);
                 $userId = $filter['id'];
@@ -481,7 +485,7 @@ class DatatablesController extends Controller
 
                             $project->cards()->attach($card->id);
                         }
-                        $cards = $company->cards()->where('user_id', $userId);
+//                        $cards = $company->cards()->where('user_id', $userId);
                         Notify::send($request->user(), DataNotification::success());
                     } else {
                         DataNotification::sendErrors(['Осталось ' . $cardsFree->count() . ' карт!']);
@@ -493,7 +497,7 @@ class DatatablesController extends Controller
             if (isset($filter['query']['removeCards'])) {
                 $removeCards = explode(',', $filter['query']['removeCards']);
                 $userId = $filter['id'];
-                $cardsChecked = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
+                $cardsChecked = $company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
 
                 foreach ($cardsChecked->get() as $card) $card->project()->detach();
 
@@ -502,7 +506,7 @@ class DatatablesController extends Controller
             if (isset($filter['query']['closeCards'])) {
                 $closeCards = explode(',', $filter['query']['closeCards']);
                 $userId = $filter['id'];
-                $cardsList = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
+                $cardsList = $company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
                 $cardsListGet = $cardsList->get();
                 $cardsListActive = $cardsList->where('state', Card::ACTIVE);
                 $isCardsExists = $cardsListActive->exists();
@@ -522,7 +526,7 @@ class DatatablesController extends Controller
                 }
                 $closeCardsRemove = explode(',', $filter['query']['closeCardsRemove']);
                 $userId = $filter['id'];
-                $cardsList = $request->user()->company->cards()->where('user_id', $userId)->whereIn('id', $closeCardsRemove);
+                $cardsList = $company->cards()->where('user_id', $userId)->whereIn('id', $closeCardsRemove);
                 $cardsListGet = $cardsList->get();
                 $cardsListActive = $cardsList->where('state', Card::ACTIVE);
                 $isCardsExists = $cardsListActive->exists();
@@ -538,7 +542,7 @@ class DatatablesController extends Controller
             if (isset($filter['query']['downloadCardsTxt'])) {
                 $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
                 $userId = $filter['id'];
-                $cardsChecked = $request->user()->company->cards()
+                $cardsChecked = $company->cards()
                     ->where('user_id', $userId)
                     ->whereIn('id', $downloadCardsTxt);
 
@@ -559,7 +563,7 @@ class DatatablesController extends Controller
             }
             if (isset($filter['query']['listCartForAdding']) and $filter['query']['listCartForAdding'] != null) {
                 $userId = $filter['id'];
-                $project = $request->user()->company->projects()->whereSlug($filter['query']['listCartForAdding']['project']);
+                $project = $company->projects()->whereSlug($filter['query']['listCartForAdding']['project']);
                 if ($project = $project->first()) {
                     foreach ($filter['query']['listCartForAdding']['cards'] as $card) {
                         $card = Card::find($card['id']);
@@ -585,12 +589,15 @@ class DatatablesController extends Controller
         }
         $this->sortUpdateAt($cards, $filter);
 
-        $data['countCardsNoUser'] = (integer)$request->user()->company->cards()->free()->count();
+        $data['countCardsNoUser'] = (integer)$company->cards()->free()->count();
         $data['amountAll'] = 0;
 
-        $cards = $cards->get()
-            ->where('company_id', $request->user()->company()->select('id')->first()->id)
-            ->where('user_id', $filter['id']);
+        $cards = $cards
+            ->orderBy('issue_at')
+            ->get()
+//            ->where('company_id', $company->id)
+//            ->where('user_id', $filter['id'])
+        ;
 
         foreach ($cards as $card) {
             $data['amountAll'] += $card->amount();

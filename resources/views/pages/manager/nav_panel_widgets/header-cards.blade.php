@@ -22,6 +22,8 @@
                     </div>
                     <!--end::Item-->
                     <!--begin::Item-->
+                    @if (\Illuminate\Support\Facades\Auth::user()
+                        ->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CREATE_CARDS['slug']))
                     <div class="navi-item mr-2">
                         <a href="{{ route('cards.create') }}" class="navi-link
                         @if(\Illuminate\Support\Facades\Request::fullUrlIs(route('cards.create')))
@@ -31,6 +33,7 @@
                             <span class="navi-text">Добавить карты</span>
                         </a>
                     </div>
+                    @endif
                     <!--end::Item-->
                 </div>
                 <!--end::Navi-->

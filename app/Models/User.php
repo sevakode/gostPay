@@ -28,7 +28,7 @@ use Illuminate\Notifications\Notifiable;
  * @property $company_id
  * @property $telegram
  * @property Company $company
- * @method static User companyValidate(User $user): User
+ * @method static User companyValidate(int $user): User
  */
 class User extends Authenticatable
 {
