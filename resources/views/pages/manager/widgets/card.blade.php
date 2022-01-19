@@ -18,9 +18,44 @@
         <div class="row justify-content-center py-8 px-8 py-md-27 px-md-0">
             <div class="col-md-10">
                 <div class="d-flex justify-content-between pb-10 pb-md-20 flex-column flex-md-row">
-                    <h1 class="display-4 font-weight-boldest mb-10">ИНФОРМАЦИЯ КАРТЫ</h1>
+                    <h1 class="display-4 font-weight-boldest mb-10">
+                        <span id="testtest">ИНФОРМАЦИЯ КАРТЫ</span>
+
+                        <span class="dropdown-notes">
+
+                            <button class="dropdown-notes-button btn btn-hover-light-warning btn-warning font-weight-bold btn-md flaticon-notes"
+                                    type="button" >
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-xl">
+
+                                <div class="card card-custom" style="font-weight: 200;">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            Заметки
+                                        </h3>
+                                        <button type="button"  id="close-dropdown-notes" class="close"
+                                                data-dismiss="modal" aria-label="Close">
+                                            <i aria-hidden="true" class="ki ki-close"></i>
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="kt_notes_message" style="height: 100px">
+
+                                        </div>
+                                        <div id="kt_notes_list">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </span>
+                    </h1>
+
+
                     <div class="d-flex flex-column align-items-md-end px-0">
                         <!--begin::Logo-->
+
                         <a href="#" class="mb-5">
                             <h4 class="text-dark">{{ $card->number }}</h4>
                         </a>
@@ -35,6 +70,7 @@
                                 {{ $card->stateRu }}
                             </span>@endisset
                         </span>
+
                     </div>
                 </div>
                 <div class="border-bottom w-100"></div>
@@ -118,7 +154,7 @@
         </div>
         <!-- end: Invoice body-->
         <!-- begin: Invoice footer-->
-        <div class="row justify-content-center bg-gray-100 py-8 px-8 py-md-10 px-md-0 mx-0">
+        <div class=" row justify-content-center bg-gray-100 py-8 px-8 py-md-10 px-md-0 mx-0">
             <div class="col-md-10">
                 <div class="table-responsive">
                     <table class="table">
@@ -156,6 +192,11 @@
                         <div class="col-4">
                             <input type="text" class="form-control" id="kt_nouislider_1_input"  placeholder="Quantity"/>
                         </div>
+                        <div id="tooltip-controls">
+                            <button id="bold-button"><i class="fa fa-bold"></i></button>
+                            :
+                        </div>
+
                         <div class="col-8">
                             <div id="kt_nouislider_1" class="nouislider-drag-danger"></div>
                         </div>
@@ -174,6 +215,398 @@
 @endif
 
     @section('scripts_next')
+
+        <script>
+            let dropdownClass = $('.dropdown-notes');
+            let dropdownButtonClass = $('.dropdown-notes-button');
+            let closeButton = $('#close-dropdown-notes.close');
+            dropdownButtonClass.on('click', function () {
+                dropdownButtonClass.dropdown('toggle');
+            });
+                $('body').on('click', function (e) {
+                    let isTapModal = $(e.target).parents('.dropdown-notes').length;
+                    let isCloseButton = closeButton.is(e.target) || $(e.target).parents('#close-dropdown-notes.close').length;
+
+                    if (!isTapModal || (isTapModal && isCloseButton)) {
+                        dropdownButtonClass.dropdown('hide');
+                        statusDropdown = 0;
+                    }
+                });
+            </script>
+        <script>
+
+
+            var toolbarSnow = [
+                    [{header: [1, 2, false]}],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    // [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
+                    // [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+                    // [{ 'direction': 'rtl' }],                         // text direction
+                    //
+                    // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
+                    // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    //
+                    [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+                    [{ 'font': [] }],
+                    [{ 'align': [] }],
+                    ['custom'],
+                ];
+
+            let optionsSnow = {
+                modules: {
+                    toolbar: {
+                        container: toolbarSnow,
+                    },
+                },
+                placeholder: '...',
+                theme: 'snow', // or 'bubble'
+            };
+            let optionsReadOnly = {
+                modules: {
+                    toolbar: false,
+                    // keyboard: false,
+                },
+                readOnly: true,
+                placeholder: '' ,
+                theme: 'bubble' // or 'bubble'
+            };
+            var quill = new Quill('#kt_notes_message', optionsSnow);
+            let toolbar = quill.getModule('toolbar');
+            toolbar.addHandler('image', function(value) {
+                console.log(this.quill)
+                if (value) {
+                    console.log(this.quill)
+                }
+            });
+            var datatable = $('#kt_notes_list').KTDatatable({
+                data: {
+                    type: 'local',
+                    source: [
+                        {
+                            "id": 0,
+                            'is_me': true,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                            ]
+                        },
+                        {
+                            "id": 1 ,
+                            'is_me': false,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 2,
+                            'is_me': true,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 3,
+                            'is_me': false,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 4,
+                            'is_me': true,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 5,
+                            'is_me': false,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 6,
+                            'is_me': true,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 7,
+                            'is_me': false,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 8,
+                            'is_me': true,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                        {
+                            "id": 9,
+                            'is_me': false,
+                            "ops": [
+                                {
+                                    "insert": "hello asdfasf ad fas%\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "italic": true
+                                    },
+                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
+                                },
+                                {
+                                    "insert": "\n"
+                                },
+                                {
+                                    "attributes": {
+                                        "underline": true
+                                    },
+                                    "insert": "asdfasfasfasf asdf as fas safaasd"
+                                },
+                                {
+                                    "insert": "\n"
+                                }
+                            ]
+                        },
+                    ],
+                    // pageSize: 10,
+                    serverPaging: false,
+                    serverFiltering: false,
+                    serverSorting: false
+                },
+                layout: {
+                    scroll: true,
+                    height: 300
+                },
+                toolbar: {
+                    layout: {
+
+                    }
+                },
+                rows: {
+                    autoHide: false,
+                    afterTemplate: function (row, data, index) {
+                        let message = new Quill('div[data-message-id="'+ data.id +'"]', optionsReadOnly)
+                        message.setContents(data.ops, 'api')
+                    },
+                },
+                sortable: false,
+                pagination: false,
+                // search: {
+                //     input: $('#add_cards_datatable_search_query'),
+                //     key: 'generalSearch'
+                // },
+
+                columns: [
+                    {
+                        field: 'insert',
+                        title: '',
+                        template: function template(row) {
+                            let note_message = '<div class="kt_note_message" data-message-id="'
+                                +
+                                row.id
+                                + '"></div>';
+                            let items_status_me = 'start';
+                            let side_me = 'left';
+                            let color_me = 'bg-light-success';
+                            let style_me = '';
+                            if (row.is_me) {
+                                items_status_me = 'end';
+                                side_me = 'right';
+                                color_me = '';
+                                style_me = 'background-color: #ffd67e;';
+                            }
+                            return `
+                            <div class="d-flex flex-column align-items-` + items_status_me + `">
+                                <div class="d-flex align-items-center">
+<!--                                    <div class="symbol symbol-circle symbol-40 mr-3">-->
+<!--                                        <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/users/300_12.jpg">-->
+<!--                                    </div>-->
+                                    <div>
+                                        <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">Matt Pears</a>
+                                        <span class="text-muted font-size-sm">2 Hours</span>
+                                    </div>
+                                </div>
+                                <div class="rounded `+ color_me +` text-dark-50 font-weight-bold font-size-lg text-`+side_me+` max-w-300px"
+                                        style="`+style_me+`">
+                                    ` + note_message + `
+                                </div>
+                            </div>`;
+                        }
+                    },
+
+                ],
+            });
+        </script>
+
         @if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class)
             and (\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or
 \Illuminate\Support\Facades\Route::is('card')))
