@@ -31,20 +31,29 @@
                                 <div class="card card-custom" style="font-weight: 200;">
                                     <div class="card-header">
                                         <h3 class="card-title">
-                                            Заметки
+                                            <span>Заметки</span>
+                                            <span id="ql_note_create"
+                                                 class="ml-1 navi-icon text-hover-dark-50">
+                                                <i class="la la-plus-circle text-hover-success text-success"></i>
+                                            </span>
                                         </h3>
+
                                         <button type="button"  id="close-dropdown-notes" class="close"
                                                 data-dismiss="modal" aria-label="Close">
                                             <i aria-hidden="true" class="ki ki-close"></i>
                                         </button>
                                     </div>
                                     <div class="card-body">
-                                        <div id="kt_notes_message" style="height: 100px">
-
+                                        <div id="kt_notes_message" style="height: 100px"></div>
+                                        <div id="ql_footer"
+                                             class="d-flex justify-content-between flex-md-row"
+                                             style="border-width: 0 1px 1px 1px;
+                                                      color: #aaa;
+                                                      padding: 5px 15px;
+                                                      ">
                                         </div>
-                                        <div id="kt_notes_list">
 
-                                        </div>
+                                        <div id="kt_notes_list"></div>
 
                                     </div>
                                 </div>
@@ -192,11 +201,6 @@
                         <div class="col-4">
                             <input type="text" class="form-control" id="kt_nouislider_1_input"  placeholder="Quantity"/>
                         </div>
-                        <div id="tooltip-controls">
-                            <button id="bold-button"><i class="fa fa-bold"></i></button>
-                            :
-                        </div>
-
                         <div class="col-8">
                             <div id="kt_nouislider_1" class="nouislider-drag-danger"></div>
                         </div>
@@ -233,11 +237,69 @@
                     }
                 });
             </script>
-        <script>
 
+        <script>
+            var editMessageId = false;
+            Quill.register('modules/footer', function(quill, options) {
+                let toolbar = $('.ql-toolbar');
+                let body = $('#kt_notes_message');
+                let footer = $('#ql_footer');
+                let note_create = $('#ql_note_create');
+                let footer_send = $(`
+                    <span id="ql_footer_send"
+                          class="navi-icon text-hover-success text-light-success
+                          align-items-md-end">
+                        <i class="la la-send"></i>
+                    </span>`);
+                let footer_close = $(`
+                    <span id="ql_footer_close"
+                          class="navi-icon text-hover-light text-hover-dark-50
+                          align-items-md-start">
+                        <i class="la la-times-circle text-danger"></i>
+                    </span>`);
+
+                if (options.close) {
+                    footer.append(footer_close);
+                }
+                if (options.send) {
+                    footer.append(footer_send);
+                }
+                if(options.hidden) {
+                    toolbar.hide();
+                    body.hide();
+                    footer_close.hide();
+                    footer_send.hide();
+                }
+                footer_close.on('click', function () {
+                    toolbar.hide();
+                    body.hide();
+                    footer_close.hide();
+                    footer_send.hide();
+                    quill.container.firstChild.textContent = '';
+                    quill.setContents({"ops": [{"insert": ""}]});
+
+                    note_create.show();
+                });
+                footer_send.on('click', function () {
+                    toolbar.hide();
+                    body.hide();
+                    footer_close.hide();
+                    footer_send.hide();
+
+                    note_create.show();
+                });
+                note_create.on('click', function () {
+                    toolbar.show();
+                    body.show();
+                    footer_close.show();
+                    footer_send.show();
+
+                    note_create.hide();
+                });
+            });
 
             var toolbarSnow = [
-                    [{header: [1, 2, false]}],
+                    // [{header: [1, 2, false]}],
                     ['bold', 'italic', 'underline', 'strike'],
                     ['blockquote'],
                     [{ 'list': 'ordered'}, { 'list': 'bullet' }],
@@ -249,15 +311,21 @@
                     // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                     //
                     [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-                    [{ 'font': [] }],
-                    [{ 'align': [] }],
-                    ['custom'],
+                    // [{ 'font': [] }],
+                    // [{ 'align': [] }],
+                    // ['custom'],
                 ];
 
             let optionsSnow = {
                 modules: {
                     toolbar: {
                         container: toolbarSnow,
+                    },
+                    footer: {
+                        send: true,
+                        close: true,
+                        create: true,
+                        hidden: true
                     },
                 },
                 placeholder: '...',
@@ -272,20 +340,37 @@
                 placeholder: '' ,
                 theme: 'bubble' // or 'bubble'
             };
-            var quill = new Quill('#kt_notes_message', optionsSnow);
-            let toolbar = quill.getModule('toolbar');
-            toolbar.addHandler('image', function(value) {
-                console.log(this.quill)
-                if (value) {
-                    console.log(this.quill)
-                }
-            });
-            var datatable = $('#kt_notes_list').KTDatatable({
+            const quill = new Quill('#kt_notes_message', optionsSnow);
+
+            const datatable = $('#kt_notes_list').KTDatatable({
                 data: {
+                    {{--type: 'remote',--}}
+                    {{--source: {--}}
+                    {{--    read: {--}}
+                    {{--        url: '{{ route('datatables.card-notes', $card->id) }}',--}}
+                    {{--        method: 'POST',--}}
+                    {{--        contentType: 'application/json',--}}
+                    {{--        headers: {--}}
+                    {{--            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
+                    {{--        },--}}
+                    {{--        timeout: 60000,--}}
+                    {{--        map: function map(raw) {--}}
+                    {{--            var dataSet = raw;--}}
+                    {{--            if (typeof raw.data !== 'undefined') {--}}
+                    {{--                dataSet = raw.data;--}}
+                    {{--            }--}}
+
+                    {{--            return dataSet;--}}
+                    {{--        }--}}
+                    {{--    }--}}
+                    {{--},--}}
                     type: 'local',
                     source: [
                         {
                             "id": 0,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': true,
                             "ops": [
                                 {
@@ -294,7 +379,10 @@
                             ]
                         },
                         {
-                            "id": 1 ,
+                            "id": 1,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': false,
                             "ops": [
                                 {
@@ -322,6 +410,9 @@
                         },
                         {
                             "id": 2,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': true,
                             "ops": [
                                 {
@@ -349,6 +440,9 @@
                         },
                         {
                             "id": 3,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': false,
                             "ops": [
                                 {
@@ -376,6 +470,9 @@
                         },
                         {
                             "id": 4,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': true,
                             "ops": [
                                 {
@@ -403,6 +500,9 @@
                         },
                         {
                             "id": 5,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': false,
                             "ops": [
                                 {
@@ -430,6 +530,9 @@
                         },
                         {
                             "id": 6,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '3 Hours',
                             'is_me': true,
                             "ops": [
                                 {
@@ -457,6 +560,9 @@
                         },
                         {
                             "id": 7,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '3 Hours',
                             'is_me': false,
                             "ops": [
                                 {
@@ -484,6 +590,9 @@
                         },
                         {
                             "id": 8,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '3 Hours',
                             'is_me': true,
                             "ops": [
                                 {
@@ -511,6 +620,9 @@
                         },
                         {
                             "id": 9,
+                            "user_id": 1,
+                            "full_name": 'test',
+                            "created_at": '2 Hours',
                             'is_me': false,
                             "ops": [
                                 {
@@ -544,17 +656,17 @@
                 },
                 layout: {
                     scroll: true,
-                    height: 300
+                    height: 300,
+                    header: false,
+                    footer: false,
                 },
                 toolbar: {
-                    layout: {
-
-                    }
+                    layout: {}
                 },
                 rows: {
                     autoHide: false,
                     afterTemplate: function (row, data, index) {
-                        let message = new Quill('div[data-message-id="'+ data.id +'"]', optionsReadOnly)
+                        let message = new Quill('div[data-message-id="' + data.id + '"]', optionsReadOnly)
                         message.setContents(data.ops, 'api')
                     },
                 },
@@ -570,41 +682,94 @@
                         field: 'insert',
                         title: '',
                         template: function template(row) {
-                            let note_message = '<div class="kt_note_message" data-message-id="'
-                                +
-                                row.id
-                                + '"></div>';
+                            let note_message = '<div class="kt_note_message" data-message-id="'+ row.id +'" ' +
+                                'id="note_message_' + row.id + '"></div>';
                             let items_status_me = 'start';
                             let side_me = 'left';
                             let color_me = 'bg-light-success';
                             let style_me = '';
+                            let edit_is_me = ''
+                            let del_is_me = ''
                             if (row.is_me) {
                                 items_status_me = 'end';
                                 side_me = 'right';
                                 color_me = '';
                                 style_me = 'background-color: #ffd67e;';
+                                edit_is_me = '<i class="text-dark-75 text-left text-hover-primary align-items-start ml-1 mr-1 edit-note-message" ' +
+                                    'style="font-size: 0.9rem !important;">edit</i>'
+                                del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                    'style="font-size: 0.9rem !important;">del</i>';
                             }
+                            @if( request()->user()->cards()->where('id', $card->id)->exists() or
+                                request()->user()
+                                    ->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+                                del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                'style="font-size: 0.9rem !important;">del</i>';
+                            @endif
                             return `
+                            <style>
+                                /*.ql-editor {padding: 0px 15px 12px 15px;}*/
+                            </style>
                             <div class="d-flex flex-column align-items-` + items_status_me + `">
-                                <div class="d-flex align-items-center">
+                                <div class="d-flex align-items-left">
 <!--                                    <div class="symbol symbol-circle symbol-40 mr-3">-->
 <!--                                        <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/users/300_12.jpg">-->
 <!--                                    </div>-->
                                     <div>
-                                        <a href="#" class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">Matt Pears</a>
-                                        <span class="text-muted font-size-sm">2 Hours</span>
+                                        <a href="{{ route('dashboard') }}/user/`+ row.user_id +`/cards"
+                                        class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">
+                                            `+ row.full_name +`
+                                        </a>
+
+                                        <span class="text-muted font-size-sm">`+ row.created_at+`</span>
                                     </div>
                                 </div>
-                                <div class="rounded `+ color_me +` text-dark-50 font-weight-bold font-size-lg text-`+side_me+` max-w-300px"
-                                        style="`+style_me+`">
+
+                                <div class="rounded ` + color_me + ` text-dark-50 font-weight-bold font-size-lg text-` + side_me + ` max-w-300px"
+                                        style="` + style_me + `">
                                     ` + note_message + `
                                 </div>
+
+                                <span class="d-flex text-left align-items-start" data-message-id="`+ row.id +`">
+                                    `+edit_is_me+`
+                                    `+del_is_me+`
+                                </span>
+
+
                             </div>`;
                         }
                     },
 
                 ],
             });
+
+            $('#ql_footer_send').on('click', function () {
+                console.log(quill.getContents())
+                datatable.setDataSourceParam('query.messageCreate', quill.getContents());
+
+                quill.container.firstChild.textContent = '';
+                quill.setContents({"ops": [{"insert": ""}]});
+            });
+            $(document).on('click', '.delete-note-message', function () {
+                let item = $(event.target).parent();
+                let messageId = item.data('message-id');
+
+                datatable.setDataSourceParam('query.messageDelete', messageId);
+            });
+            $(document).on('click', '.edit-note-message', function () {
+                let item = $(event.target).parent();
+                let messageId = item.data('message-id');
+                let objectNote = $('#note_message_'+messageId)
+
+                console.log(objectNote)
+                editMessageId = {
+                    messageId: messageId,
+                    note: objectNote
+                };
+                console.log(editMessageId)
+            });
+
+
         </script>
 
         @if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class)
@@ -643,7 +808,7 @@
                             type:'post',
                             url:'{{ route('cards.limit.update') }}',
                             data:{
-                                '_token':$('meta[name="csrf-token"]').attr('content'),
+                                '_token': $('meta[name="csrf-token"]').attr('content'),
                                 'id': {{ $card->id }},
                                 'limit': sliderInput.value,
                             },

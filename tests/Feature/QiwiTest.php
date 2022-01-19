@@ -45,7 +45,7 @@ class QiwiTest extends TestCase
         $response = $this->bank()->api()->getStatement('40802810100002227700');
         $response = $this->bank()->api()->initStatement('40802810100002227700', now()->subMonth()->format('Y-m-d'), now()->format('Y-m-d'))
             ;
-        dd($response->collect('operation')->sortByDesc('id'), $response);
+        dd($response->collect());
         dd($response->collect('cards')->where('cardLastFourDigits', 6066));
     }
 }
