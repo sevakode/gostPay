@@ -241,17 +241,17 @@
         <script>
             var editMessageId = false;
             Quill.register('modules/footer', function(quill, options) {
-                let toolbar = $('.ql-toolbar');
-                let body = $('#kt_notes_message');
-                let footer = $('#ql_footer');
-                let note_create = $('#ql_note_create');
-                let footer_send = $(`
+                var toolbar_note = $('.ql-toolbar');
+                var body_note = $('#kt_notes_message');
+                var footer_note = $('#ql_footer');
+                var note_create_note = $('#ql_note_create');
+                var footer_send_note = $(`
                     <span id="ql_footer_send"
                           class="navi-icon text-hover-success text-light-success
                           align-items-md-end">
                         <i class="la la-send"></i>
                     </span>`);
-                let footer_close = $(`
+                var footer_close_note = $(`
                     <span id="ql_footer_close"
                           class="navi-icon text-hover-light text-hover-dark-50
                           align-items-md-start">
@@ -259,44 +259,59 @@
                     </span>`);
 
                 if (options.close) {
-                    footer.append(footer_close);
+                    footer_note.append(footer_close_note);
                 }
                 if (options.send) {
-                    footer.append(footer_send);
+                    footer_note.append(footer_send_note);
                 }
                 if(options.hidden) {
-                    toolbar.hide();
-                    body.hide();
-                    footer_close.hide();
-                    footer_send.hide();
+                    toolbar_note.hide();
+                    body_note.hide();
+                    footer_close_note.hide();
+                    footer_send_note.hide();
                 }
-                footer_close.on('click', function () {
-                    toolbar.hide();
-                    body.hide();
-                    footer_close.hide();
-                    footer_send.hide();
+                footer_close_note.on('click', function () {
+                    toolbar_note.hide();
+                    body_note.hide();
+                    footer_close_note.hide();
+                    footer_send_note.hide();
                     quill.container.firstChild.textContent = '';
                     quill.setContents({"ops": [{"insert": ""}]});
 
-                    note_create.show();
-                });
-                footer_send.on('click', function () {
-                    toolbar.hide();
-                    body.hide();
-                    footer_close.hide();
-                    footer_send.hide();
+                    quill.message_id = undefined;
 
-                    note_create.show();
+                    note_create_note.show();
                 });
-                note_create.on('click', function () {
-                    toolbar.show();
-                    body.show();
-                    footer_close.show();
-                    footer_send.show();
+                footer_send_note.on('click', function () {
+                    toolbar_note.hide();
+                    body_note.hide();
+                    footer_close_note.hide();
+                    footer_send_note.hide();
 
-                    note_create.hide();
+                    note_create_note.show();
+                });
+                note_create_note.on('click', function () {
+                    toolbar_note.show();
+                    body_note.show();
+                    footer_close_note.show();
+                    footer_send_note.show();
+
+                    note_create_note.hide();
                 });
             });
+
+            function editNote(messageId, innerHtml = '...')
+            {
+                $('.ql-toolbar').show();
+                $('#kt_notes_message').show();
+                $('#ql_footer_close').show();
+                $("#ql_footer_send").show();
+
+                quill.message_id = messageId;
+                quill.container.firstChild.innerHTML = innerHtml;
+
+                $('#ql_note_create').hide();
+            }
 
             var toolbarSnow = [
                     // [{header: [1, 2, false]}],
@@ -344,311 +359,311 @@
 
             const datatable = $('#kt_notes_list').KTDatatable({
                 data: {
-                    {{--type: 'remote',--}}
-                    {{--source: {--}}
-                    {{--    read: {--}}
-                    {{--        url: '{{ route('datatables.card-notes', $card->id) }}',--}}
-                    {{--        method: 'POST',--}}
-                    {{--        contentType: 'application/json',--}}
-                    {{--        headers: {--}}
-                    {{--            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
-                    {{--        },--}}
-                    {{--        timeout: 60000,--}}
-                    {{--        map: function map(raw) {--}}
-                    {{--            var dataSet = raw;--}}
-                    {{--            if (typeof raw.data !== 'undefined') {--}}
-                    {{--                dataSet = raw.data;--}}
-                    {{--            }--}}
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: '{{ route('datatables.card-notes', $card->id) }}',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            timeout: 60000,
+                            map: function map(raw) {
+                                var dataSet = raw;
+                                if (typeof raw.data !== 'undefined') {
+                                    dataSet = raw.data;
+                                }
 
-                    {{--            return dataSet;--}}
-                    {{--        }--}}
-                    {{--    }--}}
-                    {{--},--}}
-                    type: 'local',
-                    source: [
-                        {
-                            "id": 0,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': true,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                            ]
-                        },
-                        {
-                            "id": 1,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': false,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 2,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': true,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 3,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': false,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 4,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': true,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 5,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': false,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 6,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '3 Hours',
-                            'is_me': true,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 7,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '3 Hours',
-                            'is_me': false,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 8,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '3 Hours',
-                            'is_me': true,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                        {
-                            "id": 9,
-                            "user_id": 1,
-                            "full_name": 'test',
-                            "created_at": '2 Hours',
-                            'is_me': false,
-                            "ops": [
-                                {
-                                    "insert": "hello asdfasf ad fas%\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "italic": true
-                                    },
-                                    "insert": "asdfas as dzcv zxz hgfho ks erw"
-                                },
-                                {
-                                    "insert": "\n"
-                                },
-                                {
-                                    "attributes": {
-                                        "underline": true
-                                    },
-                                    "insert": "asdfasfasfasf asdf as fas safaasd"
-                                },
-                                {
-                                    "insert": "\n"
-                                }
-                            ]
-                        },
-                    ],
+                                return dataSet;
+                            }
+                        }
+                    },
+                    // type: 'local',
+                    // source: [
+                    //     {
+                    //         "id": 0,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': true,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 1,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': false,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 2,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': true,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 3,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': false,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 4,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': true,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 5,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': false,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 6,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '3 Hours',
+                    //         'is_me': true,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 7,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '3 Hours',
+                    //         'is_me': false,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 8,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '3 Hours',
+                    //         'is_me': true,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    //     {
+                    //         "id": 9,
+                    //         "user_id": 1,
+                    //         "full_name": 'test',
+                    //         "created_at": '2 Hours',
+                    //         'is_me': false,
+                    //         "ops": [
+                    //             {
+                    //                 "insert": "hello asdfasf ad fas%\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "italic": true
+                    //                 },
+                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             },
+                    //             {
+                    //                 "attributes": {
+                    //                     "underline": true
+                    //                 },
+                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
+                    //             },
+                    //             {
+                    //                 "insert": "\n"
+                    //             }
+                    //         ]
+                    //     },
+                    // ],
                     // pageSize: 10,
                     serverPaging: false,
                     serverFiltering: false,
@@ -745,28 +760,41 @@
 
             $('#ql_footer_send').on('click', function () {
                 console.log(quill.getContents())
-                datatable.setDataSourceParam('query.messageCreate', quill.getContents());
 
-                quill.container.firstChild.textContent = '';
-                quill.setContents({"ops": [{"insert": ""}]});
+                if (quill.container.textContent) {
+                    console.log(quill.container.textContent)
+                    if(quill.message_id) {
+                        datatable.setDataSourceParam('query.messageEdit', {
+                            id: quill.message_id,
+                            contents: quill.getContents(),
+                        });
+                    } else {
+                        datatable.setDataSourceParam('query.messageCreate', {
+                            contents: quill.getContents(),
+                        });
+                    }
+
+                    quill.container.firstChild.textContent = '';
+                    quill.setContents({"ops": [{"insert": ""}]});
+
+                   datatable.load();
+                }
             });
             $(document).on('click', '.delete-note-message', function () {
                 let item = $(event.target).parent();
                 let messageId = item.data('message-id');
 
-                datatable.setDataSourceParam('query.messageDelete', messageId);
+                datatable.setDataSourceParam('query.messageDelete', {
+                    id: messageId
+                });
+                datatable.initialDatatable().update()
             });
             $(document).on('click', '.edit-note-message', function () {
                 let item = $(event.target).parent();
                 let messageId = item.data('message-id');
                 let objectNote = $('#note_message_'+messageId)
 
-                console.log(objectNote)
-                editMessageId = {
-                    messageId: messageId,
-                    note: objectNote
-                };
-                console.log(editMessageId)
+                editNote(messageId, objectNote.children().html())
             });
 
 

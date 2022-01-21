@@ -4,6 +4,9 @@ use App\Http\Controllers\DatatablesController;
 use App\Interfaces\OptionsPermissions;
 use Illuminate\Support\Facades\Route;
 
+Route::post('card-notes/{id}', [DatatablesController::class, 'cardNotes'])
+    ->name('datatables.card-notes');
+
 Route::post('company-cards', [DatatablesController::class, 'companyCards'])
     ->name('datatables.company-cards');
 

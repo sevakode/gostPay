@@ -6,6 +6,7 @@ use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Account;
 use App\Models\Bank\BankToken;
 use App\Models\Bank\Card;
+use App\Models\Bank\NoteCard;
 use App\Models\Bank\Payment;
 use App\Models\Bank\TransactionBalance;
 use App\Models\Company;
@@ -31,6 +32,51 @@ class DatatablesController extends Controller
     public function index()
     {
         return view('product');
+    }
+
+    public function cardNotes(Request $request, $id)
+    {
+        mb_parse_str(urldecode($request->getContent()), $filter);
+        $query = collect($filter['query']);
+
+        if ($requestNote = $query->get('messageCreate', false)) {
+            $noteNew = new NoteCard();
+            $noteNew->user_id = $request->user()->id;
+            $noteNew->card_id = $id;
+//            dd(json_encode([$requestNote['contents']]));
+            $noteNew->message = $requestNote['contents'];
+//            $noteNew->message = json_encode([$requestNote['contents']]);
+
+            $noteNew->save();
+
+        }
+        else if ($requestNote = $query->get('messageEdit', false)) {
+            $noteEdit = NoteCard::query()->where('id', $requestNote['id'])->first();
+            $noteEdit->user_id = $request->user()->id;
+            $noteEdit->card_id = $id;
+            $noteEdit->message = $requestNote['contents'];
+            $noteEdit->save();
+        }
+        else if ($requestNote = $query->get('messageDelete', false)) {
+            $noteDelete = NoteCard::query()->where('id', $requestNote['id'])->delete();
+        }
+
+        NoteCard::query()->where('card_id', $id)->with('user')->get()->map(function (NoteCard $noteCard) {
+//            id
+//            user_id
+//            full_name
+//            created_at
+//            is_me
+//            ops
+            return [
+                'id' => $noteCard->id,
+                'user_id' => $noteCard->user_id,
+                'full_name' => $noteCard->user->fullName,
+                'created_at' => $noteCard->created_at->format('m-d-Y'),
+                'is_me' => $noteCard->user_id == Auth::id(),
+                'ops' => $noteCard->message->ops,
+            ];
+        });
     }
 
     /**
