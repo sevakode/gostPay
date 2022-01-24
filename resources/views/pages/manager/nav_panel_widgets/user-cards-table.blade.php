@@ -3,7 +3,7 @@
 <div class="card-header flex-wrap border-0 pt-6 pb-0">
     <div class="card-title">
         <h3 class="card-label">Карты
-            <div class="text-muted pt-2 font-size-sm">{{ \Illuminate\Support\Facades\Auth::user()->company->name }}</div>
+            <div class="text-muted pt-2 font-size-sm">{{ request()->user()->company->name }}</div>
         </h3>
     </div>
 
@@ -42,7 +42,7 @@
                                 <label class="mr-3 mb-0 d-none d-md-block">Пользователь:</label>
                                 <select class="form-control" id="add_cards_datatable_search_type">
                                     <option value="">All</option>
-                                    @foreach(\Illuminate\Support\Facades\Auth::user()->company->users()->get() as $user)
+                                    @foreach(request()->user()->company->users()->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->fullname }}</option>
                                     @endforeach
                                 </select>
@@ -82,8 +82,8 @@
                                 Выберите действие:
                             </li>
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') and
-        \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']) or
-        \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+                    request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_REMOVE_CARDS['slug']) or
+        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="remove-cards" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-reply text-muted"></i></span>
@@ -92,8 +92,8 @@
                                 </li>
                             @endif
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') and
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+    request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or
+    request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" data-toggle="modal" data-target="#close-cards-remove-modal" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
@@ -102,7 +102,7 @@
                                 </li>
                             @endif
                             @if(
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::OWNER['slug']))
+    request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::OWNER['slug']))
                                 <li class="navi-item">
                                     <a href="#" data-toggle="modal" data-target="#close-cards-modal" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
@@ -113,7 +113,7 @@
 
                             @endif
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
-    \Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+    request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
                                 <li class="navi-item">
                                     <a href="#" id="download-cards-txt" class="navi-link disabled">
                                         <span class="navi-icon"><i class="flaticon-doc text-warning"></i></span>

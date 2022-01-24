@@ -152,6 +152,7 @@ class DatatablesController extends Controller
         foreach ($cards as $card) {
             $updateAtPayments = $card->payments()->latest('updated_at')->first();
             $data['data'][] = [
+                'id' => $card->id,
                 'number' => $card->number,
                 'numberLink' => route('card', $card->id),
                 'user' => isset($card->user) ? $card->user->fullname : 'none',
