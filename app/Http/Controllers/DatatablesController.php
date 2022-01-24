@@ -14,6 +14,7 @@ use App\Models\User;
 use App\Notifications\DataNotification;
 use App\Notifications\TelegramNotification;
 use App\Providers\RouteServiceProvider;
+use App\Services\NotesCardDirectory;
 use App\Traits\TableCards;
 use App\Traits\TableProjects;
 use Carbon\Carbon;
@@ -34,49 +35,28 @@ class DatatablesController extends Controller
         return view('product');
     }
 
-    public function cardNotes(Request $request, $id)
+    public function cardNotes(Request $request, NotesCardDirectory $notesCardDirectory, $id)
     {
         mb_parse_str(urldecode($request->getContent()), $filter);
-        $query = collect($filter['query']);
+        $query = collect($filter['query'] ?? []);
+
+        $card = Card::query()->where('id', $id);
+        $cardWhereMeUser = $card->where('user_id', $request->user()->id);
+        $noteWhereMeUser = NoteCard::query()->where('user_id', $request->user()->id);
 
         if ($requestNote = $query->get('messageCreate', false)) {
-            $noteNew = new NoteCard();
-            $noteNew->user_id = $request->user()->id;
-            $noteNew->card_id = $id;
-//            dd(json_encode([$requestNote['contents']]));
-            $noteNew->message = $requestNote['contents'];
-//            $noteNew->message = json_encode([$requestNote['contents']]);
-
-            $noteNew->save();
-
+            $notesCardDirectory->create($request->user()->id, $id, $requestNote['contents']['ops']);
         }
-        else if ($requestNote = $query->get('messageEdit', false)) {
-            $noteEdit = NoteCard::query()->where('id', $requestNote['id'])->first();
-            $noteEdit->user_id = $request->user()->id;
-            $noteEdit->card_id = $id;
-            $noteEdit->message = $requestNote['contents'];
-            $noteEdit->save();
+        if ($requestNote = $query->get('messageEdit', false) and
+                $noteWhereMeUser->where('id', $requestNote['id'])->exists()) {
+            $notesCardDirectory->update($requestNote['id'], $request->user()->id, $id, $requestNote['contents']['ops']);
         }
-        else if ($requestNote = $query->get('messageDelete', false)) {
-            $noteDelete = NoteCard::query()->where('id', $requestNote['id'])->delete();
+        else if ($requestNote = $query->get('messageDelete', false) and
+                ($cardWhereMeUser->exists() or $noteWhereMeUser->where('id', $requestNote['id'])->exists())) {
+            $notesCardDirectory->delete($requestNote['id']);
         }
 
-        NoteCard::query()->where('card_id', $id)->with('user')->get()->map(function (NoteCard $noteCard) {
-//            id
-//            user_id
-//            full_name
-//            created_at
-//            is_me
-//            ops
-            return [
-                'id' => $noteCard->id,
-                'user_id' => $noteCard->user_id,
-                'full_name' => $noteCard->user->fullName,
-                'created_at' => $noteCard->created_at->format('m-d-Y'),
-                'is_me' => $noteCard->user_id == Auth::id(),
-                'ops' => $noteCard->message->ops,
-            ];
-        });
+        return $notesCardDirectory->getDatatables($id);
     }
 
     /**
