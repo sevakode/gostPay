@@ -140,6 +140,7 @@ class DatatablesController extends Controller
         else {
             $filter['sort'] = ['field' => 'created_at', 'sort' => 'desc'];
         }
+
         $this->sortUpdateAt($cards, $filter);
 
         if (isset($filter['query'])) {
@@ -150,7 +151,6 @@ class DatatablesController extends Controller
 
         $cards = $cards->get()->where('company_id', $request->user()->company()->select('id')->first()->id);
         foreach ($cards as $card) {
-            $updateAtPayments = $card->payments()->latest('updated_at')->first();
             $data['data'][] = [
                 'id' => $card->id,
                 'number' => $card->number,

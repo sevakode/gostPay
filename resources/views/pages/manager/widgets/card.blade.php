@@ -22,43 +22,43 @@
                             <span id="testtest">ИНФОРМАЦИЯ КАРТЫ</span>
 
                             <span class="dropdown-notes">
+                                <button class="dropdown-notes-button btn
+                                        btn-hover-light-warning btn-warning font-weight-bold btn-md flaticon-notes"
+                                        type="button" >
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-xl">
 
-                            <button class="dropdown-notes-button btn btn-hover-light-warning btn-warning font-weight-bold btn-md flaticon-notes"
-                                    type="button" >
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-xl">
+                                    <div class="card card-custom" style="font-weight: 200;">
+                                        <div class="card-header">
+                                            <h3 class="card-title">
+                                                <span>Заметки</span>
+                                                <span id="ql_note_create"
+                                                      class="ml-1 navi-icon text-hover-dark-50">
+                                                    <i class="la la-plus-circle text-hover-success text-success"></i>
+                                                </span>
+                                            </h3>
 
-                                <div class="card card-custom" style="font-weight: 200;">
-                                    <div class="card-header">
-                                        <h3 class="card-title">
-                                            <span>Заметки</span>
-                                            <span id="ql_note_create"
-                                                  class="ml-1 navi-icon text-hover-dark-50">
-                                                <i class="la la-plus-circle text-hover-success text-success"></i>
-                                            </span>
-                                        </h3>
-
-                                        <button type="button"  id="close-dropdown-notes" class="close"
-                                                data-dismiss="modal" aria-label="Close">
-                                            <i aria-hidden="true" class="ki ki-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="card-body">
-                                        <div id="kt_notes_message" style="height: 100px"></div>
-                                        <div id="ql_footer"
-                                             class="d-flex justify-content-between flex-md-row"
-                                             style="border-width: 0 1px 1px 1px;
-                                                      color: #aaa;
-                                                      padding: 5px 15px;
-                                                      ">
+                                            <button type="button"  id="close-dropdown-notes" class="close"
+                                                    data-dismiss="modal" aria-label="Close">
+                                                <i aria-hidden="true" class="ki ki-close"></i>
+                                            </button>
                                         </div>
+                                        <div class="card-body">
+                                            <div id="kt_notes_message" style="height: 100px"></div>
+                                            <div id="ql_footer"
+                                                 class="d-flex justify-content-between flex-md-row"
+                                                 style="border-width: 0 1px 1px 1px;
+                                                          color: #aaa;
+                                                          padding: 5px 15px;
+                                                          ">
+                                            </div>
 
-                                        <div id="kt_notes_list"></div>
+                                            <div id="kt_notes_list"></div>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </span>
+                            </span>
                         </h1>
 
 
@@ -314,21 +314,10 @@
         }
 
         var toolbarSnow = [
-            // [{header: [1, 2, false]}],
             ['bold', 'italic', 'underline', 'strike'],
             ['blockquote'],
             [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-            // [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-            // [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-            // [{ 'direction': 'rtl' }],                         // text direction
-            //
-            // [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-            // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-            //
             [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
-            // [{ 'font': [] }],
-            // [{ 'align': [] }],
-            // ['custom'],
         ];
 
         let optionsSnow = {
@@ -357,465 +346,174 @@
         };
         const quill = new Quill('#kt_notes_message', optionsSnow);
         // jQuery(document).ready(function() {
-            var datatable_notes = $('#kt_notes_list').KTDatatable({
-                data: {
-                    saveState: true,
-                    type: 'remote',
-                    source: {
-                        read: {
-                            url: '{{ route('datatables.card-notes', $card->id) }}',
-                            method: 'POST',
-                            contentType: 'application/json',
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            },
-                            // delay: 250,
-                            timeout: 60000,
-                            map: function map(raw) {
+        var datatable_notes = $('#kt_notes_list').KTDatatable({
+            data: {
+                saveState: true,
+                type: 'remote',
+                source: {
+                    read: {
+                        url: '{{ route('datatables.card-notes', $card->id) }}',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        // delay: 250,
+                        timeout: 60000,
+                        map: function map(raw) {
 
-                                datatable_notes.setDataSourceParam('query', {})
-                                var dataSet = raw;
-                                if (typeof raw.data !== 'undefined') {
-                                    dataSet = raw.data;
-                                }
-                                return dataSet;
+                            datatable_notes.setDataSourceParam('query', {})
+                            var dataSet = raw;
+                            if (typeof raw.data !== 'undefined') {
+                                dataSet = raw.data;
                             }
+                            return dataSet;
                         }
-                    },
-                    // type: 'local',
-                    // source: [
-                    //     {
-                    //         "id": 0,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': true,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 1,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': false,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 2,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': true,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 3,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': false,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 4,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': true,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 5,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': false,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 6,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '3 Hours',
-                    //         'is_me': true,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 7,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '3 Hours',
-                    //         'is_me': false,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 8,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '3 Hours',
-                    //         'is_me': true,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    //     {
-                    //         "id": 9,
-                    //         "user_id": 1,
-                    //         "full_name": 'test',
-                    //         "created_at": '2 Hours',
-                    //         'is_me': false,
-                    //         "ops": [
-                    //             {
-                    //                 "insert": "hello asdfasf ad fas%\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "italic": true
-                    //                 },
-                    //                 "insert": "asdfas as dzcv zxz hgfho ks erw"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             },
-                    //             {
-                    //                 "attributes": {
-                    //                     "underline": true
-                    //                 },
-                    //                 "insert": "asdfasfasfasf asdf as fas safaasd"
-                    //             },
-                    //             {
-                    //                 "insert": "\n"
-                    //             }
-                    //         ]
-                    //     },
-                    // ],
-                    // pageSize: 10,
-                    serverPaging: false,
-                    serverFiltering: false,
-                    serverSorting: false
-                },
-                layout: {
-                    scroll: true,
-                    height: 300,
-                    header: false,
-                    footer: false,
-                },
-                toolbar: {
-                    layout: {}
-                },
-                rows: {
-                    autoHide: false,
-                    afterTemplate: function (row, data, index) {
-                        let message = new Quill('div[data-message-id="' + data.id + '"]', optionsReadOnly)
-                        message.setContents(data.ops, 'api')
-                    },
-                },
-                sortable: false,
-                pagination: false,
-                columns: [
-                    {
-                        field: 'insert',
-                        title: '',
-                        template: function template(row) {
-                            let note_message = '<div class="kt_note_message" data-message-id="'+ row.id +'" ' +
-                                'id="note_message_' + row.id + '"></div>';
-                            let items_status_me = 'start';
-                            let side_me = 'left';
-                            let color_me = 'bg-light-success';
-                            let style_me = '';
-                            let edit_is_me = ''
-                            let del_is_me = ''
-                            if (row.is_me) {
-                                items_status_me = 'end';
-                                side_me = 'right';
-                                color_me = '';
-                                style_me = 'background-color: #ffd67e;';
-                                edit_is_me = '<i class="text-dark-75 text-left text-hover-primary align-items-start ml-1 mr-1 edit-note-message" ' +
-                                    'style="font-size: 0.9rem !important;">edit</i>'
-                                del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
-                                    'style="font-size: 0.9rem !important;">del</i>';
-                            }
-                            @if( request()->user()->cards()->where('id', $card->id)->exists() or
-                                request()->user()
-                                    ->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
-                                del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
-                                'style="font-size: 0.9rem !important;">del</i>';
-                            @endif
-                                return `
-                                <style>
-                                    /*.ql-editor {padding: 0px 15px 12px 15px;}*/
-                                </style>
-                                <div class="d-flex flex-column align-items-` + items_status_me + `">
-                                    <div class="d-flex align-items-left">
-    <!--                                    <div class="symbol symbol-circle symbol-40 mr-3">-->
-    <!--                                        <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/users/300_12.jpg">-->
-    <!--                                    </div>-->
-                                        <div>
-                                            <a href="{{ route('dashboard') }}/user/`+ row.user_id +`/cards"
-                                            class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">
-                                                `+ row.full_name +`
-                                            </a>
-
-                                            <span class="text-muted font-size-sm">`+ row.created_at+`</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="rounded ` + color_me + ` text-dark-50 font-weight-bold font-size-lg text-` + side_me + ` max-w-300px"
-                                            style="` + style_me + `">
-                                        ` + note_message + `
-                                    </div>
-
-                                    <span class="d-flex text-left align-items-start" data-message-id="`+ row.id +`">
-                                        `+edit_is_me+`
-                                        `+del_is_me+`
-                                    </span>
-
-
-                                </div>`;
-                        }
-                    },
-
-                ],
-            });
-
-            $('#ql_footer_send').on('click', function () {
-                datatable_notes.setDataSourceParam('query', {});
-
-                if (quill.container.textContent) {
-                    if(quill.message_id) {
-                        datatable_notes.setDataSourceParam('query.messageEdit', {
-                            id: quill.message_id,
-                            contents: quill.getContents(),
-                        });
-                        quill.message_id = undefined;
-                    } else {
-                        datatable_notes.setDataSourceParam('query.messageCreate', {
-                            contents: quill.getContents(),
-                        });
                     }
+                },
+                serverPaging: false,
+                serverFiltering: false,
+                serverSorting: false
+            },
+            layout: {
+                scroll: true,
+                height: 300,
+                header: false,
+                footer: false,
+            },
+            toolbar: {
+                layout: {}
+            },
+            rows: {
+                autoHide: false,
+                afterTemplate: function (row, data, index) {
+                    let message = new Quill('div[data-message-id="' + data.id + '"]', optionsReadOnly)
+                    message.setContents(data.ops, 'api')
+                },
+            },
+            sortable: false,
+            pagination: false,
+            columns: [
+                {
+                    field: 'insert',
+                    title: '',
+                    template: function template(row) {
+                        let note_message = '<div class="kt_note_message" data-message-id="'+ row.id +'" ' +
+                            'id="note_message_' + row.id + '"></div>';
+                        let items_status_me = 'start';
+                        let side_me = 'left';
+                        let color_me = 'bg-light-success';
+                        let style_me = '';
+                        let edit_is_me = ''
+                        let del_is_me = ''
+                        if (row.is_me) {
+                            items_status_me = 'end';
+                            side_me = 'right';
+                            color_me = '';
+                            style_me = 'background-color: #ffd67e;';
+                            edit_is_me = '<i class="text-dark-75 text-left text-hover-primary align-items-start ml-1 mr-1 edit-note-message" ' +
+                                'style="font-size: 0.9rem !important;">edit</i>'
+                            del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                'style="font-size: 0.9rem !important;">del</i>';
+                        }
+                        @if( request()->user()->cards()->where('id', $card->id)->exists() or
+                            request()->user()
+                                ->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+                            del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                            'style="font-size: 0.9rem !important;">del</i>';
+                        @endif
+                            return `
+                            <style>
+                                /*.ql-editor {padding: 0px 15px 12px 15px;}*/
+                            </style>
+                            <div class="d-flex flex-column align-items-` + items_status_me + `">
+                                <div class="d-flex align-items-left">
+<!--                                    <div class="symbol symbol-circle symbol-40 mr-3">-->
+<!--                                        <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/users/300_12.jpg">-->
+<!--                                    </div>-->
+                                    <div>
+                                        <a href="{{ route('dashboard') }}/user/`+ row.user_id +`/cards"
+                                        class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">
+                                            `+ row.full_name +`
+                                        </a>
 
-                    quill.container.firstChild.textContent = '';
-                    quill.setContents({"ops": [{"insert": ""}]});
+                                        <span class="text-muted font-size-sm">`+ row.created_at+`</span>
+                                    </div>
+                                </div>
 
-                    datatable_notes.load();
+                                <div class="rounded ` + color_me + ` text-dark-50 font-weight-bold font-size-lg text-` + side_me + ` max-w-300px"
+                                        style="` + style_me + `">
+                                    ` + note_message + `
+                                </div>
+
+                                <span class="d-flex text-left align-items-start" data-message-id="`+ row.id +`">
+                                    `+edit_is_me+`
+                                    `+del_is_me+`
+                                </span>
+
+
+                            </div>`;
+                    }
+                },
+
+            ],
+        });
+
+        $('#ql_footer_send').on('click', function () {
+            datatable_notes.setDataSourceParam('query', {});
+
+            if (quill.container.textContent) {
+                if(quill.message_id) {
+                    datatable_notes.setDataSourceParam('query.messageEdit', {
+                        id: quill.message_id,
+                        contents: quill.getContents(),
+                    });
+                    quill.message_id = undefined;
+                } else {
+                    datatable_notes.setDataSourceParam('query.messageCreate', {
+                        contents: quill.getContents(),
+                    });
                 }
-            });
-            $(document).on('click', '.edit-note-message', function () {
 
-                let item = $(event.target).parent();
-                let messageId = item.data('message-id');
-                let objectNote = $('#note_message_'+messageId);
+                quill.container.firstChild.textContent = '';
+                quill.setContents({"ops": [{"insert": ""}]});
 
-                editNote(messageId, objectNote.children().html());
-            });
-            $(document).on('click', '.delete-note-message', function () {
-                datatable_notes.setDataSourceParam('query', {});
-
-                let item = $(event.target).parent();
-                let messageId = item.data('message-id');
-
-                datatable_notes.setDataSourceParam('query.messageDelete', {
-                    id: messageId
-                });
                 datatable_notes.load();
-            });
-            let timing = false;
-            function realTimeDatatable() {
-                if($('span.dropdown-notes.show').length) {
-                    datatable_notes.load();
-                }
-                if(!timing) {
-                    timing = setTimeout(realTimeDatatable, 10000);
-                }
             }
+        });
+        $(document).on('click', '.edit-note-message', function () {
 
-            $('span.dropdown-notes').on('click',  function () {
-                realTimeDatatable()
+            let item = $(event.target).parent();
+            let messageId = item.data('message-id');
+            let objectNote = $('#note_message_'+messageId);
+
+            editNote(messageId, objectNote.children().html());
+        });
+        $(document).on('click', '.delete-note-message', function () {
+            datatable_notes.setDataSourceParam('query', {});
+
+            let item = $(event.target).parent();
+            let messageId = item.data('message-id');
+
+            datatable_notes.setDataSourceParam('query.messageDelete', {
+                id: messageId
             });
+            datatable_notes.load();
+        });
+        let timing = false;
+        function realTimeDatatable() {
+            if($('span.dropdown-notes.show').length) {
+                datatable_notes.load();
+            }
+            if(!timing) {
+                timing = setTimeout(realTimeDatatable, 10000);
+            }
+        }
 
-
-
-        // });
-
-        </script>
+        $('span.dropdown-notes').on('click',  function () {
+            realTimeDatatable()
+        });
+    </script>
 
         @if($card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class)
             and (\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or
