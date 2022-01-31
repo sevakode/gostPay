@@ -132,7 +132,9 @@ class DatatablesController extends Controller
         $data = array();
         mb_parse_str(urldecode($request->getContent()), $filter);
 
-        $cards = $request->user()->company->cards();
+        $user = $request->user();
+        $company = $request->user()->company;
+        $cards = $company->cards();
 
         if (isset($filter['sort']) and count($filter['sort']) == 2) {
             $this->sortNumber($cards, $filter);
@@ -149,24 +151,257 @@ class DatatablesController extends Controller
             $this->filterUsers($cards, $filter);
         }
 
+        if (isset($filter['query']['removeCards'])) {
+            if($user->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']) and
+                $user->hasPermission(OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']))
+            {
+                $removeCards = explode(',', $filter['query']['removeCards']);
+                $cardsChecked = $company->cards()->whereIn('cards.id', $removeCards);
+
+                foreach ($cardsChecked->get() as $card) $card->project()->detach();
+
+                $cardsChecked->update(['user_id' => null, 'issue_at' => null]);
+            }
+            else {
+                DataNotification::sendErrors(['У вас недостаточно прав!']);
+            }
+        }
+//        if (isset($filter['query']['closeCardsRemove'])) {
+//            $closeCardsRemove = explode(',', $filter['query']['closeCardsRemove']);
+//            $userId = $user->id;
+//            $cardsList = $company->cards()->whereIn('id', $closeCardsRemove);
+//            $cardsListForUser = $cardsList->clone()->where('user_id', $userId);
+//            $isPermissions = $user->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']) and
+//                            $user->hasPermission(OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']);
+//            if ($cardsListForUser->exists() or $isPermissions) {
+//                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
+//                $isCardsExists = $cardsListActive->exists();
+//
+//                if ($isCardsExists) {
+//                    $cardsListActive->closed();
+//                    Notify::send(\request()->user(), DataNotification::success("Карты закрыты!"));
+//                    $cardsListGet = $cardsList->get();
+//                    TelegramNotification::sendMessageClosedCards('-1001248516513', $cardsListGet);
+//                }
+//                else DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
+//
+//            } else {
+//                DataNotification::sendErrors(["У вас недостаточно прав!"]);
+//            }
+//        }
+
         $cards = $cards->get()->where('company_id', $request->user()->company()->select('id')->first()->id);
         foreach ($cards as $card) {
             $data['data'][] = [
                 'id' => $card->id,
                 'number' => $card->number,
                 'numberLink' => route('card', $card->id),
-                'user' => isset($card->user) ? $card->user->fullname : 'none',
+                'user' => isset($card->user) ? $card->user->fullname : '-',
                 'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
                 'type' => $card->card_type,
                 'state' => $card->state,
-                'project' => $card->project->name ?? 'none',
+                'project' => $card->project->name ?? '-',
                 'expiredAt' => $card->expiredAt->format('M d, Y'),
                 'amount' => $card->amount() . $card->currencySign,
-                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d Y') : '-',
+                'limit' => $card->limit ? $card->limit . $card->currencySign : '-',
             ];
         }
 
         $data['data'] = $this->getSort(collect($data['data']), $filter);
+
+        return new JsonResponse($data);
+    }
+
+    public function userCards(Request $request)
+    {
+        // TODO: Почистить код!
+        $data = array();
+        mb_parse_str(urldecode($request->getContent()), $filter);
+        if (!isset($filter['id'])) dd('error');
+        $user = User::companyValidate(Auth::id());
+        $company = $user->company;
+        $cards = $company->cards()->where('user_id', $filter['id']);
+
+        if (isset($filter['query']['date'])) {
+            $date = $filter['query']['date'];
+            $dateStart = Carbon::createFromFormat('m#d#Y', $date['start'])->setTime(0, 0, 0);
+            $dateEnd = Carbon::createFromFormat('m#d#Y', $date['end'])->setTime(0, 0, 0);
+            $dateEnd = $dateStart->getTimestamp() == $dateEnd->getTimestamp() ? $dateEnd->addDay() : $dateEnd;
+
+            $cards = $cards->whereHas('payments', function (Builder $query) use ($dateStart, $dateEnd) {
+                $query->where('operationAt', '>=', $dateStart);
+                $query->where('operationAt', '<=', $dateEnd);
+            });
+        }
+
+        $this->filterStatus($cards, $filter);
+
+        $this->filterSearch($cards, $filter);
+
+        if (!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
+            if (isset($filter['query']['countCards'])
+                and $filter['query']['countCards']
+                and $filter['query']['countCards']['count'])
+            {
+                $countCards = $filter['query']['countCards']['count'];
+                $account_id = $filter['query']['countCards']['account_id'];
+
+                $project = $company->projects()->whereSlug($filter['query']['countCards']['project']);
+                $invoice = $company->invoices()->whereAccountId($account_id);
+                $userId = $filter['id'];
+
+                if ($project = $project->first()) {
+                    $cardsFree = $company->cards()->free();
+                    if ($invoice->exists())
+                        $cardsFree = $cardsFree->where('account_code', $account_id);
+
+                    if ($cardsFree->count() >= (integer)$countCards) {
+                        $cardsFree = $cardsFree->get()->shuffle()->forPage(1, $countCards);
+
+                        foreach ($cardsFree as $card) {
+                            $card->user_id = $userId;
+                            $card->issue_at = now();
+                            $card->save();
+
+                            $project->cards()->attach($card->id);
+                        }
+//                        $cards = $company->cards()->where('user_id', $userId);
+                        Notify::send($request->user(), DataNotification::success());
+                    } else {
+                        DataNotification::sendErrors(['Осталось ' . $cardsFree->count() . ' карт!']);
+                    }
+                } else {
+                    DataNotification::sendErrors(['Не указан проект для карт!']);
+                }
+            }
+            if (isset($filter['query']['removeCards'])) {
+                $removeCards = explode(',', $filter['query']['removeCards']);
+                $userId = $filter['id'];
+                $cardsChecked = $company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
+
+                foreach ($cardsChecked->get() as $card) $card->project()->detach();
+
+                $cardsChecked->update(['user_id' => null, 'issue_at' => null]);
+            }
+            if (isset($filter['query']['closeCards'])) {
+                $closeCards = explode(',', $filter['query']['closeCards']);
+                $userId = $filter['id'];
+                $cardsList = $company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
+                $cardsListGet = $cardsList->get();
+                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
+                $isCardsExists = $cardsListActive->exists();
+
+                $cardsListActive->update(['state' => Card::PENDING]);
+                if ($isCardsExists)
+                    Notify::send(\request()->user(), DataNotification::success("Запрос на закрытие карт, отправлен!"));
+                else
+                    DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
+
+                TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
+            }
+            if (isset($filter['query']['closeCardsRemove'])) {
+                if (!$request->user()->hasPermissionTo(OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug'])) {
+                    DataNotification::sendErrors(["У вас нет прав для осуществлений таких действий!"]);
+                    return [];
+                }
+                $closeCardsRemove = explode(',', $filter['query']['closeCardsRemove']);
+                $userId = $filter['id'];
+                $cardsList = $company->cards()->where('user_id', $userId)->whereIn('id', $closeCardsRemove);
+                $cardsListGet = $cardsList->get();
+                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
+                $isCardsExists = $cardsListActive->exists();
+
+                if ($isCardsExists) {
+                    $cardsListActive->closed();
+                    Notify::send(\request()->user(), DataNotification::success("Карты закрыты!"));
+                }
+                else DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
+
+                TelegramNotification::sendMessageClosedCards('-1001248516513', $cardsListGet);
+            }
+            if (isset($filter['query']['downloadCardsTxt'])) {
+                $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
+                $userId = $filter['id'];
+                $cardsChecked = $company->cards()
+                    ->where('user_id', $userId)
+                    ->whereIn('id', $downloadCardsTxt);
+
+                $txt = '';
+                foreach ($cardsChecked->get() as $card) {
+                    $txt .= $card->number;
+                    $txt .= "\n";
+                }
+
+                $dirPath = public_path('download/');
+                $fileName = Str::random(10) . '.txt';
+                $fullPath = $dirPath . $fileName;
+
+                if (!File::isDirectory($dirPath)) File::makeDirectory($dirPath);
+                File::put($fullPath, $txt);
+
+                return response()->download($fullPath)->deleteFileAfterSend();
+            }
+            if (isset($filter['query']['listCartForAdding']) and $filter['query']['listCartForAdding'] != null) {
+                $userId = $filter['id'];
+                $project = $company->projects()->whereSlug($filter['query']['listCartForAdding']['project']);
+                if ($project = $project->first()) {
+                    foreach ($filter['query']['listCartForAdding']['cards'] as $card) {
+                        $card = Card::find($card['id']);
+                        $card->user_id = $userId;
+                        $card->issue_at = now();
+                        $card->save();
+
+                        $project->cards()->attach($card->id);
+                    }
+
+                    Notify::send($request->user(), DataNotification::success());
+                } else {
+                    DataNotification::sendErrors(['Не указан проект для карт!']);
+                }
+            }
+        }
+
+        if (isset($filter['sort']) and count($filter['sort']) == 2) {
+            $this->sortNumber($cards, $filter);
+        }
+        else {
+            $filter['sort'] = ['field' => 'issue_at', 'sort' => 'desc'];
+        }
+        $this->sortUpdateAt($cards, $filter);
+
+        $data['countCardsNoUser'] = (integer)$company->cards()->free()->count();
+        $data['amountAll'] = 0;
+
+        $cards = $cards
+            ->orderBy('issue_at')
+            ->get()
+//            ->where('company_id', $company->id)
+//            ->where('user_id', $filter['id'])
+        ;
+
+        foreach ($cards as $card) {
+            $data['amountAll'] += $card->amount();
+            $data['data'][] = [
+                'id' => $card->id,
+                'number' => $filter['access_cards'] ? $card->numberFull : $card->number,
+                'numberLink' => route('card', $card->id),
+                'user' => isset($card->user) ? $card->user->fullname : '-',
+                'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
+                'type' => $card->card_type,
+                'state' => $card->state,
+                'project' => $card->project->name ?? '-',
+                'expiredAt' => $card->expiredAt->format('M d, Y'),
+                'amount' => $card->amount() . $card->currencySign,
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : '-',
+                'limit' => $card->limit ? $card->limit . $card->currencySign : '-',
+            ];
+        }
+
+        if (isset($data['data']))
+            $data['data'] = $this->getSort(collect($data['data']), $filter);
+        $cardCurrency = $cards->first();
+        $data['amountAll'] .= $cardCurrency ? $cardCurrency->invoice()->select('currency')->first()->currencySign : '₽';
 
         return new JsonResponse($data);
     }
@@ -456,197 +691,6 @@ class DatatablesController extends Controller
                 'currency' => $invoice->getCurrencySignAttribute()
             ];
         }
-
-        return new JsonResponse($data);
-    }
-
-    public function userCards(Request $request)
-    {
-        // TODO: Почистить код!
-        $data = array();
-        mb_parse_str(urldecode($request->getContent()), $filter);
-        if (!isset($filter['id'])) dd('error');
-        $user = User::companyValidate(Auth::id());
-        $company = $user->company;
-        $cards = $company->cards()->where('user_id', $filter['id']);
-
-        if (isset($filter['query']['date'])) {
-            $date = $filter['query']['date'];
-            $dateStart = Carbon::createFromFormat('m#d#Y', $date['start'])->setTime(0, 0, 0);
-            $dateEnd = Carbon::createFromFormat('m#d#Y', $date['end'])->setTime(0, 0, 0);
-            $dateEnd = $dateStart->getTimestamp() == $dateEnd->getTimestamp() ? $dateEnd->addDay() : $dateEnd;
-
-            $cards = $cards->whereHas('payments', function (Builder $query) use ($dateStart, $dateEnd) {
-                $query->where('operationAt', '>=', $dateStart);
-                $query->where('operationAt', '<=', $dateEnd);
-            });
-        }
-        $this->filterStatus($cards, $filter);
-
-        $this->filterSearch($cards, $filter);
-
-        if (!$request->user()->hasPermissionTo(OptionsPermissions::DEMO['slug'])) {
-            if (isset($filter['query']['countCards'])
-                and $filter['query']['countCards']
-                and $filter['query']['countCards']['count'])
-            {
-                $countCards = $filter['query']['countCards']['count'];
-                $account_id = $filter['query']['countCards']['account_id'];
-
-                $project = $company->projects()->whereSlug($filter['query']['countCards']['project']);
-                $invoice = $company->invoices()->whereAccountId($account_id);
-                $userId = $filter['id'];
-
-                if ($project = $project->first()) {
-                    $cardsFree = $company->cards()->free();
-                    if ($invoice->exists())
-                        $cardsFree = $cardsFree->where('account_code', $account_id);
-
-                    if ($cardsFree->count() >= (integer)$countCards) {
-                        $cardsFree = $cardsFree->get()->shuffle()->forPage(1, $countCards);
-
-                        foreach ($cardsFree as $card) {
-                            $card->user_id = $userId;
-                            $card->issue_at = now();
-                            $card->save();
-
-                            $project->cards()->attach($card->id);
-                        }
-//                        $cards = $company->cards()->where('user_id', $userId);
-                        Notify::send($request->user(), DataNotification::success());
-                    } else {
-                        DataNotification::sendErrors(['Осталось ' . $cardsFree->count() . ' карт!']);
-                    }
-                } else {
-                    DataNotification::sendErrors(['Не указан проект для карт!']);
-                }
-            }
-            if (isset($filter['query']['removeCards'])) {
-                $removeCards = explode(',', $filter['query']['removeCards']);
-                $userId = $filter['id'];
-                $cardsChecked = $company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
-
-                foreach ($cardsChecked->get() as $card) $card->project()->detach();
-
-                $cardsChecked->update(['user_id' => null, 'issue_at' => null]);
-            }
-            if (isset($filter['query']['closeCards'])) {
-                $closeCards = explode(',', $filter['query']['closeCards']);
-                $userId = $filter['id'];
-                $cardsList = $company->cards()->where('user_id', $userId)->whereIn('id', $closeCards);
-                $cardsListGet = $cardsList->get();
-                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
-                $isCardsExists = $cardsListActive->exists();
-
-                $cardsListActive->update(['state' => Card::PENDING]);
-                if ($isCardsExists)
-                    Notify::send(\request()->user(), DataNotification::success("Запрос на закрытие карт, отправлен!"));
-                else
-                    DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
-
-                TelegramNotification::sendMessageClosingCards('-1001248516513', $cardsListGet);
-            }
-            if (isset($filter['query']['closeCardsRemove'])) {
-                if (!$request->user()->hasPermissionTo(OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug'])) {
-                    DataNotification::sendErrors(["У вас нет прав для осуществлений таких действий!"]);
-                    return [];
-                }
-                $closeCardsRemove = explode(',', $filter['query']['closeCardsRemove']);
-                $userId = $filter['id'];
-                $cardsList = $company->cards()->where('user_id', $userId)->whereIn('id', $closeCardsRemove);
-                $cardsListGet = $cardsList->get();
-                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
-                $isCardsExists = $cardsListActive->exists();
-
-                if ($isCardsExists) {
-                    $cardsListActive->closed();
-                    Notify::send(\request()->user(), DataNotification::success("Карты закрыты!"));
-                }
-               else DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
-
-                TelegramNotification::sendMessageClosedCards('-1001248516513', $cardsListGet);
-            }
-            if (isset($filter['query']['downloadCardsTxt'])) {
-                $downloadCardsTxt = explode(',', $filter['query']['downloadCardsTxt']);
-                $userId = $filter['id'];
-                $cardsChecked = $company->cards()
-                    ->where('user_id', $userId)
-                    ->whereIn('id', $downloadCardsTxt);
-
-                $txt = '';
-                foreach ($cardsChecked->get() as $card) {
-                    $txt .= $card->number;
-                    $txt .= "\n";
-                }
-
-                $dirPath = public_path('download/');
-                $fileName = Str::random(10) . '.txt';
-                $fullPath = $dirPath . $fileName;
-
-                if (!File::isDirectory($dirPath)) File::makeDirectory($dirPath);
-                File::put($fullPath, $txt);
-
-                return response()->download($fullPath)->deleteFileAfterSend();
-            }
-            if (isset($filter['query']['listCartForAdding']) and $filter['query']['listCartForAdding'] != null) {
-                $userId = $filter['id'];
-                $project = $company->projects()->whereSlug($filter['query']['listCartForAdding']['project']);
-                if ($project = $project->first()) {
-                    foreach ($filter['query']['listCartForAdding']['cards'] as $card) {
-                        $card = Card::find($card['id']);
-                        $card->user_id = $userId;
-                        $card->issue_at = now();
-                        $card->save();
-
-                        $project->cards()->attach($card->id);
-                    }
-
-                    Notify::send($request->user(), DataNotification::success());
-                } else {
-                    DataNotification::sendErrors(['Не указан проект для карт!']);
-                }
-            }
-        }
-
-        if (isset($filter['sort']) and count($filter['sort']) == 2) {
-            $this->sortNumber($cards, $filter);
-        }
-        else {
-            $filter['sort'] = ['field' => 'issue_at', 'sort' => 'desc'];
-        }
-        $this->sortUpdateAt($cards, $filter);
-
-        $data['countCardsNoUser'] = (integer)$company->cards()->free()->count();
-        $data['amountAll'] = 0;
-
-        $cards = $cards
-            ->orderBy('issue_at')
-            ->get()
-//            ->where('company_id', $company->id)
-//            ->where('user_id', $filter['id'])
-        ;
-
-        foreach ($cards as $card) {
-            $data['amountAll'] += $card->amount();
-            $data['data'][] = [
-                'id' => $card->id,
-                'number' => $filter['access_cards'] ? $card->numberFull : $card->number,
-                'numberLink' => route('card', $card->id),
-                'user' => isset($card->user) ? $card->user->fullname : 'none',
-                'userLink' => isset($card->user) ? route('user_cards', $card->user->id) : '#',
-                'type' => $card->card_type,
-                'state' => $card->state,
-                'project' => $card->project->name ?? 'none',
-                'expiredAt' => $card->expiredAt->format('M d, Y'),
-                'amount' => $card->amount() . $card->currencySign,
-                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : 'none',
-            ];
-        }
-
-        if (isset($data['data']))
-            $data['data'] = $this->getSort(collect($data['data']), $filter);
-        $cardCurrency = $cards->first();
-        $data['amountAll'] .= $cardCurrency ? $cardCurrency->invoice()->select('currency')->first()->currencySign : '₽';
 
         return new JsonResponse($data);
     }

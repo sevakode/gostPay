@@ -40,6 +40,5 @@ class RoleSeeder extends Seeder
                 }
             }
         }
-        dd(User::first()->role);
     }
 }

@@ -75,35 +75,101 @@
                                     </a>
                                 </li>
                             @endif
-                            @if(
-                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'])
-                            )
-                                <li class="navi-item">
-                                    <a href="#" data-toggle="modal" data-target="#close-cards-remove-modal" class="navi-link disabled">
-                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
-                                        <span class="navi-text">Установить лимит</span>
-                                    </a>
-                                </li>
-                            @endif
-                            @if(
-                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or
-                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'])
-                            )
-                                <li class="navi-item">
-                                    <a href="#" data-toggle="modal" data-target="#close-cards-modal" class="navi-link disabled">
-                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
-                                        <span class="navi-text">Закрыть</span>
-                                    </a>
-                                </li>
-                            @endif
-                            @if(true
-                       // request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'])
-                            )
-                            @endif
+{{--                            @if(--}}
+{{--                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'])--}}
+{{--                            )--}}
+{{--                                <li class="navi-item">--}}
+{{--                                    <a href="#" data-toggle="modal" data-target="#set-cards-limit-modal" class="navi-link disabled">--}}
+{{--                                        id="set_limit_cards" --}}
+{{--                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>--}}
+{{--                                        <span class="navi-text">Установить лимит</span>--}}
+{{--                                    </a>--}}
+{{--                                </li>--}}
+{{--                            @endif--}}
+{{--                            @if(--}}
+{{--                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']) or--}}
+{{--                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'])--}}
+{{--                            )--}}
+{{--                                <li class="navi-item">--}}
+{{--                                    <a href="#" data-toggle="modal" data-target="#close-cards-remove-modal" class="navi-link disabled">--}}
+{{--                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>--}}
+{{--                                        <span class="navi-text">Закрыть</span>--}}
+{{--                                    </a>--}}
+{{--                                </li>--}}
+{{--                            @endif--}}
                         </ul>
                     </div>
                 </div>
             </div>
+{{--            <div class="modal fade" id="close-cards-remove-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">--}}
+{{--                <div class="modal-dialog" role="document">--}}
+{{--                    <div class="modal-content">--}}
+{{--                        <div class="modal-header">--}}
+{{--                            <h5 class="modal-title" id="exampleModalLabel">Закрытие карт</h5>--}}
+{{--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                                <i aria-hidden="true" class="ki ki-close"></i>--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                        <div class="modal-body">--}}
+{{--                            Вы уверены что хотите закрыть карты?--}}
+{{--                        </div>--}}
+{{--                        <div class="modal-footer">--}}
+{{--                            <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">--}}
+{{--                                Закрыть--}}
+{{--                            </button>--}}
+{{--                            <button type="button" id="close-cards-remove" class="btn btn-primary font-weight-bold" data-dismiss="modal">--}}
+{{--                                Да--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="modal fade" id="set-cards-limit-modal" tabindex="-1" role="dialog" aria-hidden="true">--}}
+{{--                <div class="modal-dialog modal-xl" role="document">--}}
+{{--                    <div class="modal-content">--}}
+{{--                        <div class="modal-header">--}}
+{{--                            <h5 class="modal-title" id="exampleModalLabel">Установление лимитного остатка</h5>--}}
+{{--                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">--}}
+{{--                                <i aria-hidden="true" class="ki ki-close"></i>--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                        <div class="modal-body">--}}
+{{--                            <div class="card card-custom gutter-b">--}}
+{{--                                <div class="card-body">--}}
+{{--                                    <div class="form-group row mb-6">--}}
+{{--                                        <label class="col-form-label text-right col-lg-3 col-sm-12">Установить лимит</label>--}}
+{{--                                        <div class="col-lg-6 col-md-12 col-sm-12">--}}
+{{--                                            <div class="row align-items-center">--}}
+{{--                                                <div class="col-4">--}}
+{{--                                                    <input type="text" class="form-control" id="kt_nouislider_1_input"  placeholder="Quantity"/>--}}
+{{--                                                </div>--}}
+{{--                                                <div class="col-8">--}}
+{{--                                                    <div id="kt_nouislider_1" class="nouislider-drag-danger"></div>--}}
+{{--                                                </div>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="row">--}}
+{{--                                            <div class="col-lg-9 ml-lg-auto">--}}
+{{--                                                <button type="button" class="btn btn-primary" id="edit_spend_limit">--}}
+{{--                                                    Добавить--}}
+{{--                                                </button>--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="modal-footer">--}}
+{{--                            <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">--}}
+{{--                                Закрыть--}}
+{{--                            </button>--}}
+{{--                            <button type="button" id="set_limit_cards" class="btn btn-primary font-weight-bold" data-dismiss="modal">--}}
+{{--                                изменить--}}
+{{--                            </button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
             <div class="col-lg-1 col-xl-1 text-left" id="note_button_dropdown" style="display: none;">
                 <span class="dropdown-notes dropdown dropleft dropdown-inline">
                     <button id="notes_card" class="dropdown-notes-button btn
@@ -169,6 +235,57 @@
             }
         });
     </script>
+{{--    @if(--}}
+{{--   // $card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class) and--}}
+{{--(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or--}}
+{{--\Illuminate\Support\Facades\Route::is('card')))--}}
+{{--        <script>--}}
+{{--            var slider = document.getElementById('kt_nouislider_1');--}}
+
+{{--            noUiSlider.create(slider, {--}}
+{{--                start: [ {{ 0 }} ],--}}
+{{--                step: 1,--}}
+{{--                range: {--}}
+{{--                    'min': [ 0 ],--}}
+{{--                    'max': [ {{ request()->user()->balance()->getSum() }} ]--}}
+{{--                },--}}
+{{--                format: wNumb({--}}
+{{--                    decimals: 0--}}
+{{--                })--}}
+{{--            });--}}
+
+{{--            // init slider input--}}
+{{--            var sliderInput = document.getElementById('kt_nouislider_1_input');--}}
+
+{{--            slider.noUiSlider.on('update', function( values, handle ) {--}}
+{{--                sliderInput.value = values[handle];--}}
+{{--            });--}}
+
+{{--            sliderInput.addEventListener('change', function(){--}}
+{{--                slider.noUiSlider.set(this.value);--}}
+{{--            });--}}
+
+{{--            --}}{{--&& sliderInput.value !== {{ $card->limit }}--}}
+{{--            --}}{{--$('#edit_spend_limit').on('click', function () {--}}
+{{--            --}}{{--    if (sliderInput.value > 0) {--}}
+{{--            --}}{{--        $.ajax({--}}
+{{--            --}}{{--            type:'post',--}}
+{{--            --}}{{--            url:'{{ route('cards.limit.update') }}',--}}
+{{--            --}}{{--            data:{--}}
+{{--            --}}{{--                '_token': $('meta[name="csrf-token"]').attr('content'),--}}
+{{--            --}}{{--                'id': {{ $card->id }},--}}
+{{--            --}}{{--                'limit': sliderInput.value,--}}
+{{--            --}}{{--            },--}}
+{{--            --}}{{--            success: function(data) {--}}
+{{--            --}}{{--                $('#limit').html(data['limit']);--}}
+
+{{--            --}}{{--                return true;--}}
+{{--            --}}{{--            },--}}
+{{--            --}}{{--        });--}}
+{{--            --}}{{--    }--}}
+{{--            --}}{{--});--}}
+{{--        </script>--}}
+{{--    @endif--}}
     <script>
         Quill.register('modules/footer', function(quill, options) {
             let editMessageId = false;
@@ -392,7 +509,6 @@
                     placeholder: '' ,
                     theme: 'bubble' // or 'bubble'
                 };
-                console.log('asda')
                 var datatable_notes = $('#kt_notes_list').KTDatatable({
                     data: {
                         saveState: true,
@@ -635,6 +751,10 @@
                         field: 'issue_at',
                         title: 'Дата выдачи',
                     },
+                    {
+                        field: 'limit',
+                        title: 'Лимит',
+                    },
                 ],
             });
             $('#check_all').on('click', function () {
@@ -652,6 +772,49 @@
             $('#adding_random_cards').on('click', function () {
                 datatable.search(sliderInput.value, 'countCards');
             });
+
+            $('#remove-cards').on('click', function () {
+                datatable.setDataSourceParam('query.listCartForAdding', '');
+                let checkboxes_value = [];
+                $('input[name="checkboxes"]').each(function(){
+                    if(this.checked) {
+                        checkboxes_value.push($(this).val());
+                    }
+                });
+                checkboxes_value = checkboxes_value.toString();
+                datatable.search(checkboxes_value, 'removeCards');
+                datatable.setDataSourceParam('query.removeCards', '');
+            });
+
+            // $('#close-cards-remove').on('click', function () {
+            //     datatable.setDataSourceParam('query.listCartForAdding', '');
+            //     let checkboxes_value = [];
+            //     $('input[name="checkboxes"]').each(function(){
+            //         if(this.checked) {
+            //             checkboxes_value.push($(this).val());
+            //         }
+            //     });
+            //     checkboxes_value = checkboxes_value.toString();
+            //     datatable.search(checkboxes_value, 'closeCardsRemove');
+            //     datatable.setDataSourceParam('query.closeCardsRemove', '');
+            // });
+
+
+
+            // $('#set_limit_cards').on('click', function () {
+            //     datatable.setDataSourceParam('query.listCartForAdding', '');
+            //     datatable.setDataSourceParam('query.listCardForSetLimit', '');
+            //     let checkboxes_value = [];
+            //     $('input[name="checkboxes"]').each(function(){
+            //         if(this.checked) {
+            //             checkboxes_value.push($(this).val());
+            //         }
+            //     });
+            //     checkboxes_value = checkboxes_value.toString();
+            //     datatable.setDataSourceParam('query.listCardForSetLimit', document.getElementById('kt_nouislider_1_input').value);
+            //     datatable.search(checkboxes_value, 'listCardForSetLimit');
+            //     datatable.setDataSourceParam('query.listCardForSetLimit', undefined);
+            // });
 
             $('.event_click_checkbox').on('click', function () {
                 let status_check = 0;
