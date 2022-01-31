@@ -169,8 +169,8 @@ interface OptionsRole
             OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY ,
             OptionsPermissions::ACCESS_TO_SHOW_BALANCE_FOR_COMPANY_USERS ,
 
-            OptionsPermissions::ACCESS_TO_CLOSE_CARDS,
-            OptionsPermissions::ACCESS_TO_REMOVE_CARDS,
+//            OptionsPermissions::ACCESS_TO_CLOSE_CARDS,
+//            OptionsPermissions::ACCESS_TO_REMOVE_CARDS,
         ],
     ],
         USER = [
