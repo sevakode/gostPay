@@ -161,7 +161,9 @@ class DatatablesController extends Controller
                 $removeCards = explode(',', $filter['query']['removeCards']);
                 $cardsChecked = $company->cards()->whereIn('cards.id', $removeCards);
 
-                foreach ($cardsChecked->get() as $card) $card->project()->detach();
+                $cardsChecked->get()->map(function (Card $card) {
+                    $card->project()->detach();
+                });
 
                 $cardsChecked->update(['user_id' => null, 'issue_at' => null]);
             }
@@ -259,7 +261,9 @@ class DatatablesController extends Controller
                 $userId = $filter['id'];
                 $cardsChecked = $company->cards()->where('user_id', $userId)->whereIn('id', $removeCards);
 
-                foreach ($cardsChecked->get() as $card) $card->project()->detach();
+                $cardsChecked->get()->map(function (Card $card) {
+                    $card->project()->detach();
+                });
 
                 $cardsChecked->update(['user_id' => null, 'issue_at' => null]);
             }
@@ -330,7 +334,9 @@ class DatatablesController extends Controller
                         $card->user_id = $userId;
                         $card->issue_at = now();
                         $card->save();
-
+                        $project->cards()->has('project')->get()->map(function (Card $card) {
+                            $card->project()->detach();
+                        });
                         $project->cards()->attach($card->id);
                     }
 
