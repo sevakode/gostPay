@@ -14,7 +14,7 @@
 
 {{-- Content --}}
 @section('content_profile')
-    <div class="flex-row-fluid ml-lg-8">@dd('asda')
+    <div class="flex-row-fluid ml-lg-8">
         <div class="card card-custom gutter-b">
             @include('pages.manager.nav_panel_widgets.user-cards-table',  compact('user'))
         </div>
