@@ -71,13 +71,18 @@ class CompanyController extends Controller
         })->first();
         $cards = collect();
         $sumCardsStates = $company->cards()->count();
+        $cardsActiveCount = $company->cards()->where('state', Card::ACTIVE)->count();
+        $cardsPendingCount = $company->cards()->where('state', Card::PENDING)->count();
+        $cardsCloseCount = $company->cards()->where('state', Card::ACTIVE)->count();
+        $sumCardsStatesRub = $sumCardsStates * 100;
+
         $card_states = collect([
-            'active'  => $company->cards()->where('state', Card::ACTIVE)->count() / $sumCardsStates*100,
-            'active_count' => $company->cards()->where('state', Card::ACTIVE)->count(),
-            'pending' => $company->cards()->where('state', Card::PENDING)->count() / $sumCardsStates*100,
-            'pending_count' => $company->cards()->where('state', Card::PENDING)->count(),
-            'close' => $company->cards()->where('state', Card::CLOSE)->count() / $sumCardsStates*100,
-            'close_count' => $company->cards()->where('state', Card::CLOSE)->count(),
+            'active'  => $cardsActiveCount ? $cardsActiveCount / $sumCardsStatesRub : 0,
+            'active_count' => $cardsActiveCount,
+            'pending' => $cardsPendingCount ? $cardsPendingCount / $sumCardsStatesRub : 0,
+            'pending_count' => $cardsPendingCount,
+            'close' => $cardsCloseCount ? $cardsCloseCount / $sumCardsStatesRub : 0,
+            'close_count' => $cardsCloseCount,
         ]);
 
         return view('pages.company.widgets.edit', compact(

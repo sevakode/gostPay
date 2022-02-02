@@ -9,8 +9,73 @@
     <div class="card card-custom gutter-b">
         @include('pages.manager.nav_panel_widgets.user-cards-table',  ['user' => $user, 'access_cards' => true])
     </div>
-    @if(\Illuminate\Support\Facades\Auth::user()
-        ->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']))
+
+    @if(request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ACCESS_TO_ADD_CARDS['slug']))
+        <div class="card card-custom gutter-b">
+            <div class="card-body">
+                <div class="form-group row mb-6">
+                    <label class="col-form-label text-right col-lg-3 col-sm-12">Добавить конкретные карты</label>
+                    <div class="col-lg-6 col-md-12 col-sm-12">
+                        <select class="form-control select2" id="kt_select2_3" name="param" multiple="multiple"></select>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-9 ml-lg-auto">
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddCardsModal">
+                                Добавить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="AddCardsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Открыть карты</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row">
+                            <label class="col-form-label text-right col-lg-3 col-sm-12">Проект</label>
+                            <div class="col-lg-8 col-md-8 col-sm-12">
+                                <div class="dropdown bootstrap-select form-control dropup">
+                                    <select class="form-control selectpicker"
+                                            id="selectpicker_project"
+                                            data-size="12"
+                                            data-live-search="true"
+                                            tabindex="null">
+                                        <option value="">Select</option>
+                                        @foreach(request()->user()->company->projects()->get() as $project)
+                                            <option value="{{$project->slug}}">{{ $project->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="dropdown-menu" style="max-height: 343px; overflow: hidden;">
+                                        <div class="bs-searchbox">
+                                            <input type="search" class="form-control"
+                                                   autocomplete="off"
+                                                   role="combobox"
+                                                   aria-label="Search"
+                                                   aria-controls="bs-select-6"
+                                                   aria-autocomplete="list"
+                                                   aria-activedescendant="bs-select-6-236">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="reset" data-dismiss="modal" id="adding_cards" class="btn btn-primary mr-2">Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card card-custom gutter-b">
             <div class="card-body">
                 <div class="form-group row mb-6">
@@ -147,6 +212,49 @@
 
             sliderInput.addEventListener('change', function(){
                 slider.noUiSlider.set(this.value);
+            });
+        </script>
+        <script>
+            $("#kt_select2_3").select2({
+                placeholder: "Поиск свободных карт",
+                allowClear: true,
+                ajax: {
+                    url: "{{route('datatables.select-add-cards')}}",
+                    method: 'POST',
+
+                    dataType: 'json',
+                    delay: 250,
+                    data: function data(params) {
+                        return {
+                            q: params.term,
+                            // search term
+                            page: params.page,
+                            '_token': $('meta[name="csrf-token"]').attr('content'),
+                        };
+                    },
+                    processResults: function processResults(data, params) {
+                        // parse the results into the format expected by Select2
+                        // since we are using custom formatting functions we do not need to
+                        // alter the remote JSON data, except to indicate that infinite
+                        // scrolling can be used
+                        params.page = params.page || 1;
+                        return {
+                            results: data.items,
+                            pagination: {
+                                more: params.page * 30 < data.total_count
+                            }
+                        };
+                    },
+                    cache: true
+                },
+                escapeMarkup: function escapeMarkup(markup) {
+                    return markup;
+                },
+                // let our custom formatter work
+                minimumInputLength: 0,
+                // templateResult: formatRepo,
+                // omitted for brevity, see the source of this page
+                // templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
             });
         </script>
     @endif
