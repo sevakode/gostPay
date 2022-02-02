@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         $user1->password = bcrypt('Dd781993');
         $user1->role_id = $ownerRole->id;
         $user1->company_id = $testCompany->id;
-        if (!$user1->refresh()->exists()) $user1->save();
+        if (!User::query()->where('email', $user1->email)->exists()) $user1->save();
 
         $demo = new User();
         $demo->first_name = 'Demo';
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
         $demo->password = bcrypt('demo');
         $demo->role_id = $demoRole->id;
         $demo->company_id = $testCompany->id;
-        if (!$demo->refresh()->exists()) $demo->save();
+        if (!User::query()->where('email', $demo->email)->exists()) $demo->save();
 
         $drabbit = new User();
         $drabbit->first_name = 'Drunk';
@@ -48,7 +48,7 @@ class UserSeeder extends Seeder
         $drabbit->password = bcrypt('fallen5742');
         $drabbit->role_id = $ownerRole->id;
         $drabbit->company_id = $testCompany->id;
-        if (!$drabbit->refresh()->exists()) $drabbit->save();
+        if (!User::query()->where('email', $drabbit->email)->exists()) $drabbit->save();
 
     }
 }
