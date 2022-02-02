@@ -334,9 +334,7 @@ class DatatablesController extends Controller
                         $card->user_id = $userId;
                         $card->issue_at = now();
                         $card->save();
-                        $project->cards()->has('project')->get()->map(function (Card $card) {
-                            $card->project()->detach();
-                        });
+                        $card->project()->detach();
                         $project->cards()->attach($card->id);
                     }
 
