@@ -59,11 +59,7 @@
                 </div>
             </div>
 
-            <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
-            </div>
-            <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
-            </div>
-            <div class="col-lg-1 col-xl-1" style="padding-left: 0px; padding-right: 0px;">
+            <div class="col-lg-1 col-xl-1 text-center" style="padding-left: 0px; padding-right: 0px;">
                 <div id="checkbox-parameter" class="dropdown dropdown-inline d-none">
                     <a href="javascript:;" class="btn btn-sm btn-default btn-text-primary btn-hover-primary btn-icon mr-2" data-toggle="dropdown">
                     <span class="svg-icon svg-icon-md">
@@ -105,12 +101,21 @@
     request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::OWNER['slug']))
                                 <li class="navi-item">
                                     <a href="#" data-toggle="modal" data-target="#close-cards-modal" class="navi-link disabled">
-                                        <span class="navi-icon"><i class="flaticon2-delete text-danger"></i></span>
+                                        <span class="navi-icon"><i class="far fa-file-excel text-danger"></i></span>
                                         <span class="navi-text">Подать заявку на закрытие</span>
                                     </a>
                                 </li>
-
-
+                            @endif
+                            @if(
+                        request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug'])
+                            )
+                                <li class="navi-item">
+                                    <a href="#" data-toggle="modal" data-target="#set-cards-limit-modal" class="navi-link disabled"
+                                       id="set_limit_cards">
+                                        <span class="navi-icon"><i class="fas fa-sliders-h text-primary"></i></span>
+                                        <span class="navi-text">Установить лимит</span>
+                                    </a>
+                                </li>
                             @endif
                             @if(\Illuminate\Support\Facades\Route::is('profile_cards') or
     request()->user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
@@ -124,6 +129,44 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+            <div class="col-lg-1 col-xl-1 text-left" id="note_button_dropdown" style="display: none;">
+                <span class="dropdown-notes dropdown dropleft dropdown-inline">
+                    <button id="notes_card" class="dropdown-notes-button btn
+                            btn-hover-light-warning btn-warning font-weight-bold btn-md flaticon-notes"
+                            type="button" style="display: none;"></button>
+                    <div class="dropdown-menu dropdown-menu-xl">
+                        <div class="card card-custom" style="font-weight: 200;">
+                            <div class="card-header">
+                                <h3 class="card-title">
+                                    <span>Заметки</span>
+                                    <span id="ql_note_create"
+                                          class="ml-1 navi-icon text-hover-dark-50">
+                                    <i class="la la-plus-circle text-hover-success text-success"></i>
+                                </span>
+                                </h3>
+
+                                <button type="button"  id="close-dropdown-notes" class="close"
+                                        data-dismiss="modal" aria-label="Close">
+                                    <i aria-hidden="true" class="ki ki-close"></i>
+                                </button>
+                            </div>
+                            <div class="card-body">
+                                <div id="kt_notes_message" style="height: 100px"></div>
+                                <div id="ql_footer"
+                                     class="d-flex justify-content-between flex-md-row"
+                                     style="border-width: 0 1px 1px 1px;
+                                          color: #aaa;
+                                          padding: 5px 15px;
+                                          ">
+                                </div>
+
+                                <div id="kt_notes_list"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </span>
             </div>
         </div>
     </div>
@@ -145,6 +188,52 @@
                     </button>
                     <button type="button" id="close-cards" class="btn btn-primary font-weight-bold" data-dismiss="modal">
                         Да
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="set-cards-limit-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Установление лимитного остатка</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i aria-hidden="true" class="ki ki-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="card card-custom gutter-b">
+                        <div class="card-body">
+                            <div class="form-group row mb-6">
+                                <label class="col-form-label text-right col-lg-3 col-sm-12">Установить лимит</label>
+                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                    <div class="row align-items-center">
+                                        <div class="col-4">
+                                            <input type="text" class="form-control" id="kt_nouislider_limit_card_input" placeholder="Quantity"/>
+                                        </div>
+                                        <div class="col-8">
+                                            <div id="kt_nouislider_limit_card" class="nouislider-drag-danger"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-9 ml-lg-auto">
+                                        <button type="button" class="btn btn-primary" id="edit_spend_limit">
+                                            Добавить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">
+                        Закрыть
+                    </button>
+                    <button type="button" id="set_limit_cards_button" class="btn btn-primary font-weight-bold" data-dismiss="modal">
+                        Изменить
                     </button>
                 </div>
             </div>
@@ -184,7 +273,388 @@
 
 @section('scripts_next')
     <script>
+        let dropdownClass = $('.dropdown-notes');
+        let dropdownButtonClass = $('.dropdown-notes-button');
+        let closeButton = $('#close-dropdown-notes.close');
+        dropdownButtonClass.on('click', function () {
+            dropdownButtonClass.dropdown('toggle');
+        });
+        $('body').on('click', function (e) {
+            let isTapModal = $(e.target).parents('.dropdown-notes').length;
+            let isCloseButton = closeButton.is(e.target) || $(e.target).parents('#close-dropdown-notes.close').length;
+
+            if (!isTapModal || (isTapModal && isCloseButton)) {
+                dropdownButtonClass.dropdown('hide');
+                statusDropdown = 0;
+            }
+        });
+    </script>
+    @if(
+   // $card->bank()->first()->isApiOfContract(\App\Classes\BankContract\CardLimitContract::class) and
+(\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or
+\Illuminate\Support\Facades\Route::is('card')))
+        <script>
+            var slider = document.getElementById('kt_nouislider_limit_card');
+
+            noUiSlider.create(slider, {
+                start: [ {{ 0 }} ],
+                step: 1,
+                range: {
+                    'min': [ 0 ],
+                    'max': [ {{ request()->user()->balance()->getSum() }} ]
+                },
+                format: wNumb({
+                    decimals: 0
+                })
+            });
+
+            // init slider input
+            var sliderInput = document.getElementById('kt_nouislider_limit_card_input');
+
+            slider.noUiSlider.on('update', function( values, handle ) {
+                sliderInput.value = values[handle];
+            });
+
+            sliderInput.addEventListener('change', function(){
+                slider.noUiSlider.set(this.value);
+            });
+        </script>
+    @endif
+    <script>
+        Quill.register('modules/footer', function(quill, options) {
+            let editMessageId = false;
+            let toolbar_note = $('.ql-toolbar');
+            let body_note = $('#kt_notes_message');
+            let footer_note = $('#ql_footer');
+            let note_create_note = $('#ql_note_create');
+            let footer_send_note = $(`
+                        <span id="ql_footer_send"
+                              class="navi-icon text-hover-success text-light-success
+                              align-items-md-end">
+                            <i class="la la-send"></i>
+                        </span>`);
+            let footer_close_note = $(`
+                        <span id="ql_footer_close"
+                              class="navi-icon text-hover-light text-hover-dark-50
+                              align-items-md-start">
+                            <i class="la la-times-circle text-danger"></i>
+                        </span>`);
+
+            if (options.close) {
+                footer_note.append(footer_close_note);
+            }
+            if (options.send) {
+                footer_note.append(footer_send_note);
+            }
+            if(options.hidden) {
+                toolbar_note.hide();
+                body_note.hide();
+                footer_close_note.hide();
+                footer_send_note.hide();
+            }
+            footer_close_note.on('click', function () {
+                toolbar_note.hide();
+                body_note.hide();
+                footer_close_note.hide();
+                footer_send_note.hide();
+                quill.container.firstChild.textContent = '';
+                quill.setContents({"ops": [{"insert": ""}]});
+
+                quill.message_id = undefined;
+
+                note_create_note.show();
+            });
+            footer_send_note.on('click', function () {
+                toolbar_note.hide();
+                body_note.hide();
+                footer_close_note.hide();
+                footer_send_note.hide();
+
+                note_create_note.show();
+            });
+            note_create_note.on('click', function () {
+                toolbar_note.show();
+                body_note.show();
+                footer_close_note.show();
+                footer_send_note.show();
+
+                note_create_note.hide();
+            });
+        });
+        let toolbarSnow = [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote'],
+            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+            [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
+        ];
+        let optionsSnow = {
+            modules: {
+                toolbar: {
+                    container: toolbarSnow,
+                },
+                footer: {
+                    send: true,
+                    close: true,
+                    create: true,
+                    hidden: true
+                },
+            },
+            placeholder: '...',
+            theme: 'snow', // or 'bubble'
+        };
+        const quill = new Quill('#kt_notes_message', optionsSnow);
+        function dialog_note_open(card_id) {
+            let optionsReadOnly = {
+                modules: {
+                    toolbar: false,
+                    // keyboard: false,
+                },
+                readOnly: true,
+                placeholder: '' ,
+                theme: 'bubble' // or 'bubble'
+            };
+            var datatable_notes = $('#kt_notes_list').KTDatatable({
+                data: {
+                    saveState: true,
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: '{{ asset('') }}' + 'datatables/card-notes/' + card_id,
+                            method: 'POST',
+                            contentType: 'application/json',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            timeout: 60000,
+                            map: function map(raw) {
+
+                                datatable_notes.setDataSourceParam('query', {})
+                                var dataSet = raw;
+                                if (typeof raw.data !== 'undefined') {
+                                    dataSet = raw.data;
+                                }
+                                return dataSet;
+                            }
+                        }
+                    },
+                    serverPaging: false,
+                    serverFiltering: false,
+                    serverSorting: false
+                },
+                layout: {
+                    scroll: true,
+                    height: 300,
+                    header: false,
+                    footer: false,
+                },
+                toolbar: {
+                    layout: {}
+                },
+                rows: {
+                    autoHide: false,
+                    afterTemplate: function (row, data, index) {
+                        let message = new Quill('div[data-message-id="' + data.id + '"]', optionsReadOnly)
+                        message.setContents(data.ops, 'api')
+                    },
+                },
+                sortable: false,
+                pagination: false,
+                columns: [
+                    {
+                        field: 'insert',
+                        title: '',
+                        template: function template(row) {
+                            let note_message = '<div class="kt_note_message" data-message-id="' + row.id + '" ' +
+                                'id="note_message_' + row.id + '"></div>';
+                            let items_status_me = 'start';
+                            let side_me = 'left';
+                            let color_me = 'bg-light-success';
+                            let style_me = '';
+                            let edit_is_me = ''
+                            let del_is_me = ''
+                            if (row.is_me) {
+                                items_status_me = 'end';
+                                side_me = 'right';
+                                color_me = '';
+                                style_me = 'background-color: #ffd67e;';
+                                edit_is_me = '<i class="text-dark-75 text-left text-hover-primary align-items-start ml-1 mr-1 edit-note-message" ' +
+                                    'style="font-size: 0.9rem !important;">edit</i>'
+                                del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                    'style="font-size: 0.9rem !important;">del</i>';
+                            }
+                            @if(request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+                                del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                'style="font-size: 0.9rem !important;">del</i>';
+                            @endif
+                                return `
+                            <style>
+                                /*.ql-editor {padding: 0px 15px 12px 15px;}*/
+                            </style>
+                            <div class="d-flex flex-column align-items-` + items_status_me + `">
+                                <div class="d-flex align-items-left">
+<!--                                    <div class="symbol symbol-circle symbol-40 mr-3">-->
+<!--                                        <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/users/300_12.jpg">-->
+<!--                                    </div>-->
+                                    <div>
+                                        <a href="{{ route('dashboard') }}/user/` + row.user_id + `/cards"
+                                        class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">
+                                            ` + row.full_name + `
+                                        </a>
+
+                                        <span class="text-muted font-size-sm">` + row.created_at + `</span>
+                                    </div>
+                                </div>
+
+                                <div class="rounded ` + color_me + ` text-dark-50 font-weight-bold font-size-lg text-` + side_me + ` max-w-300px"
+                                        style="` + style_me + `">
+                                    ` + note_message + `
+                                </div>
+
+                                <span class="d-flex text-left align-items-start" data-message-id="` + row.id + `">
+                                    ` + edit_is_me + `
+                                    ` + del_is_me + `
+                                </span>
+
+
+                            </div>`;
+                        }
+                    },
+
+                ],
+            });
+
+            quill.enable();
+        }
+        function dialog_note_close() {
+            quill.disable();
+            quill.off();
+            if ($('div#kt_notes_list.datatable.datatable-default').length) {
+                $('#kt_notes_list').KTDatatable().destroy()
+            }
+        }
         window.addEventListener('load', function () {
+            function dialog_note_open(card_id) {
+                let optionsReadOnly = {
+                    modules: {
+                        toolbar: false,
+                    },
+                    readOnly: true,
+                    placeholder: '' ,
+                    theme: 'bubble'
+                };
+                var datatable_notes = $('#kt_notes_list').KTDatatable({
+                    data: {
+                        saveState: true,
+                        type: 'remote',
+                        source: {
+                            read: {
+                                url: '{{ asset('') }}' + 'datatables/card-notes/' + card_id,
+                                method: 'POST',
+                                contentType: 'application/json',
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                timeout: 60000,
+                                map: function map(raw) {
+
+                                    datatable_notes.setDataSourceParam('query', {})
+                                    var dataSet = raw;
+                                    if (typeof raw.data !== 'undefined') {
+                                        dataSet = raw.data;
+                                    }
+                                    return dataSet;
+                                }
+                            }
+                        },
+                        serverPaging: false,
+                        serverFiltering: false,
+                        serverSorting: false
+                    },
+                    layout: {
+                        scroll: true,
+                        height: 300,
+                        header: false,
+                        footer: false,
+                    },
+                    toolbar: {
+                        layout: {}
+                    },
+                    rows: {
+                        autoHide: false,
+                        afterTemplate: function (row, data, index) {
+                            let message = new Quill('div[data-message-id="' + data.id + '"]', optionsReadOnly)
+                            message.setContents(data.ops, 'api')
+                        },
+                    },
+                    sortable: false,
+                    pagination: false,
+                    columns: [
+                        {
+                            field: 'insert',
+                            title: '',
+                            template: function template(row) {
+                                let note_message = '<div class="kt_note_message" data-message-id="' + row.id + '" ' +
+                                    'id="note_message_' + row.id + '"></div>';
+                                let items_status_me = 'start';
+                                let side_me = 'left';
+                                let color_me = 'bg-light-success';
+                                let style_me = '';
+                                let edit_is_me = ''
+                                let del_is_me = ''
+                                if (row.is_me) {
+                                    items_status_me = 'end';
+                                    side_me = 'right';
+                                    color_me = '';
+                                    style_me = 'background-color: #ffd67e;';
+                                    edit_is_me = '<i class="text-dark-75 text-left text-hover-primary align-items-start ml-1 mr-1 edit-note-message" ' +
+                                        'style="font-size: 0.9rem !important;">edit</i>'
+                                    del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                        'style="font-size: 0.9rem !important;">del</i>';
+                                }
+                                @if(request()->user()->hasPermissionTo(App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']))
+                                    del_is_me = '<i class="text-danger text-hover-primary ml-1 mr-5 delete-note-message" ' +
+                                    'style="font-size: 0.9rem !important;">del</i>';
+                                @endif
+                                    return `
+                            <style>
+                                /*.ql-editor {padding: 0px 15px 12px 15px;}*/
+                            </style>
+                            <div class="d-flex flex-column align-items-` + items_status_me + `">
+                                <div class="d-flex align-items-left">
+<!--                                    <div class="symbol symbol-circle symbol-40 mr-3">-->
+<!--                                        <img alt="Pic" src="/metronic/theme/html/demo1/dist/assets/media/users/300_12.jpg">-->
+<!--                                    </div>-->
+                                    <div>
+                                        <a href="{{ route('dashboard') }}/user/` + row.user_id + `/cards"
+                                        class="text-dark-75 text-hover-primary font-weight-bold font-size-h6">
+                                            ` + row.full_name + `
+                                        </a>
+
+                                        <span class="text-muted font-size-sm">` + row.created_at + `</span>
+                                    </div>
+                                </div>
+
+                                <div class="rounded ` + color_me + ` text-dark-50 font-weight-bold font-size-lg text-` + side_me + ` max-w-300px"
+                                        style="` + style_me + `">
+                                    ` + note_message + `
+                                </div>
+
+                                <span class="d-flex text-left align-items-start" data-message-id="` + row.id + `">
+                                    ` + edit_is_me + `
+                                    ` + del_is_me + `
+                                </span>
+
+
+                            </div>`;
+                            }
+                        },
+
+                    ],
+                });
+
+                quill.enable();
+                // quill.on();
+            }
             var datatable = $('#add_cards_datatable').KTDatatable({
                 data: {
                     type: 'remote',
@@ -247,17 +717,31 @@
                     afterTemplate: function (row, data, index) {
                         $('.event_click_checkbox').on('click', function () {
                             var status_check = 0;
-                            $('input[name="checkboxes"]').each(function () {
-                                if (this.checked) {
-                                    status_check = 1;
-                                }
-                            });
+                            let checkboxes = $('input[name="checkboxes"]:checked');
+                            let notes_card = $('#notes_card');
+                            let note_button_dropdown = $('#note_button_dropdown');
+
+                            if (checkboxes.length) {
+                                status_check = 1;
+                            }
+                            if (checkboxes.length === 1) {
+                                dialog_note_open(checkboxes.val());
+                                note_button_dropdown.show();
+                                notes_card.show();
+                            }
+                            else {
+                                dialog_note_close()
+                                note_button_dropdown.hide()
+                                notes_card.hide()
+                            }
+
                             if (status_check) {
                                 $('#checkbox-parameter').removeClass('d-none');
                             } else {
                                 $('#checkbox-parameter').addClass('d-none');
                             }
                         });
+
                     }
                 },
 
@@ -444,6 +928,87 @@
                 };
                 datatable.search(date, 'date');
             });
+
+            $('#set_limit_cards_button').on('click', function () {
+                console.log('asdadasd')
+                datatable.setDataSourceParam('query.listCartForAdding', '');
+                let checkboxes_value = [];
+                $('input[name="checkboxes"]').each(function(){
+                    if(this.checked) {
+                        checkboxes_value.push($(this).val());
+                    }
+                });
+                checkboxes_value = checkboxes_value.toString();
+                datatable.setDataSourceParam('query.amountLimit', document.getElementById('kt_nouislider_limit_card_input').value);
+                datatable.search(checkboxes_value, 'listCardForSetLimit');
+            });
+        });
+        function editNote(messageId, innerHtml = '...')
+        {
+            $('.ql-toolbar').show();
+            $('#kt_notes_message').show();
+            $('#ql_footer_close').show();
+            $("#ql_footer_send").show();
+
+            quill.message_id = messageId;
+            quill.container.firstChild.innerHTML = innerHtml;
+
+            $('#ql_note_create').hide();
+        }
+
+        $('#ql_footer_send').on('click', function () {
+            $('#kt_notes_list').KTDatatable().setDataSourceParam('query', {});
+
+            if (quill.container.textContent) {
+                if(quill.message_id) {
+                    $('#kt_notes_list').KTDatatable().setDataSourceParam('query.messageEdit', {
+                        id: quill.message_id,
+                        contents: quill.getContents(),
+                    });
+                    quill.message_id = undefined;
+                } else {
+                    $('#kt_notes_list').KTDatatable().setDataSourceParam('query.messageCreate', {
+                        contents: quill.getContents(),
+                    });
+                }
+
+                quill.container.firstChild.textContent = '';
+                quill.setContents({"ops": [{"insert": ""}]});
+
+                $('#kt_notes_list').KTDatatable().load();
+            }
+        });
+        $(document).on('click', '.edit-note-message', function () {
+
+            let item = $(event.target).parent();
+            let messageId = item.data('message-id');
+            let objectNote = $('#note_message_'+messageId);
+
+            editNote(messageId, objectNote.children().html());
+        });
+        $(document).on('click', '.delete-note-message', function () {
+            $('#kt_notes_list').KTDatatable().setDataSourceParam('query', {});
+
+            let item = $(event.target).parent();
+            let messageId = item.data('message-id');
+
+            $('#kt_notes_list').KTDatatable().setDataSourceParam('query.messageDelete', {
+                id: messageId
+            });
+            $('#kt_notes_list').KTDatatable().load();
+        });
+        let timing = false;
+        function realTimeDatatable() {
+            if($('span.dropdown-notes.show').length) {
+                $('#kt_notes_list').KTDatatable().load();
+            }
+            if(!timing) {
+                timing = setTimeout(realTimeDatatable, 10000);
+            }
+        }
+
+        $('span.dropdown-notes').on('click',  function () {
+            realTimeDatatable()
         });
     </script>
     <script>

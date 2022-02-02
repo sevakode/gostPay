@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\BankContract\CardLimitContract;
+use App\Classes\BankMain;
+use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Account;
 use App\Models\Bank\BankToken;
@@ -166,29 +169,6 @@ class DatatablesController extends Controller
                 DataNotification::sendErrors(['У вас недостаточно прав!']);
             }
         }
-//        if (isset($filter['query']['closeCardsRemove'])) {
-//            $closeCardsRemove = explode(',', $filter['query']['closeCardsRemove']);
-//            $userId = $user->id;
-//            $cardsList = $company->cards()->whereIn('id', $closeCardsRemove);
-//            $cardsListForUser = $cardsList->clone()->where('user_id', $userId);
-//            $isPermissions = $user->hasPermission(OptionsPermissions::ADMIN_ROLE_SET['slug']) and
-//                            $user->hasPermission(OptionsPermissions::ACCESS_TO_CLOSE_CARDS['slug']);
-//            if ($cardsListForUser->exists() or $isPermissions) {
-//                $cardsListActive = $cardsList->where('state', Card::ACTIVE);
-//                $isCardsExists = $cardsListActive->exists();
-//
-//                if ($isCardsExists) {
-//                    $cardsListActive->closed();
-//                    Notify::send(\request()->user(), DataNotification::success("Карты закрыты!"));
-//                    $cardsListGet = $cardsList->get();
-//                    TelegramNotification::sendMessageClosedCards('-1001248516513', $cardsListGet);
-//                }
-//                else DataNotification::sendErrors(["В списке выбранных нет открытых карт!"]);
-//
-//            } else {
-//                DataNotification::sendErrors(["У вас недостаточно прав!"]);
-//            }
-//        }
 
         $cards = $cards->get()->where('company_id', $request->user()->company()->select('id')->first()->id);
         foreach ($cards as $card) {
@@ -266,7 +246,6 @@ class DatatablesController extends Controller
 
                             $project->cards()->attach($card->id);
                         }
-//                        $cards = $company->cards()->where('user_id', $userId);
                         Notify::send($request->user(), DataNotification::success());
                     } else {
                         DataNotification::sendErrors(['Осталось ' . $cardsFree->count() . ' карт!']);
@@ -358,6 +337,53 @@ class DatatablesController extends Controller
                     Notify::send($request->user(), DataNotification::success());
                 } else {
                     DataNotification::sendErrors(['Не указан проект для карт!']);
+                }
+            }
+            if (isset($filter['query']['amountLimit']) and isset($filter['query']['listCardForSetLimit'])) {
+                $requestUser = $request->user();
+                $requestLimit = $filter['query']['amountLimit'];
+                $cardList = explode(',', $filter['query']['listCardForSetLimit']);
+                $cardsQuery = Card::query()
+                    ->whereIn('id', $cardList)
+                    ->where('user_id', $requestUser->id)
+                    ->with('invoice.bank');
+                $cardsCollect = $cardsQuery->get();
+                $cardsCollect->map(function (Card $card) use($requestLimit, $requestUser) {
+
+                    if (!$requestUser) {
+                        return;
+                    }
+                    $balanceUser = $requestUser->balance()->getSum();
+                    $maxLimit = max($balanceUser, 0);
+
+                    if ($requestLimit > $maxLimit)
+                        return DataNotification::sendErrors(
+                            ["У вас нет прав на лимит выше $maxLimit, на вашем счету $balanceUser!"],
+                            $requestUser);
+                    if (!$card->bank()->first()->isBank(BankMain::TINKOFF_BIN))
+                        return DataNotification::sendErrors(["Для данного банка нельзя изменить лимит!"], $requestUser);
+                    $bank = $card->getRelation('invoice')->getRelation('bank');
+
+                    if(is_null($card->ucid)) Card::refreshUcidApi();
+
+                    if ($bank->api() instanceof CardLimitContract) {
+                        $limit = $requestLimit ?: $balanceUser;
+                        $response = $bank
+                            ->api()
+                            ->editCardLimits((string)$card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, (int)$limit)
+                            ->json();
+
+                        if (isset($response->errorMessage) or isset($response['errorMessage'])) {
+                            $errorMessage = $response->errorMessage ?? $response['errorMessage'];
+                            return DataNotification::sendErrors([$errorMessage], $requestUser);
+                        }
+
+                        $card->limit = $requestLimit;
+                        $card->save();
+                    }
+                });
+                if ($cardsCollect) {
+                    Notify::send($requestUser, DataNotification::success());
                 }
             }
         }
