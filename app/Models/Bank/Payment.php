@@ -68,6 +68,7 @@ class Payment extends Model
 
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
+
                 self::upsert($payments->toArray(), ['transaction_id'],
                     [
                         'description',

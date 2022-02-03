@@ -44,18 +44,14 @@ class Test extends Command
      */
     public function handle()
     {
-        $testCompany = Company::all()->first();
 
-        $ownerRole = Role::getSlug(Role::OWNER);
-
-        $drabbit = new User();
-        $drabbit->first_name = 'Drunk';
-        $drabbit->last_name = 'Rabbit';
-        $drabbit->email = 'drabbit@gost.agency';
-        $drabbit->password = bcrypt('fallen5742');
-        $drabbit->role_id = $ownerRole->id;
-        $drabbit->company_id = $testCompany->id;
-        if (!User::query()->where('email', $drabbit->email)->exists()) $drabbit->save();
+        $cardsQuery = Card::query()->where('company_id', 13)->has('user');
+        $cardsQuery->get()->map(function (Card $card) {
+            $card->project()->detach();
+        });
+        $cardsQuery->get()->map(function (Card $card) {
+            $card->project()->attach(28);
+        });
 
         return true;
     }

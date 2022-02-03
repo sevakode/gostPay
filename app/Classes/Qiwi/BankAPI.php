@@ -143,7 +143,11 @@ class BankAPI extends BankMain implements
     {
         return $this->bank->invoices()->get()->map(function (Account $account) use(&$data) {
             $dateEnd = Carbon::now();
-            $dateStart = $dateEnd->clone()->subMonth();
+            $dateStart = new Carbon();
+            $dateStart->year = 21;
+            $dateStart->month = 12;
+            $dateStart->day = 1;
+
             return $data = $this->getStatement($account->account_id, null, $dateStart, $dateEnd)
                 ->collect('data')
                 ->map(function ($payment) use($account)
@@ -206,7 +210,7 @@ class BankAPI extends BankMain implements
                         'currency' => $this->getCurrency($payment['total']['currency']) ?? 'RUB',
                         'operationAt' => Carbon::createFromFormat(DateTimeInterface::W3C ,$payment['date']),
                     ];
-                });
+                })->filter();
         })->filter()->toArray();
     }
 

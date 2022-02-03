@@ -37,11 +37,13 @@ trait TableCards
 
     public function sortNumber(&$cards, $filter)
     {
-        if(in_array($filter['sort']['field'], ['number', 'issue_at']))
+
+        if(in_array($filter['sort']['field'], ['number', 'issue_at'])) {
             if ($filter['sort']['sort'] == 'asc')
-            $cards = $cards->orderBy($filter['sort']['field']);
-        if ($filter['sort']['sort'] == 'desc')
-            $cards = $cards->orderByDesc($filter['sort']['field']);
+                $cards = $cards->orderBy($filter['sort']['field']);
+            if ($filter['sort']['sort'] == 'desc')
+                $cards = $cards->orderByDesc($filter['sort']['field']);
+        }
     }
 
     public function sortUpdateAt(&$cards, $filter)

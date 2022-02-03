@@ -402,12 +402,8 @@ class DatatablesController extends Controller
 
         $data['countCardsNoUser'] = (integer)$company->cards()->free()->count();
         $data['amountAll'] = 0;
-
         $cards = $cards
-            ->orderBy('issue_at')
             ->get()
-//            ->where('company_id', $company->id)
-//            ->where('user_id', $filter['id'])
         ;
 
         foreach ($cards as $card) {
