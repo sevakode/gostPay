@@ -48,6 +48,7 @@ trait Imageable
         $this->mkdirIfEmpty($dirpath);
 
         Image::make($file)->save($basepath);
+
         $result = $this->imageable
             ->updateOrCreate([
                     'type' => $this->type,

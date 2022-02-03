@@ -133,11 +133,12 @@
                         {{ \Illuminate\Support\Facades\Auth::user()->first_name }}
                     </span>
                     <span class="symbol symbol-35 symbol-white">
-                        @isset($user->avatarSmall)
-                        <span class="symbol-label font-size-h5 font-weight-bold" style="background-image:url('{{asset($user->avatarSmall)}}')"></span>
+                        @isset(request()->user()->avatarSmall)
+                        <span class="symbol-label font-size-h5 font-weight-bold"
+                              style="background-image:url('{{asset(request()->user()->avatarSmall)}}')"></span>
                         @else
                         <span class="symbol-label font-size-h5 font-weight-bold" >
-                            {{ \Illuminate\Support\Facades\Auth::user()->shortname }}
+                            {{ request()->user()->shortname }}
                         </span>
                         @endisset
                     </span>

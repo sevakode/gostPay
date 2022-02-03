@@ -20,7 +20,7 @@
                     <!--begin::Symbol-->
                     <div class="symbol symbol-40 symbol-light-success mr-5">
                         <span class="symbol-label">
-                            <img src="{{ asset('media/svg/avatars/009-boy-4.svg') }}"
+                            <img src="{{ asset($user->avatarSmall ?: 'media/svg/avatars/009-boy-4.svg') }}"
                                  class="h-75 align-self-end" alt="">
                         </span>
                     </div>
