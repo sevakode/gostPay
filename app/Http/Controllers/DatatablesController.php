@@ -371,19 +371,24 @@ class DatatablesController extends Controller
                     if(is_null($card->ucid)) Card::refreshUcidApi();
 
                     if ($bank->api() instanceof CardLimitContract) {
-                        $limit = $requestLimit ?: $balanceUser;
-                        $response = $bank
-                            ->api()
-                            ->editCardLimits((string)$card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, (int)$limit)
-                            ->json();
+                        if ($requestLimit < 0 or $balanceUser < 0) {
+                            DataNotification::sendErrors(["У вас нет средств для соврешения данной операции!"], $requestUser);
+                        } else {
+                            $limit = $requestLimit ?: $balanceUser;
+                            $response = $bank
+                                ->api()
+                                ->editCardLimits((string)$card->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, (int)$limit)
+                                ->json();
 
-                        if (isset($response->errorMessage) or isset($response['errorMessage'])) {
-                            $errorMessage = $response->errorMessage ?? $response['errorMessage'];
-                            return DataNotification::sendErrors([$errorMessage], $requestUser);
+                            if (isset($response->errorMessage) or isset($response['errorMessage'])) {
+                                $errorMessage = $response->errorMessage ?? $response['errorMessage'];
+                                DataNotification::sendErrors([$errorMessage], $requestUser);
+                            }
+                            else {
+                                $card->limit = $requestLimit;
+                                $card->save();
+                            }
                         }
-
-                        $card->limit = $requestLimit;
-                        $card->save();
                     }
                 });
                 if ($cardsCollect) {
