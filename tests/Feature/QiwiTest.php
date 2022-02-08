@@ -3,10 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Bank\BankToken;
-use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class QiwiTest extends TestCase
