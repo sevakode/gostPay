@@ -9,7 +9,6 @@ use App\Classes\Tinkoff\BankAPI as TinkoffAPI;
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Account;
 use App\Models\Bank\Card;
-use App\Models\Permission;
 use App\Models\User;
 use App\Notifications\DataNotification;
 use Aspera\Spreadsheet\XLSX\Reader;

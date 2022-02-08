@@ -109,6 +109,23 @@ class Card extends Model
         return $this->invoice()->select('bank_token_id')->first()->bank();
     }
 
+    public function getBankAttribute()
+    {
+        if($this->bank()->exists()) {
+            $bank = $this->bank()->select('url')->first();
+            $bankAr = collect(config('bank_list.info'))->where('url', $bank->url)->first();
+        }
+        else {
+            $bankAr = [
+                'title' => '',
+                'icon' => '',
+                'bin' => ''
+            ];
+        }
+
+        return (object) $bankAr;
+    }
+
     public function isBlock()
     {
         return is_int($this->limit) and $this->limit <= 0;

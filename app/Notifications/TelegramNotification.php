@@ -34,7 +34,7 @@ class TelegramNotification extends Notification
     {
         foreach($messages as $message)
         {
-            $data = new TelegramNotification($card, $user, $message);
+            $data = new self($card, $user, $message);
             Notify::send($card, $data);
         }
     }

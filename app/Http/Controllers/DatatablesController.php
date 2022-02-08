@@ -417,9 +417,9 @@ class DatatablesController extends Controller
                 'type' => $card->card_type,
                 'state' => $card->state,
                 'project' => $card->project->name ?? '-',
-                'expiredAt' => $card->expiredAt->format('M d, Y'),
+                'expiredAt' => $card->expiredAt->format('M d, Y H:i'),
                 'amount' => $card->amount() . $card->currencySign,
-                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y') : '-',
+                'issue_at' => $card->issue_at ? $card->issue_at->format('M d, Y H:i') : '-',
                 'limit' => $card->limit ? $card->limit . $card->currencySign : '-',
             ];
         }
@@ -506,7 +506,7 @@ class DatatablesController extends Controller
                 'state' => $card->state,
 
                 'description' => $payment->description,
-                'operation_at' => $payment->operationAt->format('M d, Y H:m'),
+                'operation_at' => $payment->operationAt->format('M d, Y H:i'),
                 'amount' => $payment->amount,
                 'currency' => $card->currencySign,
                 'type' => $payment->type,
@@ -597,7 +597,7 @@ class DatatablesController extends Controller
                 'userLink' => $transaction->user_id,
 
                 'description' => $transaction->message ?? 'none',
-                'operation_at' => $transaction->created_at->format('M d, Y H:m'),
+                'operation_at' => $transaction->created_at->format('M d, Y H:i'),
                 'amount' => $transaction->amount,
                 'currency' => $account->currencySign,
                 'type' => $transaction->type(),

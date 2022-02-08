@@ -41,6 +41,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/', [PagesController::class, 'index'])->name('home');
 
+    /**
+     * Уведомление
+     */
+    Route::prefix('notify')->group(base_path('routes/web/notify.php'));
+
     /** Не активно
      * API
      */

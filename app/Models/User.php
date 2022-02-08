@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Interfaces\OptionsPermissions;
 use App\Models\Bank\Account;
+use App\Models\Bank\Card;
 use App\Models\Bank\TransactionBalance;
 use App\Traits\HasCompanyAndPermissions;
 use App\Traits\Imageable;
@@ -111,12 +112,9 @@ class User extends Authenticatable
         return $belongsToMany;
     }
 
-    public function cards()
+    public function cards(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        if ($this->company) {
-            return $this->company->cards()->where('user_id', $this->id);
-        }
-        return collect();
+        return $this->hasMany(Card::class)->where('company_id', $this->company_id);
     }
 
     public function projects()

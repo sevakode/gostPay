@@ -235,7 +235,7 @@ return [
 
         // Quick Panel
         'quick-panel' => [
-            'display' => false,
+            'display' => true,
             'offcanvas' => [
                 'direction' => 'right'
             ]

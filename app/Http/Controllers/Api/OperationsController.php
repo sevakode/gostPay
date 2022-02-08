@@ -174,6 +174,7 @@ class OperationsController extends Controller
 
             foreach ($notify['users'] as $user) {
                 Notify::send(User::find($user), DataNotification::success($notify['msg']));
+
             }
         }
 

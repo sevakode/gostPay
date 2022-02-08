@@ -102,8 +102,9 @@
     {{-- Quick panel --}}
     @if (config('layout.extras.quick-panel.display'))
         <div class="topbar-item">
-            <div class="btn btn-icon btn-clean btn-lg mr-1" id="kt_quick_panel_toggle">
+            <div class="btn btn-icon btn-clean btn-lg mr-1 pulse pulse-primary" id="kt_quick_panel_toggle">
                 {{ Metronic::getSVG("media/svg/icons/General/Notifications1.svg", "svg-icon-xl svg-icon-primary") }}
+                <span class="pulse-ring" id="kt_quick_panel_toggle_pulse_ring"></span>
             </div>
         </div>
     @endif

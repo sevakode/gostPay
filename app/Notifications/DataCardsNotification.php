@@ -2,15 +2,20 @@
 
 namespace App\Notifications;
 
+use App\Models\Bank\Card;
 use App\Models\User;
 use Illuminate\Bus\Queueable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Notification as Notify;
 
-class DataNotification extends Notification
+class DataCardsNotification extends Notification
 {
     use Queueable;
+
+    const DEFAULT_ICON = 'icon icon-xl flaticon2-check-mark text-success';
+    const DEFAULT_TIMER = 5000;
+    const DEFAULT_TITLE = 'Новое сообщение по карте!!!';
 
     private $notify;
 
@@ -65,40 +70,50 @@ class DataNotification extends Notification
 
     }
 
-    public static function success(string $message='Данные обновлены!'): DataNotification
+    /**
+     * @param mixed $cardOrUser
+     * @return Builder
+     */
+    public static function query($cardOrUser): Builder
     {
-        return new self(
-            'dark', '',
-            $message, 'icon icon-xl flaticon2-check-mark text-success',
-            50000, '', self::TEMPLATE_XL
+        if ($cardOrUser instanceof Card) {
+            $query =  $cardOrUser->notifications();
+        }
+        else if (is_array($cardOrUser)) {
+            $query =  \App\Models\Notification::query()->whereIn('notifiable_id', $cardOrUser);
+        }
+        else if ($cardOrUser instanceof User) {
+            $query =  \App\Models\Notification::query()->whereHas('card', function ($query) use ($cardOrUser) {
+                $query->where('cards.user_id', $cardOrUser->id);
+            });
+        }
+        else {
+            $query =  \App\Models\Notification::query()->whereHas('card', function ($query) use ($cardOrUser) {
+                $query->where('cards.user_id', $cardOrUser);
+            });
+        }
+
+        return $query->where('type', self::class);
+    }
+
+    public static function createMessage(string $message, Card $card, $title = null)
+    {
+        $data = new self(
+            'dark', $title ?: self::DEFAULT_TITLE,
+            $message, self::DEFAULT_ICON,
+            self::DEFAULT_TIMER, '', self::TEMPLATE_XL
         );
+
+        Notify::send($card, $data);
     }
 
-    public static function sendErrors(array $messages, User $user = null, $title = '') {
-        $user = is_null($user) ? Auth::user() : $user;
+    public static function createMessageList(array $messages, Card $card)
+    {
         foreach($messages as $message)
         {
-            $data = new self(
-                'dark', $title, $message, 'icon flaticon-exclamation text-danger icon-xl', 5000,
-                '', self::TEMPLATE_XL
-            );
-            Notify::send($user, $data);
+            self::createMessage($message, $card);
         }
     }
-
-    public static function sendSuccess(array $messages, User $user = null, $title = '') {
-        $user = is_null($user) ? Auth::user() : $user;
-        foreach($messages as $message)
-        {
-            $data = new self(
-                'dark', $title,
-                $message, 'icon icon-xl flaticon2-check-mark text-success',
-                50000, '', self::TEMPLATE_XL
-            );
-            Notify::send($user, $data);
-        }
-    }
-
 
     /**
      * Get the notification's delivery channels.
@@ -108,7 +123,7 @@ class DataNotification extends Notification
      */
     public function via($notifiable)
     {
-        return [ 'database'];
+        return ['database'];
     }
 
     /**
