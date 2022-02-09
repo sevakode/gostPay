@@ -97,6 +97,11 @@ class Account extends Model
         return $cards;
     }
 
+    public function queryCards(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Card::class, 'account_code', 'account_id');
+    }
+
     public function bank()
     {
         return $this->hasOne(BankToken::class, 'id', 'bank_token_id');

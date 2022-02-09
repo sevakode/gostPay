@@ -3,7 +3,7 @@
 use App\Classes\BankContract\BankConnectContract;
 use App\Classes\BankContract\BaseContracts;
 use App\Classes\BankContract\CardLimitContract;
-use App\Classes\BankContract\CloseCardContract;
+use App\Classes\BankContract\DeleteAndReissuedCardContract;
 use App\Classes\BankContract\StateCardContract;
 use App\Classes\BankMain;
 use App\Classes\Tinkoff\Traits\ConnectBanking;
@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
 class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
     CardLimitContract,
     StateCardContract,
-    CloseCardContract
+    DeleteAndReissuedCardContract
 {
     use OpenBanking, ConnectBanking;
 
@@ -148,5 +148,38 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
         $data['countCard'] = $countCard;
 
         return $data;
+    }
+
+    public function reissuedCard($cards)
+    {
+        return collect($cards)->map(function (Card $oldCard) {
+            $correlationId = Card::query()->whereNotNull('correlation_id')->latest()->first('correlation_id')->correlation_id;
+
+            $response = $this->getStatusForReissuedCard($correlationId);
+            $cardResponse = $response->collect();
+
+            if ($cardResponse->get('status') == 'READY') {
+                $cardInfo = collect($cardResponse->get('info'));
+                $newUcid = $cardInfo->get('newUcid');
+
+                $newCardInfo = $this->getCardInfo($newUcid)->collect();
+                $expiryDate = collect($newCardInfo->get('expiryDate'));
+                $month = $expiryDate->get('month');
+                $year = $expiryDate->get('year');
+
+                $newCard = new Card();
+                $newCard->ucid = $newUcid;
+                $newCard->number = $newCardInfo->get('number');
+                $newCard->cvc = $newCardInfo->get('cvc');
+                $newCard->expiredAt = \Carbon\Carbon::createFromFormat('m#Y#d H', "$month-$year-1 00");;
+                $newCard->account_code = $oldCard->account_code;
+                $newCard->bank_code = $oldCard->bank_code;
+                $newCard->save();
+
+                return $newCard->refresh();
+            }
+            return null;
+
+        })->filter();
     }
 }

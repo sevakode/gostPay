@@ -389,6 +389,28 @@ trait OpenBanking
         return Http::withHeaders($headers)->withOptions($this->getCert())->post($url, $parameters);
     }
 
+    /**
+     * Получить статус заявки на перевыпуск виртуальной карты
+     *
+     * @var string $cardCode
+     * @var string $message
+     * @return PromiseInterface|Response
+     */
+    public function getStatusForReissuedCard(string $correlationId): Response
+    {
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/virtual/reissue/result';
+        $headers = [
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/virtual/reissue'
+        ];
+
+        $parameters = [
+            'correlationId' => $correlationId,
+        ];
+
+        return Http::withHeaders($headers)->withOptions($this->getCert())->get($url, $parameters);
+    }
+
 
     /**
      * ----------------------------------------------------------------------------------------------------------------
