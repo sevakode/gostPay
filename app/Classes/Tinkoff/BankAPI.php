@@ -174,6 +174,7 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
                 $newCard->expiredAt = \Carbon\Carbon::createFromFormat('m#Y#d H', "$month-$year-1 00");;
                 $newCard->account_code = $oldCard->account_code;
                 $newCard->bank_code = $oldCard->bank_code;
+                $newCard->state = Card::ACTIVE;
                 $newCard->save();
 
                 return $newCard->refresh();

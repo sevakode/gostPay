@@ -2,8 +2,10 @@
 
 namespace App\Models\Bank;
 
+use App\Classes\BankContract\DeleteAndReissuedCardContract;
 use App\Classes\BankContract\GenerateCardsContract;
 use App\Models\Company;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -47,8 +49,19 @@ class Account extends Model
                 'id', 'title','url','rsUrl','apiVersion', 'bankId', 'bankSecret', 'accessToken', 'refreshToken'
             ]);
         }]);
+        $query->orWhereHas('queryCards', function(Builder $queryCard) {
+            $queryCard->whereReissued(request()->user()->company_id);
+        });
+        $query->with(['queryCards' => function($queryCard) {
+            $queryCard->whereReissued(request()->user()->company_id);
+            $queryCard->select('id', 'account_code');
+        }]);
+
         $result = $query->get()->map(function (Account $account) {
             if ($account->getRelation('bank')->api() instanceof GenerateCardsContract) {
+                return $account;
+            }
+            if ($account->getRelation('bank')->api() instanceof DeleteAndReissuedCardContract) {
                 return $account;
             }
             return null;

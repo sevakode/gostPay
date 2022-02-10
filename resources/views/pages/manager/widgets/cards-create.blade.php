@@ -34,7 +34,7 @@
                             @isset(request()->user()->company)
                                 <option value="">--Выберите счет--</option>
                                 @foreach(request()->user()->company->invoices()->getWhereCreateCards() as $invoice)
-                                    <option value="{{ $invoice->account_id }}">{{ $invoice->account_id }}</option>
+                                    <option value="{{ $invoice->account_id }}">{{ $invoice->account_id }} ({{ $invoice->queryCards->count() }})</option>
                                 @endforeach
                             @endisset
                         </select>
@@ -198,21 +198,20 @@
 @section('scripts')
     <script>
         $(document).ready(function() {
-            var fd = new FormData;
+            let fd_generate = new FormData;
 
             $('#generate_cards').on('click', function () {
 
                 let count_card = $('#count_cards_for_generate')[0];
                 let invoice = $('#invoice_cards_input')[0];
-
-                fd.append(count_card.name, Number(count_card.value));
-                fd.append(invoice.name, Number(invoice.value));
+                fd_generate.append(count_card.name, count_card.value)
+                fd_generate.append(invoice.name, invoice.value);
 
                 $.ajax({
                     type: 'post',
                     url: '{{ route('cards.generate') }}',
                     dataType: "json",
-                    data: fd,
+                    data: fd_generate,
                     processData: false,  // tell jQuery not to process the data
                     contentType: false,  // tell jQuery not to set contentType
                     headers: {
@@ -243,18 +242,18 @@
                 $('#year_card'),
                 $('#invoice_card'),
             ];
-            var fd = new FormData;
+            let fd_create = new FormData;
 
 
             $('#create_card').on('click', function () {
                 $.each(inputs, function( index, value ) {
-                    fd.append(value[0].name, value[0].value);
+                    fd_create.append(value[0].name, value[0].value);
                 });
                 $.ajax({
                     type: 'post',
                     url: '{{ route('cards.create') }}',
                     dataType: "json",
-                    data: fd,
+                    data: fd_create,
                     processData: false,  // tell jQuery not to process the data
                     contentType: false,  // tell jQuery not to set contentType
                     headers: {
@@ -280,17 +279,17 @@
         $(document).ready(function() {
             var input = $("#create_cards_input_pdf");
             var invoice = $("#invoice_cards_input_pdf");
-            var fd = new FormData;
+            var fd_create_pdf = new FormData;
 
 
             $('#create_cards_pfd').on('click', function () {
-                fd.append(input[0].name, input.prop('files')[0]);
-                fd.append(invoice[0].name, invoice[0].value);
+                fd_create_pdf.append(input[0].name, input.prop('files')[0]);
+                fd_create_pdf.append(invoice[0].name, invoice[0].value);
                 $.ajax({
                     type: 'post',
                     url: '{{ route('cards.create.pdf') }}',
                     dataType: "json",
-                    data: fd,
+                    data: fd_create_pdf,
                     processData: false,  // tell jQuery not to process the data
                     contentType: false,  // tell jQuery not to set contentType
                     headers: {
@@ -317,17 +316,17 @@
         $(document).ready(function() {
             var input = $("#create_cards_input_xlsx");
             var invoice = $("#invoice_cards_input_xlsx");
-            var fd = new FormData;
+            let fd_create_xlsx = new FormData;
 
 
             $('#create_cards_xlsx').on('click', function () {
-                fd.append(input[0].name, input.prop('files')[0]);
-                fd.append(invoice[0].name, invoice[0].value);
+                fd_create_xlsx.append(input[0].name, input.prop('files')[0]);
+                fd_create_xlsx.append(invoice[0].name, invoice[0].value);
                 $.ajax({
                     type: 'post',
                     url: '{{ route('cards.create.xlsx') }}',
                     dataType: "json",
-                    data: fd,
+                    data: fd_create_xlsx,
                     processData: false,  // tell jQuery not to process the data
                     contentType: false,  // tell jQuery not to set contentType
                     headers: {

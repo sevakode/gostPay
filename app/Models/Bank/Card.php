@@ -79,6 +79,19 @@ class Card extends Model
             });
     }
 
+    public function scopeWhereReissued($query, $company_id = null)
+    {
+        if ($company_id) {
+            $query->whereHas('invoice', function ($query) use ($company_id) {
+                $query->where('company_id', $company_id);
+            });
+        }
+
+        return $query
+            ->whereNotNull(['cvc', 'account_code'])
+            ->whereNull(['company_id', 'user_id']);
+    }
+
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -262,7 +275,7 @@ class Card extends Model
         return $query
             ->where('user_id', null)
             ->where('state', Card::ACTIVE)
-            ->has('payments', '==', null);
+            ->has('payments', 0);
     }
 
     public function scopeWhereActive($query)

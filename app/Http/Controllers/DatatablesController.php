@@ -189,8 +189,8 @@ class DatatablesController extends Controller
                 'limit' => $card->limit ? $card->limit . $card->currencySign : '-',
             ];
         }
-
-        $data['data'] = $this->getSort(collect($data['data']), $filter);
+        if (isset($data['data']))
+            $data['data'] = $this->getSort(collect($data['data']), $filter);
 
         return new JsonResponse($data);
     }
