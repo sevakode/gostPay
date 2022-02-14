@@ -63,12 +63,13 @@ class Payment extends Model
         {
             if($bank->api()) {
                 $payments = self::getCollectApi($bank->api());
-                $paymentsExists = Payment::query()
-                    ->whereIn('transaction_id', $payments->pluck('transaction_id'))
+                $paymentsNotExists = Payment::query()
+                    ->whereNotIn('transaction_id', $payments->pluck('transaction_id'))
 //                    ->pluck('id')->toArray()
                     ->get();
 
-                $newPayments = $newPayments->merge($paymentsExists);
+                $newPayments = $newPayments->merge($paymentsNotExists);
+                if($newPayments->count()) dd($newPayments);
 
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
@@ -90,7 +91,7 @@ class Payment extends Model
         self::setLimit($newPayments);
         self::setBalance($newPayments);
 
-        if($command) $command->info('Обновленные карты: '. $countCards);
+        if ($command) $command->info('Обновленные карты: '. $countCards);
     }
 
     public static function setLimit($newPayments)
