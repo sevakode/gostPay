@@ -207,7 +207,7 @@
                         <div class="card-body">
                             <div class="form-group row mb-6">
                                 <label class="col-form-label text-right col-lg-3 col-sm-12">Установить лимит</label>
-                                <div class="col-lg-6 col-md-12 col-sm-12">
+                                <div class="col-lg-8 col-md-12 col-sm-12">
                                     <div class="row align-items-center">
                                         <div class="col-4">
                                             <input type="text" class="form-control" id="kt_nouislider_limit_card_input" placeholder="Quantity"/>
@@ -217,13 +217,13 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-lg-9 ml-lg-auto">
-                                        <button type="button" class="btn btn-primary" id="edit_spend_limit">
-                                            Добавить
-                                        </button>
-                                    </div>
-                                </div>
+{{--                                <div class="row">--}}
+{{--                                    <div class="col-lg-9 ml-lg-auto">--}}
+{{--                                        <button type="button" class="btn btn-primary" id="edit_spend_limit">--}}
+{{--                                            Добавить--}}
+{{--                                        </button>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                         </div>
                     </div>
@@ -294,9 +294,9 @@
 (\Illuminate\Support\Facades\Auth::user()->hasPermission(\App\Interfaces\OptionsPermissions::ADMIN_ROLE_SET['slug']) or
 \Illuminate\Support\Facades\Route::is('card')))
         <script>
-            var slider = document.getElementById('kt_nouislider_limit_card');
+            var sliderLimitCard = document.getElementById('kt_nouislider_limit_card');
 
-            noUiSlider.create(slider, {
+            noUiSlider.create(sliderLimitCard, {
                 start: [ {{ 0 }} ],
                 step: 1,
                 range: {
@@ -309,14 +309,14 @@
             });
 
             // init slider input
-            var sliderInput = document.getElementById('kt_nouislider_limit_card_input');
+            var sliderLimitCardInput = document.getElementById('kt_nouislider_limit_card_input');
 
-            slider.noUiSlider.on('update', function( values, handle ) {
-                sliderInput.value = values[handle];
+            sliderLimitCard.noUiSlider.on('update', function( values, handle ) {
+                sliderLimitCardInput.value = values[handle];
             });
 
-            sliderInput.addEventListener('change', function(){
-                slider.noUiSlider.set(this.value);
+            sliderLimitCardInput.addEventListener('change', function(){
+                sliderLimitCard.noUiSlider.set(this.value);
             });
         </script>
     @endif
@@ -930,7 +930,6 @@
             });
 
             $('#set_limit_cards_button').on('click', function () {
-                console.log('asdadasd')
                 datatable.setDataSourceParam('query.listCartForAdding', '');
                 let checkboxes_value = [];
                 $('input[name="checkboxes"]').each(function(){

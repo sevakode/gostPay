@@ -107,6 +107,7 @@ class Payment extends Model
         self::setBalance($newPayments);
 
         if ($command) $command->info('Обновленные карты: '. $countCards);
+        if ($command) $command->info('Обновленные платежы: '. $newPayments->count());
     }
 
     public static function setLimit($newPayments)
