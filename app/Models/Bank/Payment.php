@@ -64,12 +64,12 @@ class Payment extends Model
                     ->whereIn('transaction_id', $payments->pluck('transaction_id'))
                     ->pluck('id')->toArray();
 
-                $newPayments = $newPayments->merge($payments->whereNotIn('transaction_id',  $paymentsExists));
+                $newPayments = $newPayments->merge($payments->whereNotIn('id',  $paymentsExists));
 
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
 
-                self::upsert($payments->toArray(), ['transaction_id'],
+                self::query()->upsert($payments->toArray(), ['transaction_id'],
                     [
                         'description',
                         'account_id',

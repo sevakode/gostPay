@@ -327,7 +327,6 @@ trait OpenBanking
      * Работа с платежами
      * ----------------------------------------------------------------------------------------------------------------
      */
-
     public function getPaymentStatus(string $requestId): Response
     {
         $url = $this->bank->rsUrl . '/payment-history/'.$this->bank->apiVersion.'/transactions/'.$requestId;
