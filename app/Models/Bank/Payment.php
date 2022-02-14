@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Class Payment
  * @package App\Models\Bank
  * @property string $description
+ * @property $card_id
+ * @property $type
+ * @property $amount
  */
 class Payment extends Model
 {
@@ -62,9 +65,10 @@ class Payment extends Model
                 $payments = self::getCollectApi($bank->api());
                 $paymentsExists = Payment::query()
                     ->whereIn('transaction_id', $payments->pluck('transaction_id'))
-                    ->pluck('id')->toArray();
+//                    ->pluck('id')->toArray()
+                    ->get();
 
-                $newPayments = $newPayments->merge($payments->whereNotIn('id',  $paymentsExists));
+                $newPayments = $newPayments->merge($paymentsExists);
 
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
@@ -91,8 +95,9 @@ class Payment extends Model
 
     public static function setLimit($newPayments)
     {
-        $newPayments->each(function ($payment) {
-            $card = Card::find($payment['card_id']);
+        $newPayments->each(function (self $payment) {
+
+            $card = Card::query()->find($payment->card_id);
             if ($card) {
                 $api = $card->bank()->first()->api();
                 if ($api instanceof CardLimitContract) {
@@ -108,18 +113,18 @@ class Payment extends Model
     }
     public static function setBalance($newPayments)
     {
-        $newPayments->each(function ($payment) {
-            $company = Company::whereHas('cards', function ($query) use($payment){
-                $query->where('id', $payment['card_id'] ?? -1);
+        $newPayments->each(function (self $payment) {
+            $company = Company::query()->whereHas('cards', function ($query) use($payment){
+                $query->where('id', $payment->card_id ?? -1);
             })->with(['cards' => function ($query) use($payment){
-                $query->where('id', $payment['card_id'] ?? -1);
+                $query->where('id', $payment->card_id ?? -1);
             }])->first();
 
             if ($company and isset($company->cards)) {
                 $card = $company->cards->first();
 
-                if ($payment['type'] == self::EXPENDITURE) $amount = 0 - $payment['amount'];
-                else $amount = $payment['amount'];
+                if ($payment->type == self::EXPENDITURE) $amount = 0 - $payment->amount;
+                else $amount = $payment->amount;
 
                 $company->transactionBalance($amount, $card->account_code, $card->user_id);
             }
