@@ -69,7 +69,6 @@ class Payment extends Model
                     ->get();
 
                 $newPayments = $newPayments->merge($paymentsNotExists);
-                if($newPayments->count()) dd($newPayments);
 
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
