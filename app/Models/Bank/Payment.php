@@ -28,6 +28,18 @@ class Payment extends Model
     const PENDING = 'pending';
     const CANCELED = 'canceled';
 
+    protected $fillable = [
+        'transaction_id',
+        'description',
+        'account_id',
+        'card_id',
+        'type',
+        'status',
+        'amount',
+        'currency',
+        'operationAt',
+    ];
+
     protected $dates = ['operationAt', 'updated_at'];
 
     public function card()
@@ -63,11 +75,15 @@ class Payment extends Model
         {
             if($bank->api()) {
                 $payments = self::getCollectApi($bank->api());
-                $paymentsNotExists = Payment::query()
-                    ->whereNotIn('transaction_id', $payments->pluck('transaction_id'))
-//                    ->pluck('id')->toArray()
-                    ->get();
+                $paymentsExists = Payment::query()
+                    ->whereIn('transaction_id', $payments->filter()->pluck('transaction_id'))
+                    ->pluck('transaction_id')->toArray();
 
+                $paymentsNotExists = $payments->filter()
+                    ->whereNotIn('transaction_id', $paymentsExists)
+                    ->map(function($payment) use ($payments, $paymentsExists) {
+                        return new Payment($payment);
+                    });
                 $newPayments = $newPayments->merge($paymentsNotExists);
 
                 if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];

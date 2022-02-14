@@ -202,7 +202,7 @@ class BankAPI extends BankMain implements
                     return [
                         'transaction_id' => $payment['txnId'],
                         'description' => $description,
-                        'account_id' => $account,
+                        'account_id' => $account->account_id,
                         'card_id' => $cardId,
                         'type' => $this->isRevenue($payment['type']) ? Payment::REVENUE : Payment::EXPENDITURE,
                         'status' => $this->getStatus($payment['status']),
