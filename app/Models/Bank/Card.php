@@ -204,10 +204,17 @@ class Card extends Model
 
         $bank = $this->invoice->bank()->first();
         $api = $bank->api();
+        $user = $user ?? $this->user()->first();
         if ($api instanceof BlockCardContract) {
             $deleteCard = $api->openCard($this->ucid)->object();
         } elseif ($api instanceof CardLimitContract) {
-            if (is_int($this->limit) and $this->limit <= 0) {
+            if (! $user->balance()->count()) {
+                $limitCount = env('DEFAULT_CARD_LIMIT', 500000);
+                $limitCard = $api
+                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_MONTH, $limitCount)
+                    ->json();
+            }
+            else if (is_int($this->limit) and $this->limit <= 0) {
                 $limitCount = max($user->balance()->getSum(), 1);
                 $limitCard = $api
                     ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $limitCount)
@@ -233,11 +240,12 @@ class Card extends Model
         });
     }
 
-    public function scopeUnblocks($query)
+    public function scopeUnblocks(Builder $query)
     {
-        $cards = $query->get();
+        $cards = $query
+            ->get();
 
-        if ($query->where('ucid', '!=', null)->exists())
+        if ($query->clone()->where('ucid', '!=', null)->exists())
             self::refreshUcidApi();
 
         $cards->each(function (Card $card) {

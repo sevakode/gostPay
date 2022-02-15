@@ -270,6 +270,7 @@
 
         function setInvoice(invoice) {
             let divInvoiceBank = document.getElementById("invoice_bank_" + invoice.id);
+            invoice.avail = invoice.avail || 0;
             divInvoiceBank.textContent = invoice.currencySign + invoice.avail;
         }
 

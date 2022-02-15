@@ -3,6 +3,7 @@
 namespace App\Models\Bank;
 
 use App\Classes\BankContract\CardLimitContract;
+use App\Classes\Tinkoff\BankAPI as TinkOff;
 use App\Models\Company;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -82,11 +83,13 @@ class Payment extends Model
                 $paymentsNotExists = $payments->filter()
                     ->whereNotIn('transaction_id', $paymentsExists)
                     ->map(function($payment) use ($payments, $paymentsExists) {
+                        if(!is_array($payment))
+                            return null;
                         return new Payment($payment);
                     });
-                $newPayments = $newPayments->merge($paymentsNotExists);
+                $newPayments = $newPayments->merge($paymentsNotExists)->filter();
 
-                if(isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
+                if (isset($payments['countCard'])) $countCards = $countCards + $payments['countCard'];
                 unset($payments['countCard']);
 
                 self::query()->upsert($payments->toArray(), ['transaction_id'],
@@ -102,7 +105,7 @@ class Payment extends Model
                 );
             }
         }
-        $newPayments = $newPayments->filter();
+
         self::setLimit($newPayments);
         self::setBalance($newPayments);
 
@@ -116,11 +119,19 @@ class Payment extends Model
 
             $card = Card::query()->find($payment->card_id);
             if ($card) {
-                $api = $card->bank()->first()->api();
+                $bank = $card->bank()->first();
+                $api = $bank->api();
                 if ($api instanceof CardLimitContract) {
-                    $limitInfo = $api->getCardLimits($card->ucid)->collect('spendLimit');
-                    if ($limitInfo) {
-                        $card->limit = $limitInfo->limitRemain;
+                    if (is_null($card->ucid)) {
+                        Card::refreshUcidApi();
+                        $card = Card::query()->find($card->id);
+                    }
+                    $response = $api->getCardLimits($card->ucid);
+                    $limitInfo = $response->collect('spendLimit');
+                    if ($limitInfo->count()) {
+                        $card->limit = $limitInfo->get('limitRemain') == env('DEFAULT_CARD_LIMIT', 500000) ?
+                            null :
+                            $limitInfo->get('limitRemain');
 
                         $card->save();
                     }
@@ -136,7 +147,6 @@ class Payment extends Model
             })->with(['cards' => function ($query) use($payment){
                 $query->where('id', $payment->card_id ?? -1);
             }])->first();
-
             if ($company and isset($company->cards)) {
                 $card = $company->cards->first();
 

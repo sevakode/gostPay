@@ -96,7 +96,9 @@ class User extends Authenticatable
             $cards->blocks();
         }
         else if ($balance > 0) {
-            $cards->unblocks();
+            $cards
+//                ->whereNotNull('limit')
+                ->unblocks();
         }
     }
 

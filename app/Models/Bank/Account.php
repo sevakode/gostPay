@@ -2,6 +2,7 @@
 
 namespace App\Models\Bank;
 
+use App\Classes\BankContract\BaseContracts;
 use App\Classes\BankContract\DeleteAndReissuedCardContract;
 use App\Classes\BankContract\GenerateCardsContract;
 use App\Models\Company;
@@ -183,12 +184,12 @@ class Account extends Model
         return $sign;
     }
 
-    public static function getCollectApi($api)
+    public static function getCollectApi($bank)
     {
         $data = array();
 
-        if($api->api())
-            $api->api()->getAccountsData($data);
+        if($bank->api() and $bank->api() instanceof BaseContracts)
+            $bank->api()->getAccountsData($data);
 
         return collect($data);
     }

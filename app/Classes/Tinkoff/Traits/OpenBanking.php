@@ -244,9 +244,9 @@ trait OpenBanking
     public function getCardsLimits(): Response
     {
         $url = $this->bank->rsUrl.'/api/v1/cards/limits';
-        $url = $this->bank->rsUrl.'/api/v1/cards/limits';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/get',
         ];
 
         return Http::withHeaders($headers)->get($url);
@@ -260,9 +260,10 @@ trait OpenBanking
      */
     public function getCardLimits(string $cardCode): Response
     {
-        $url = $this->bank->rsUrl.'/card/'.$this->bank->apiVersion.'/card/'.$cardCode.'/limits';
+        $url = 'https://secured-openapi.business.tinkoff.ru/api/v1/card/'.$cardCode.'/limits';
         $headers = [
-            'Authorization' => 'Bearer '. $this->bank->accessToken
+            'Authorization' => 'Bearer '. $this->bank->accessToken,
+            'scope' => 'opensme/inn/246525853385/kpp/0/card/limit/get',
         ];
 
         return Http::withHeaders($headers)

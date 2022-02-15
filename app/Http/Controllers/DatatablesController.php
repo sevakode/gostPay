@@ -71,6 +71,7 @@ class DatatablesController extends Controller
     public function paymentsRefresh(Request $request): JsonResponse
     {
         Payment::refreshApi();
+        Account::refreshApi();
 
         $user = $request->user();
         $company = $user->company;

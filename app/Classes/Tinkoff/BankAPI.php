@@ -68,8 +68,8 @@ class BankAPI extends BankMain implements BankConnectContract, BaseContracts,
                 $data[$i]['bank_token_id'] = $account->bank_token_id;
                 $data[$i]['company_id'] = $account->company_id;
                 $data[$i]['currency'] = $this->currency($accountApi->currency);
-                $data[$i]['avail'] = $accountApi->balance->otb;
-                $data[$i]['current'] = $accountApi->balance->authorized;
+                $data[$i]['avail'] = (float) $accountApi->balance->otb;
+                $data[$i]['current'] = (float) $accountApi->balance->authorized;
             }
 
             $i++;
