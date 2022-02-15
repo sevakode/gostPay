@@ -184,12 +184,12 @@ class Card extends Model
         $bank = $this->invoice->bank()->first();
 
         if ($bank->api() instanceof BlockCardContract) {
-            $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
+//            $deleteCard = $bank->api()->deleteCard($this->ucid)->object();
         } elseif ($bank->api() instanceof CardLimitContract) {
-            $limitCard = $bank->api()->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, 1)->json();
+//            $limitCard = $bank->api()->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, 1)->json();
         }
         $this->limit = 0;
-        $this->save();
+//        $this->save();
 
         return $this;
     }
