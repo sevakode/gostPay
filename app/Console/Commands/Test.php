@@ -45,13 +45,8 @@ class Test extends Command
     public function handle()
     {
 
-        $cardsQuery = Card::query()->where('company_id', 13)->has('user');
-        $cardsQuery->get()->map(function (Card $card) {
-            $card->project()->detach();
-        });
-        $cardsQuery->get()->map(function (Card $card) {
-            $card->project()->attach(28);
-        });
+        $cardsQuery = Card::query()->where('updated_at', '>=', now()->subHours(3))->whereNotNull('limit');
+        dd($cardsQuery->unblocks());
 
         return true;
     }

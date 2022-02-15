@@ -208,22 +208,23 @@ class Card extends Model
         if ($api instanceof BlockCardContract) {
             $deleteCard = $api->openCard($this->ucid)->object();
         } elseif ($api instanceof CardLimitContract) {
-            if (! $user->balance()->count()) {
+            if (isset($user) and ! $user->balance()->count()) {
                 $limitCount = env('DEFAULT_CARD_LIMIT', 500000);
-                $limitCard = $api
-                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_MONTH, $limitCount)
-                    ->json();
+//                $limitCard = $api
+//                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_MONTH, $limitCount)
+//                    ->json();
             }
             else if (is_int($this->limit) and $this->limit <= 0) {
                 $limitCount = max($user->balance()->getSum(), 1);
-                $limitCard = $api
-                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $limitCount)
-                    ->json();
+//                $limitCard = $api
+//                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, $limitCount)
+//                    ->json();
             }
         }
 
         $this->limit = (isset($limitCount) and !is_null($limitCount)) ? $limitCount : null;
-        $this->save();
+        $this->limit = $this->limit == env('DEFAULT_CARD_LIMIT', 500000) ? null : $this->limit;
+//        $this->save();
 
         return $this;
     }
