@@ -45,7 +45,9 @@ class Test extends Command
     public function handle()
     {
 
-        $cardsQuery = Card::query()->where('updated_at', '>=', now()->subHours(3))->whereNotNull('limit');
+        $cardsQuery = Card::query()->where('updated_at', '>=', now()->subHours(4))
+//            ->whereNotNull('limit')
+        ;
         dd($cardsQuery->unblocks());
 
         return true;

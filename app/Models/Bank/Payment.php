@@ -106,8 +106,8 @@ class Payment extends Model
             }
         }
 
-        self::setLimit($newPayments);
-        self::setBalance($newPayments);
+//        self::setLimit($newPayments);
+//        self::setBalance($newPayments);
 
         if ($command) $command->info('Обновленные карты: '. $countCards);
         if ($command) $command->info('Обновленные платежы: '. $newPayments->count());
