@@ -189,7 +189,7 @@ class Card extends Model
 //            $limitCard = $bank->api()->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_IRREGULAR, 1)->json();
         }
         $this->limit = 0;
-//        $this->save();
+        $this->save();
 
         return $this;
     }
@@ -197,18 +197,20 @@ class Card extends Model
 
     public function unblock()
     {
-        if (is_null($this->ucid) and
-            ! $this->isBlock() and
+        if (is_null($this->ucid) or
+            ! $this->isBlock() or
             ! ($user = $this->user()->first()))
             return false;
 
         $bank = $this->invoice->bank()->first();
         $api = $bank->api();
-        $user = $user ?? $this->user()->first();
+//        $user = $user ?? $this->user()->first();
+
+        $limitCount = null;
         if ($api instanceof BlockCardContract) {
             $deleteCard = $api->openCard($this->ucid)->object();
         } elseif ($api instanceof CardLimitContract) {
-            if (isset($user) and ! $user->balance()->count()) {
+            if (!isset($user) or ! $user->balance()->count()) {
                 $limitCount = env('DEFAULT_CARD_LIMIT', 500000);
 //                $limitCard = $api
 //                    ->editCardLimits($this->ucid, TinkoffAPI::$LIMIT_TYPE_MONTH, $limitCount)
@@ -222,9 +224,9 @@ class Card extends Model
             }
         }
 
-        $this->limit = (isset($limitCount) and !is_null($limitCount)) ? $limitCount : null;
-        $this->limit = $this->limit == env('DEFAULT_CARD_LIMIT', 500000) ? null : $this->limit;
-//        $this->save();
+//        $this->limit = (isset($limitCount) and !is_null($limitCount)) ? $limitCount : null;
+        $this->limit = $limitCount == env('DEFAULT_CARD_LIMIT', 500000) ? null : $limitCount;
+        $this->save();
 
         return $this;
     }

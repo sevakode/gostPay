@@ -84,7 +84,7 @@ class Company extends Model
         $this->balance($account_id)->attach($transactionObject, $withPivot);
 
         if ($user = User::query()->find($user_id)) {
-//            $user->checkBalance($account);
+            $user->checkBalance($account);
         }
         $this->checkBalance($account);
 

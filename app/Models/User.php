@@ -89,16 +89,18 @@ class User extends Authenticatable
 
     public function checkBalance(Account $account)
     {
-        $balance = (integer) $this->balance($account->id)->getSum();
+        $balance = $this->balance($account->id)->getSum();
         $cards = $this->cards()->where('account_code', $account->refresh()->account_id);
 
-        if ($balance <= 0) {
-            $cards->blocks();
-        }
-        else if ($balance > 0) {
-            $cards
+        if ($balance !== null and $this->balance($account->id)->count() != 0) {
+            if ($balance <= 0) {
+                $cards->whereNotNull('user_id')->blocks();
+            }
+            else if ($balance > 0) {
+                $cards
 //                ->whereNotNull('limit')
-                ->unblocks();
+                    ->unblocks();
+            }
         }
     }
 

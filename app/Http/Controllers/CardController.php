@@ -274,7 +274,7 @@ class CardController extends Controller
 
         if (is_null($card))
             return DataNotification::sendErrors(['Такой карты не существует!'], $request->user());
-        if ($request->limit > $maxLimit)
+        if ($request->limit > $maxLimit or !$request->limit)
             return DataNotification::sendErrors(
                 ["У вас нет прав на лимит выше $maxLimit, на вашем счету $balanceUser!"],
                 $request->user());
